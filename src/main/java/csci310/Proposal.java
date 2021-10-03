@@ -52,5 +52,8 @@ public class Proposal {
         events.add(event);
     }
 
+    public void removeEvent(Event event) {
+    }
+
 
 }

@@ -9,6 +9,7 @@ public class ProposalTest {
 
     Proposal proposal;
     User user;
+    Event event1;
 
     @Before
     public void setUp() throws Exception {
@@ -18,11 +19,22 @@ public class ProposalTest {
 
     @Test
     public void testAddEvent() {
-        Event event1 = new Event();
+        event1 = new Event();
         int oldNumberOfEvents = proposal.getEvents().size();
         proposal.addEvent(event1);
         int newNumberOfEvents = proposal.getEvents().size();
         assertTrue(oldNumberOfEvents < newNumberOfEvents);
+    }
+
+    @Test
+    public void testRemoveEvent() {
+        Proposal proposal = new Proposal(user);
+        Event partyEvent = new Event("Party");
+        proposal.addEvent(partyEvent);
+        int oldNumberOfEvents = proposal.getEvents().size();
+        proposal.removeEvent(partyEvent);
+        int newNumberOfEvents = proposal.getEvents().size();
+        assertTrue(oldNumberOfEvents > newNumberOfEvents);
     }
 
 }
