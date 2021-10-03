@@ -10,10 +10,12 @@ import static org.junit.Assert.*;
 
 public class UserTest {
     User user;
+    User other_user;
 
     @Before
     public void setUp() throws Exception {
         user = new User();
+        other_user = new User();
     }
 
     @Test
@@ -30,12 +32,14 @@ public class UserTest {
 
     @Test
     public void getBlockedUsers() {
-        user.addBlockedUser("a");
-        ArrayList<String> expected = new ArrayList<>(Arrays.asList("a"));
+        //user.addBlockedUser("a");
+        user.addBlockedUser(other_user);
+
+        ArrayList<User> expected = new ArrayList<>(Arrays.asList(other_user));
         assertTrue(expected.equals(user.getBlockedUsers()));
 
-        user.removeBlockedUser("a");
-        expected.remove("a");
+        user.removeBlockedUser(other_user);
+        expected.remove(other_user);
         assertTrue(expected.equals(user.getBlockedUsers()));
     }
 

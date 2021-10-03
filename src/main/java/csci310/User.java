@@ -5,23 +5,23 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 public class User {
-    String password;
-    String username;
-    ArrayList<String> blockedUsers;
-    ArrayList<String> receivedProposals;
-    ArrayList<String> sentProposals;
+    private String password;
+    private String username;
+    private ArrayList<User> blockedUsers;
+    private ArrayList<String> receivedProposals;
+    private ArrayList<String> sentProposals;
 
     public User() {
-        blockedUsers = new ArrayList<String>();
+        blockedUsers = new ArrayList<User>();
         receivedProposals = new ArrayList<String>();
         sentProposals = new ArrayList<String>();
     }
 
-    public void addBlockedUser(String user) {
+    public void addBlockedUser(User user) {
         this.blockedUsers.add(user);
     }
 
-    public void removeBlockedUser(String user) {
+    public void removeBlockedUser(User user) {
         this.blockedUsers.remove(user);
         if (!this.blockedUsers.contains(user)) {
             System.out.println("No such user found.");
@@ -69,9 +69,9 @@ public class User {
         return this.username;
     }
 
-    public ArrayList<String> getBlockedUsers() {
+    public ArrayList<User> getBlockedUsers() {
         if (this.blockedUsers.isEmpty()) {
-            return new ArrayList<String>();
+            return new ArrayList<User>();
         }
         return this.blockedUsers;
     }
