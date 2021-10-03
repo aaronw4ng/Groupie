@@ -13,7 +13,7 @@ public class ProposalTest {
 
     @Before
     public void setUp() throws Exception {
-        user = new User();
+        user = new User("user x");
         proposal = new Proposal(user);
     }
 
@@ -39,7 +39,7 @@ public class ProposalTest {
 
     @Test
     public void testInviteUser() {
-        User friend = new User();
+        User friend = new User("user y");
         int oldNumberOfInvitees = proposal.getAllInvitedUsers().size();
         proposal.inviteUser(friend);
         int newNumberOfInvitees = proposal.getAllInvitedUsers().size();

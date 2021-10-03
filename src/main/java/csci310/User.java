@@ -8,13 +8,14 @@ public class User {
     private String password;
     private String username;
     private ArrayList<User> blockedUsers;
-    private ArrayList<String> receivedProposals;
-    private ArrayList<String> sentProposals;
+    private ArrayList<Proposal> receivedProposals;
+    private ArrayList<Proposal> sentProposals;
 
-    public User() {
+    public User(String username) {
+        this.username = username;
         blockedUsers = new ArrayList<User>();
-        receivedProposals = new ArrayList<String>();
-        sentProposals = new ArrayList<String>();
+        receivedProposals = new ArrayList<Proposal>();
+        sentProposals = new ArrayList<Proposal>();
     }
 
     public void addBlockedUser(User user) {
@@ -28,11 +29,11 @@ public class User {
         }
     }
 
-    public void addReceivedProposal(String proposal){
+    public void addReceivedProposal(Proposal proposal){
         this.receivedProposals.add(proposal);
     }
 
-    public void removeReceivedProposal(String proposal){
+    public void removeReceivedProposal(Proposal proposal){
         this.receivedProposals.remove(proposal);
         if (!this.receivedProposals.contains(proposal)) {
             System.out.println("No such proposal found.");
@@ -40,12 +41,12 @@ public class User {
 
     }
 
-    public void addSentProposal(String proposal) {
+    public void addSentProposal(Proposal proposal) {
         this.sentProposals.add(proposal);
 
     }
 
-    public void removeSentProposal(String proposal) {
+    public void removeSentProposal(Proposal proposal) {
         this.sentProposals.remove(proposal);
         if (!this.sentProposals.contains(proposal)) {
             System.out.println("No such proposal found.");
@@ -76,16 +77,16 @@ public class User {
         return this.blockedUsers;
     }
 
-    public ArrayList<String> getReceivedProposals() {
+    public ArrayList<Proposal> getReceivedProposals() {
         if (this.receivedProposals.isEmpty()) {
-            return new ArrayList<String>();
+            return new ArrayList<Proposal>();
         }
         return this.receivedProposals;
     }
 
-    public ArrayList<String> getSentProposals() {
+    public ArrayList<Proposal> getSentProposals() {
         if (this.sentProposals.isEmpty()) {
-            return new ArrayList<String>();
+            return new ArrayList<Proposal>();
         }
         return sentProposals;
     }
