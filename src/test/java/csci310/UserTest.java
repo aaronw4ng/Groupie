@@ -3,6 +3,9 @@ package csci310;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class UserTest {
@@ -28,27 +31,33 @@ public class UserTest {
     @Test
     public void getBlockedUsers() {
         user.addBlockedUser("a");
-        assertEquals("a", user.getBlockedUsers());
+        ArrayList<String> expected = new ArrayList<>(Arrays.asList("a"));
+        assertTrue(expected.equals(user.getBlockedUsers()));
 
         user.removeBlockedUser("a");
-        assertEquals("", user.getBlockedUsers());
+        expected.remove("a");
+        assertTrue(expected.equals(user.getBlockedUsers()));
     }
 
     @Test
     public void getReceivedProposals() {
         user.addReceivedProposal("b");
-        assertEquals("b", user.getReceivedProposals());
+        ArrayList<String> expected = new ArrayList<>(Arrays.asList("b"));
+        assertTrue(expected.equals(user.getReceivedProposals()));
 
         user.removeReceivedProposal("b");
-        assertEquals("", user.getReceivedProposals());
+        expected.remove("b");
+        assertTrue(expected.equals(user.getReceivedProposals()));
     }
 
     @Test
-    public void getProposedProposals() {
+    public void getSentProposals() {
         user.addSentProposal("c");
-        assertEquals("c", user.getSentProposals());
+        ArrayList<String> expected = new ArrayList<>(Arrays.asList("c"));
+        assertTrue(expected.equals(user.getSentProposals()));
 
         user.removeSentProposal("c");
-        assertEquals("", user.getSentProposals());
+        expected.remove("c");
+        assertTrue(expected.equals(user.getSentProposals()));
     }
 }
