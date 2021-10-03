@@ -49,6 +49,7 @@ public class Proposal {
     }
 
     public void addEvent(Event event) {
+        events.add(event);
     }
 
 
