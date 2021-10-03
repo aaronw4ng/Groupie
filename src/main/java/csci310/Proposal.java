@@ -66,6 +66,12 @@ public class Proposal {
     }
 
     public void removeUser(User user) {
+        // find user to be removed
+        for (int i = 0; i < invitedUsers.size(); i++) {
+            if (invitedUsers.get(i).getUsername().equalsIgnoreCase(user.getUsername())) {
+                invitedUsers.remove(i);
+            }
+        }
     }
 
 }
