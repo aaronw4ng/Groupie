@@ -53,7 +53,12 @@ public class Proposal {
     }
 
     public void removeEvent(Event event) {
+        // find event to be removed
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).getEventName().equalsIgnoreCase(event.getEventName())) {
+                events.remove(i);
+            }
+        }
     }
-
 
 }
