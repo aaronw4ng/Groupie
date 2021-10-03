@@ -1,5 +1,11 @@
 version: "2"
 services:
+    db:
+        image: mariadb
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: "csci310project"
+            MYSQL_DATABASE: "when2meet"
     310-project:
         build: .
         ports:
