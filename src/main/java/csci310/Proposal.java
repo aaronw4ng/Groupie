@@ -65,4 +65,7 @@ public class Proposal {
         invitedUsers.add(user);
     }
 
+    public void removeUser(User user) {
+    }
+
 }

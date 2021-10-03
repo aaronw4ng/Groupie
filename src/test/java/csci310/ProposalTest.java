@@ -45,4 +45,14 @@ public class ProposalTest {
         int newNumberOfInvitees = proposal.getAllInvitedUsers().size();
         assertTrue(oldNumberOfInvitees < newNumberOfInvitees);
     }
+
+    @Test
+    public void testRemoveUser() {
+        User friend = new User("User1");
+        proposal.inviteUser(friend);
+        int oldNumberOfInvitees = proposal.getAllInvitedUsers().size();
+        proposal.removeUser(friend);
+        int newNumberOfInvitees = proposal.getAllInvitedUsers().size();
+        assertTrue(oldNumberOfInvitees > newNumberOfInvitees);
+    }
 }
