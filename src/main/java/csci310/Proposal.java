@@ -62,6 +62,7 @@ public class Proposal {
     }
 
     public void inviteUser(User user) {
+        invitedUsers.add(user);
     }
 
 }
