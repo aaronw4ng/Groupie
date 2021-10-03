@@ -61,4 +61,7 @@ public class Proposal {
         }
     }
 
+    public void inviteUser(User user) {
+    }
+
 }

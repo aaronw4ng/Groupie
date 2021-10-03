@@ -37,4 +37,12 @@ public class ProposalTest {
         assertTrue(oldNumberOfEvents > newNumberOfEvents);
     }
 
+    @Test
+    public void testInviteUser() {
+        User friend = new User();
+        int oldNumberOfInvitees = proposal.getAllInvitedUsers().size();
+        proposal.inviteUser(friend);
+        int newNumberOfInvitees = proposal.getAllInvitedUsers().size();
+        assertTrue(oldNumberOfInvitees < newNumberOfInvitees);
+    }
 }
