@@ -37,6 +37,6 @@ services:
             - "3306:3306"
         environment:
             MYSQL_ROOT_PASSWORD: "csci310project"
-            MYSQL_DATABASE: "when2meet"
+            MYSQL_DATABASE: "project27"
 volumes:
     maven-cache: {}
