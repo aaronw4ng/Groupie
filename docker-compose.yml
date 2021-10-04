@@ -1,13 +1,9 @@
 version: "2"
 services:
-    db:
-        image: mariadb
-        restart: always
-        environment:
-            MYSQL_ROOT_PASSWORD: "csci310project"
-            MYSQL_DATABASE: "when2meet"
     310-project:
         build: .
+        depends_on:
+            - "maria_db"
         ports:
             - "8080:8080" # provide direct access to web server 
         volumes:
@@ -16,10 +12,13 @@ services:
         environment:
             SCREEN_RESOLUTION: "1280x720x24"
             ENABLE_VNC: "true"
+        links:
+            - "maria_db"
     novnc:
         image: "bonigarcia/novnc:1.1.0"
         depends_on:
             - "310-project"
+            - "maria_db"
         ports:
             - "6080:6080" # provide VNC access to container
         environment:
@@ -29,5 +28,15 @@ services:
             VNC_SERVER: "310-project:5900"
             NOVNC_TAG: "v1.3.0-beta"
             WEBSOCKIFY_TAG: "v0.10.0"
+        links:
+            - maria_db
+    maria_db:
+        image: mariadb
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: "csci310project"
+            MYSQL_DATABASE: "when2meet"
 volumes:
     maven-cache: {}
