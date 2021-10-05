@@ -11,7 +11,7 @@ public class DatabaseTest {
 
 		assertTrue(testDB.checkTableExists("users") == false);
 		testDB.createRequiredTables();
-		assertTrue(testDB.checkTableExists("users"))
+		assertTrue(testDB.checkTableExists("users"));
 
 		testDB.dropAllTables();
 	}
@@ -23,7 +23,7 @@ public class DatabaseTest {
 		assertTrue(testDB.checkTableExists("users") == false);
 		testDB.createRequiredTables();
 		// TODO: check if all required tables exist
-		assertTrue(testDB.checkTableExists("users"))
+		assertTrue(testDB.checkTableExists("users"));
 
 		testDB.dropAllTables();
 	}
@@ -33,7 +33,7 @@ public class DatabaseTest {
 		Database testDB = new Database();
 
 		assertTrue(testDB.register("dummy_user", "password"));
-		assertTrue(testDB.testLogin("dummy_user", "password"));
+		assertTrue(testDB.login("dummy_user", "password"));
 		// TODO: test more invalid passwords
 
 		testDB.dropAllTables();

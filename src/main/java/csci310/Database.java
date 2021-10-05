@@ -1,16 +1,29 @@
 package csci310;
 import java.sql.*;
+import org.ini4j.Ini;
+import java.io.FileReader;
+import org.mindrot.jbcrypt.*;
 
 public class Database {
 	private static Connection connection;
+	public static String dbConfigFilename = "db_config.ini";
+	private static Ini config;
 	
-	public Database(){
+	public Database(String f){
 		try{
+			// create connection
 			connection = DriverManager.getConnection("jdbc:mariadb://maria_db:3306/project27", "root", "csci310project");
+			// load configuration
+			String filename = "config/" + f;
+			config = new Ini(new FileReader(filename));
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	public Database(){
+		this(dbConfigFilename);
 	}
 
 	// check if a particular table exists in the database
