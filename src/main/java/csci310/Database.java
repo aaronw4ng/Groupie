@@ -74,6 +74,16 @@ public class Database {
 
 	// drop all tables
 	public Boolean dropAllTables(){
+		try{
+			Statement stmt = connection.createStatement();
+			for (String tableName : config.keySet()){
+				stmt.executeUpdate("DROP TABLE IF EXISTS " + tableName);
+			}
+			return true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
