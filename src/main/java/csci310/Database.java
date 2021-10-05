@@ -19,7 +19,7 @@ public class Database {
 			config = new Ini(new FileReader(filename));
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -37,7 +37,7 @@ public class Database {
 			}
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return false;
 	}
@@ -67,7 +67,7 @@ public class Database {
 			return true;
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return false;
 	}
@@ -92,14 +92,14 @@ public class Database {
 		try{
 			Statement stmt = connection.createStatement();
 			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT * FROM users WHERE username = '" + _us + "'");
+			sql.append("SELECT * FROM users WHERE username = '" + _us.toLowerCase() + "'");
 			ResultSet rs = stmt.executeQuery(sql.toString());
 			if (rs.next()) {
 				return true;
 			}
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return false;
 	}
@@ -115,7 +115,7 @@ public class Database {
 			return true;
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return false;
 	}
@@ -123,10 +123,16 @@ public class Database {
 	// check if hashed password matches with stored hashed password in the DB
 	public Boolean login(String _us, String _pd) {
 		try{
-
+			Statement stmt = connection.createStatement();
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT password FROM users where username = '" + _us.toLowerCase() + "'");
+			ResultSet rs = stmt.executeQuery(sql.toString());
+			if (rs.next()){
+				return BCrypt.checkpw(_pd, rs.getString("password"));
+			}
 		}
 		catch(Exception e){
-			
+			// e.printStackTrace();
 		}
 		return false;
 	}
@@ -134,10 +140,17 @@ public class Database {
 	// remove the according user from table
 	public Boolean deactivate(String _us, String _pd) {
 		try{
-
+			if (login(_us, _pd)){
+				Statement stmt = connection.createStatement();
+				StringBuilder sql = new StringBuilder();
+				sql.append("DELETE FROM users WHERE username = '" + _us.toLowerCase() + "'");
+				stmt.executeUpdate(sql.toString());
+				return true;
+			}
+			return false;
 		}
 		catch(Exception e){
-			
+			e.printStackTrace();
 		}
 		return false;
 	}
