@@ -89,6 +89,18 @@ public class Database {
 
 	// check if user exists in the database
 	public Boolean checkUserExists(String _us) {
+		try{
+			Statement stmt = connection.createStatement();
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT * FROM users WHERE username = '" + _us + "'");
+			ResultSet rs = stmt.executeQuery(sql.toString());
+			if (rs.next()) {
+				return true;
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
