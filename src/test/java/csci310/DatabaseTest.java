@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class DatabaseTest {
 	@Test
-	public void testCheckTableExists(){
+	public void testCheckTableExists() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		assertTrue(testDB.checkTableExists("users") == false);
@@ -16,7 +16,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testCreateRequiredTables(){
+	public void testCreateRequiredTables() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		assertTrue(testDB.checkTableExists("users") == false);
@@ -27,7 +27,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testDropAllTables(){
+	public void testDropAllTables() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
@@ -37,7 +37,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testCheckUserExists(){
+	public void testCheckUserExists() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
@@ -48,7 +48,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testRegister() {
+	public void testRegister() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
@@ -59,7 +59,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testLogin() {
+	public void testLogin() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
@@ -71,7 +71,7 @@ public class DatabaseTest {
 	}
 	
 	@Test
-	public void testDeactivate() {
+	public void testDeactivate() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		testDB.createRequiredTables();

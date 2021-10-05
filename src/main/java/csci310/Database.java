@@ -10,147 +10,103 @@ public class Database {
 	public static String dbConfigFilename = "db_config.ini";
 	private static Ini config;
 	
-	public Database(String f){
-		try{
-			// create connection
-			connection = DriverManager.getConnection("jdbc:mariadb://maria_db:3306/project27", "root", "csci310project");
-			// load configuration
-			String filename = "config/" + f;
-			config = new Ini(new FileReader(filename));
-		}
-		catch(Exception e){
-			// e.printStackTrace();
-		}
+	public Database(String f) throws Exception{
+		// create connection
+		connection = DriverManager.getConnection("jdbc:mariadb://maria_db:3306/project27", "root", "csci310project");
+		// load configuration
+		String filename = "config/" + f;
+		config = new Ini(new FileReader(filename));
 	}
 
-	public Database(){
+	public Database() throws Exception{
 		this(dbConfigFilename);
 	}
 
 	// check if a particular table exists in the database
-	public Boolean checkTableExists(String tableName) {
-		try{
-			DatabaseMetaData md = connection.getMetaData();
-			ResultSet rs = md.getTables(null, null, tableName, null);
-			if (rs.next()) {
-				return true;
-			}
-		}
-		catch(Exception e){
-			// e.printStackTrace();
+	public Boolean checkTableExists(String tableName) throws Exception{
+		DatabaseMetaData md = connection.getMetaData();
+		ResultSet rs = md.getTables(null, null, tableName, null);
+		if (rs.next()) {
+			return true;
 		}
 		return false;
 	}
 
 	// initialize all required tables in the database
-	public Boolean createRequiredTables(){
-		try{
-			Statement stmt = connection.createStatement();
-			StringBuilder sql = new StringBuilder();
-			for (String tableName: config.keySet()){
-				sql.append("CREATE TABLE IF NOT EXISTS " + tableName + " (\n");
-				Map<String, String> tableDef = config.get(tableName);
-				int count = 0;
-				for (String columnName: tableDef.keySet()){
-					String columnSpec = tableDef.get(columnName);
-					sql.append(columnName + " " + columnSpec);
-					count++;
-					if (count < tableDef.keySet().size()){
-						sql.append(",\n");
-					}
+	public Boolean createRequiredTables() throws Exception{
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		for (String tableName: config.keySet()){
+			sql.append("CREATE TABLE IF NOT EXISTS " + tableName + " (\n");
+			Map<String, String> tableDef = config.get(tableName);
+			int count = 0;
+			for (String columnName: tableDef.keySet()){
+				String columnSpec = tableDef.get(columnName);
+				sql.append(columnName + " " + columnSpec);
+				count++;
+				if (count < tableDef.keySet().size()){
+					sql.append(",\n");
 				}
-				sql.append(")");
-				// System.out.println(sql.toString());
-				stmt.executeUpdate(sql.toString());
-				sql.setLength(0);
 			}
-			return true;
+			sql.append(")");
+			// System.out.println(sql.toString());
+			stmt.executeUpdate(sql.toString());
+			sql.setLength(0);
 		}
-		catch(Exception e){
-			// e.printStackTrace();
-		}
-		return false;
+		return true;
 	}
 
 	// drop all tables
-	public Boolean dropAllTables(){
-		try{
-			Statement stmt = connection.createStatement();
-			for (String tableName : config.keySet()){
-				stmt.executeUpdate("DROP TABLE IF EXISTS " + tableName);
-			}
-			return true;
+	public Boolean dropAllTables() throws Exception{
+		Statement stmt = connection.createStatement();
+		for (String tableName : config.keySet()){
+			stmt.executeUpdate("DROP TABLE IF EXISTS " + tableName);
 		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		return false;
+		return true;
 	}
 
 	// check if user exists in the database
-	public Boolean checkUserExists(String _us) {
-		try{
-			Statement stmt = connection.createStatement();
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT * FROM users WHERE username = '" + _us.toLowerCase() + "'");
-			ResultSet rs = stmt.executeQuery(sql.toString());
-			if (rs.next()) {
-				return true;
-			}
-		}
-		catch(Exception e){
-			// e.printStackTrace();
+	public Boolean checkUserExists(String _us) throws Exception{
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT * FROM users WHERE username = '" + _us.toLowerCase() + "'");
+		ResultSet rs = stmt.executeQuery(sql.toString());
+		if (rs.next()) {
+			return true;
 		}
 		return false;
 	}
 	
 	// add user and hashed password to the table
-	public Boolean register(String _us, String _pd) {
-		try{
-			Statement stmt = connection.createStatement();
-			StringBuilder sql = new StringBuilder();
-			String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
-			sql.append("INSERT INTO users (username, password) VALUES ('" + _us.toLowerCase() + "', '" + hashed + "')");
-			stmt.executeUpdate(sql.toString());
-			return true;
-		}
-		catch(Exception e){
-			// e.printStackTrace();
-		}
-		return false;
+	public Boolean register(String _us, String _pd) throws Exception{
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
+		sql.append("INSERT INTO users (username, password) VALUES ('" + _us.toLowerCase() + "', '" + hashed + "')");
+		stmt.executeUpdate(sql.toString());
+		return true;
 	}
 	
 	// check if hashed password matches with stored hashed password in the DB
-	public Boolean login(String _us, String _pd) {
-		try{
-			Statement stmt = connection.createStatement();
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT password FROM users where username = '" + _us.toLowerCase() + "'");
-			ResultSet rs = stmt.executeQuery(sql.toString());
-			if (rs.next()){
-				return BCrypt.checkpw(_pd, rs.getString("password"));
-			}
-		}
-		catch(Exception e){
-			// e.printStackTrace();
+	public Boolean login(String _us, String _pd) throws Exception{
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT password FROM users where username = '" + _us.toLowerCase() + "'");
+		ResultSet rs = stmt.executeQuery(sql.toString());
+		if (rs.next()){
+			return BCrypt.checkpw(_pd, rs.getString("password"));
 		}
 		return false;
 	}
 	
 	// remove the according user from table
-	public Boolean deactivate(String _us, String _pd) {
-		try{
-			if (login(_us, _pd)){
-				Statement stmt = connection.createStatement();
-				StringBuilder sql = new StringBuilder();
-				sql.append("DELETE FROM users WHERE username = '" + _us.toLowerCase() + "'");
-				stmt.executeUpdate(sql.toString());
-				return true;
-			}
-			return false;
-		}
-		catch(Exception e){
-			e.printStackTrace();
+	public Boolean deactivate(String _us, String _pd) throws Exception{
+		if (login(_us, _pd)){
+			Statement stmt = connection.createStatement();
+			StringBuilder sql = new StringBuilder();
+			sql.append("DELETE FROM users WHERE username = '" + _us.toLowerCase() + "'");
+			stmt.executeUpdate(sql.toString());
+			return true;
 		}
 		return false;
 	}
