@@ -86,19 +86,47 @@ public class Database {
 		}
 		return false;
 	}
+
+	// check if user exists in the database
+	public Boolean checkUserExists(String _us) {
+		return false;
+	}
 	
 	// add user and hashed password to the table
 	public Boolean register(String _us, String _pd) {
+		try{
+			Statement stmt = connection.createStatement();
+			StringBuilder sql = new StringBuilder();
+			String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
+			sql.append("INSERT INTO users (username, password) VALUES ('" + _us.toLowerCase() + "', '" + hashed + "')");
+			stmt.executeUpdate(sql.toString());
+			return true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
 	// check if hashed password matches with stored hashed password in the DB
 	public Boolean login(String _us, String _pd) {
+		try{
+
+		}
+		catch(Exception e){
+			
+		}
 		return false;
 	}
 	
 	// remove the according user from table
 	public Boolean deactivate(String _us, String _pd) {
+		try{
+
+		}
+		catch(Exception e){
+			
+		}
 		return false;
 	}
 }

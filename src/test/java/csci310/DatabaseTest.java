@@ -9,9 +9,9 @@ public class DatabaseTest {
 	public void testCheckTableExists(){
 		Database testDB = new Database();
 
-		assertTrue(testDB.checkTableExists("user") == false);
+		assertTrue(testDB.checkTableExists("users") == false);
 		testDB.createRequiredTables();
-		assertTrue(testDB.checkTableExists("user"));
+		assertTrue(testDB.checkTableExists("users"));
 
 		testDB.dropAllTables();
 	}
@@ -20,10 +20,10 @@ public class DatabaseTest {
 	public void testCreateRequiredTables(){
 		Database testDB = new Database();
 
-		assertTrue(testDB.checkTableExists("user") == false);
+		assertTrue(testDB.checkTableExists("users") == false);
 		testDB.createRequiredTables();
 		// TODO: check if all required tables exist
-		assertTrue(testDB.checkTableExists("user"));
+		assertTrue(testDB.checkTableExists("users"));
 
 		testDB.dropAllTables();
 	}
@@ -31,10 +31,23 @@ public class DatabaseTest {
 	@Test
 	public void testDropAllTables(){
 		Database testDB = new Database();
+
 		testDB.createRequiredTables();
-		assertTrue(testDB.checkTableExists("user"));
+		assertTrue(testDB.checkTableExists("users"));
 		testDB.dropAllTables();
-		assertTrue(testDB.checkTableExists("user") == false);
+		assertTrue(testDB.checkTableExists("users") == false);
+	}
+
+	@Test
+	public void testCheckUserExists(){
+		Database testDB = new Database();
+
+		testDB.createRequiredTables();
+		assertTrue(testDB.checkUserExists("randomperson"));
+		testDB.register("randomperson", "randompassword");
+		assertTrue(testDB.checkUserExists("randomperson"));\
+
+		testDB.dropAllTables();
 	}
 
 	@Test
