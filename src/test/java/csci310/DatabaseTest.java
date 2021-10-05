@@ -9,9 +9,9 @@ public class DatabaseTest {
 	public void testCheckTableExists(){
 		Database testDB = new Database();
 
-		assertTrue(testDB.checkTableExists("users") == false);
+		assertTrue(testDB.checkTableExists("user") == false);
 		testDB.createRequiredTables();
-		assertTrue(testDB.checkTableExists("users"));
+		assertTrue(testDB.checkTableExists("user"));
 
 		testDB.dropAllTables();
 	}
@@ -20,12 +20,21 @@ public class DatabaseTest {
 	public void testCreateRequiredTables(){
 		Database testDB = new Database();
 
-		assertTrue(testDB.checkTableExists("users") == false);
+		assertTrue(testDB.checkTableExists("user") == false);
 		testDB.createRequiredTables();
 		// TODO: check if all required tables exist
-		assertTrue(testDB.checkTableExists("users"));
+		assertTrue(testDB.checkTableExists("user"));
 
 		testDB.dropAllTables();
+	}
+
+	@Test
+	public void testDropAllTables(){
+		Database testDB = new Database();
+		testDB.createRequiredTables();
+		assertTrue(testDB.checkTableExists("user"));
+		testDB.dropAllTables();
+		assertTrue(testDB.checkTableExists("user") == false);
 	}
 
 	@Test

@@ -3,6 +3,7 @@ import java.sql.*;
 import org.ini4j.Ini;
 import java.io.FileReader;
 import org.mindrot.jbcrypt.*;
+import java.util.*; // for StringBuilder
 
 public class Database {
 	private static Connection connection;
@@ -28,11 +29,46 @@ public class Database {
 
 	// check if a particular table exists in the database
 	public Boolean checkTableExists(String tableName) {
+		try{
+			DatabaseMetaData md = connection.getMetaData();
+			ResultSet rs = md.getTables(null, null, tableName, null);
+			if (rs.next()) {
+				return true;
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	// initialize all required tables in the database
 	public Boolean createRequiredTables(){
+		try{
+			Statement stmt = connection.createStatement();
+			StringBuilder sql = new StringBuilder();
+			for (String tableName: config.keySet()){
+				sql.append("CREATE TABLE IF NOT EXISTS " + tableName + " (\n");
+				Map<String, String> tableDef = config.get(tableName);
+				int count = 0;
+				for (String columnName: tableDef.keySet()){
+					String columnSpec = tableDef.get(columnName);
+					sql.append(columnName + " " + columnSpec);
+					count++;
+					if (count < tableDef.keySet().size()){
+						sql.append(",\n");
+					}
+				}
+				sql.append(")");
+				// System.out.println(sql.toString());
+				stmt.executeUpdate(sql.toString());
+				sql.setLength(0);
+			}
+			return true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		return false;
 	}
 
