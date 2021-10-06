@@ -13,56 +13,9 @@ public class User {
 
     public User(String username) {
         this.username = username;
-        blockedUsers = new ArrayList<User>();
-        receivedProposals = new ArrayList<Proposal>();
-        sentProposals = new ArrayList<Proposal>();
-    }
-
-    public void addBlockedUser(User user) {
-        // if this user is already blocked, then don't add them
-        for (User u:blockedUsers) {
-            // user is already blocked
-            if (u.getUsername().equalsIgnoreCase(user.getUsername())) {
-                return;
-            }
-        }
-        // user is not yet blocked, then add them to blocked list
-        this.blockedUsers.add(user);
-    }
-
-    public void removeBlockedUser(User user) {
-        // first check if user is on blocked list, if so then remove
-        // otherwise, do nothing
-        if (!this.blockedUsers.contains(user)) {
-            System.out.println("No such user found.");
-            return;
-        }
-        this.blockedUsers.remove(user);
-    }
-
-    public void addReceivedProposal(Proposal proposal){
-        this.receivedProposals.add(proposal);
-    }
-
-    public void removeReceivedProposal(Proposal proposal){
-        this.receivedProposals.remove(proposal);
-        if (!this.receivedProposals.contains(proposal)) {
-            System.out.println("No such proposal found.");
-        }
-
-    }
-
-    public void addSentProposal(Proposal proposal) {
-        this.sentProposals.add(proposal);
-
-    }
-
-    public void removeSentProposal(Proposal proposal) {
-        this.sentProposals.remove(proposal);
-        if (!this.sentProposals.contains(proposal)) {
-            System.out.println("No such proposal found.");
-        }
-
+        this.blockedUsers = new ArrayList<>();
+        this.receivedProposals = new ArrayList<>();
+        this.sentProposals = new ArrayList<>();
     }
 
     public void setUsername(String username) {
@@ -83,22 +36,81 @@ public class User {
 
     public ArrayList<User> getBlockedUsers() {
         if (this.blockedUsers.isEmpty()) {
-            return new ArrayList<User>();
+            return new ArrayList<>();
         }
         return this.blockedUsers;
     }
 
     public ArrayList<Proposal> getReceivedProposals() {
         if (this.receivedProposals.isEmpty()) {
-            return new ArrayList<Proposal>();
+            return new ArrayList<>();
         }
         return this.receivedProposals;
     }
 
     public ArrayList<Proposal> getSentProposals() {
         if (this.sentProposals.isEmpty()) {
-            return new ArrayList<Proposal>();
+            return new ArrayList<>();
         }
         return sentProposals;
+    }
+
+    public void addBlockedUser(User user) {
+        // if this user is already blocked, then don't add them
+        if (!blockedUsers.contains(user)) {
+            // user is not yet blocked, then add them to blocked list
+            blockedUsers.add(user);
+        }
+    }
+
+    public void removeBlockedUser(User user) {
+        // if user is on blocked list, then remove; otherwise, do nothing
+        // note: remove function already checks if user in list before trying to remove
+        blockedUsers.remove(user);
+    }
+
+    public void addReceivedProposal(Proposal proposal){
+        this.receivedProposals.add(proposal);
+    }
+
+    public void removeReceivedProposal(Proposal proposal){
+        // TODO: Need to implement contains for proposal class in order for this to work
+        // if proposal is not in received list, then do nothing
+        if (!this.receivedProposals.contains(proposal)) {
+            System.out.println("No such proposal found.");
+            return;
+        }
+        this.receivedProposals.remove(proposal);
+    }
+
+    public void addSentProposal(Proposal proposal) {
+        // TODO: should prob check if proposal is already added?
+        this.sentProposals.add(proposal);
+    }
+
+    public void removeSentProposal(Proposal proposal) {
+        // TODO: Need to implement contains for proposal class in order for this to work
+        // if proposal is not in sent list, then do nothing
+        if (!this.sentProposals.contains(proposal)) {
+            System.out.println("No such proposal found.");
+            return;
+        }
+        this.sentProposals.remove(proposal);
+    }
+
+    @Override
+    public boolean equals(Object otherUser) {
+        // Check if otherUser is instance of User or null, then return false
+        if (!(otherUser instanceof User)) {
+            return false;
+        }
+        // If the object is compared with itself then return true
+        if (otherUser == this) {
+            return true;
+        }
+        // typecast to User so that we can compare data members
+        User castUser = (User) otherUser;
+        // Compare if they are same username since Users must have unique usernames and return accordingly
+        return username.equalsIgnoreCase(castUser.getUsername());
     }
 }
