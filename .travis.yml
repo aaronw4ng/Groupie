@@ -8,11 +8,11 @@ services:
 
 before_script:
   - docker-compose up -d --force-recreate maria_db
-  - docker-compose up -d --force-recreate 310-project
+  - docker-compose up -d --force-recreate 310-project mvn test
   - docker-compose ps
 
 script:
-  - mvn test
+  # - mvn test
 
 cache:
   directories:
