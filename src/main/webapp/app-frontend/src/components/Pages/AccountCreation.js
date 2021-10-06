@@ -69,6 +69,7 @@ function AccountCreation() {
           label: "Username",
           setState: handleUsernameChange,
           cssClass: "field-input",
+          name: "input-username"
         }}
       />
       <InputField
@@ -77,6 +78,7 @@ function AccountCreation() {
           label: "Password",
           setState: handlePasswordChange,
           cssClass: "field-input",
+          name: "input-password"
         }}
       />
       <InputField
@@ -85,9 +87,16 @@ function AccountCreation() {
           label: "Re-type Password",
           setState: handleRetypedPasswordChange,
           cssClass: "field-input",
+          name: "input-retype-password"
         }}
       />
-      <Button data={{ innerText: "Create Account", onClick: handleCreation }} />
+      <Button 
+        data={{ 
+          innerText: "Create Account", 
+          onClick: handleCreation,
+          name: "btn-create-account" 
+        }} 
+      />
     </div>
   )
 }

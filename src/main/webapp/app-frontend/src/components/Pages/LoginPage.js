@@ -44,9 +44,31 @@ function LoginPage() {
   return (
     <div>
       <h1>Login</h1>
-      <InputField data={{type: "text", label: "Username", setState: handleUsernameChange, cssClass: "field-input"}}/>
-      <InputField data={{type: "password", label: "Password", setState: handlePasswordChange, cssClass: "field-input"}}/>
-      <Button data={{innerText : "LOGIN", onClick: handleLogin}}/>
+      <InputField 
+        data={{
+          type: "text", 
+          label: "Username", 
+          setState: handleUsernameChange, 
+          cssClass: "field-input",
+          name:  "input-username"
+        }}
+      />
+      <InputField 
+        data={{
+          type: "password", 
+          label: "Password", 
+          setState: handlePasswordChange, 
+          cssClass: "field-input",
+          name: "input-password"
+        }}
+      />
+      <Button 
+        data={{
+          innerText : "LOGIN", 
+          onClick: handleLogin,
+          name: "btn-login"
+        }}
+      />
     </div>
   );
 }
