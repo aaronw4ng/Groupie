@@ -2,3 +2,9 @@ language: java
 branches:
   only:
   - develop
+addons:
+  mariadb: '10.6'
+
+before_script:
+  - mysql -e 'create database project27;'
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('csci310project') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
