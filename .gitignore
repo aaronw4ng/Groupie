@@ -13,3 +13,6 @@ buildNumber.properties
 /.settings/
 /.classpath
 /.project
+node_modules/
+.DS_Store
+src/.DS_Store

@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  padding: 10rem;
+}
+
+button {
+  width: 25rem;
+  height: 4rem;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  background-color: rgba(91, 2, 116, 0.975);
+  transition: 0.3s all;
+  margin-bottom: 3rem;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 100;
+  margin-bottom: 5rem;
+}
+
+.field {
+  width: 25rem;
+  height: 4rem;
+  border: 1px solid rgba(121, 121, 121, 0.3);
+  border-radius: 1rem;
+  background-color: rgba(246, 246, 246, 0.564);
+  transition: 0.3s all;
+  margin-bottom: 3rem;
+}
+
+.inputBox {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inputHeader {
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25rem;
+  margin-bottom: 3px;
+}

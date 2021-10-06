@@ -1,14 +1,15 @@
 {
-  "name": "simple-reactjs-app",
+  "name": "scheduling-app",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://aditya-sridhar.github.io/simple-reactjs-app",
   "dependencies": {
     "axios": "^0.22.0",
+    "bootstrap": "^5.1.1",
     "react": "^16.4.1",
-    "react-bootstrap": "^0.32.1",
+    "react-bootstrap": "^2.0.0-rc.0",
     "react-dom": "^16.4.1",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3"
   },
   "scripts": {
@@ -20,7 +21,9 @@
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "gh-pages": "^1.2.0"
+    "autoprefixer": "^9.8.8",
+    "gh-pages": "^1.2.0",
+    "postcss": "^7.0.39"
   },
   "browserslist": {
     "production": [

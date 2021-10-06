@@ -1,12 +1,11 @@
 import React, {useState} from "react";
-import InputField from "./InputField"
-import Button from "./Button";
+import InputField from "../InputField"
+import Button from "../Button";
 
 function LoginPage() {
 
   const [usernameInput, setUsername] = useState("")
   const [passwordInput, setPassword] = useState("")
-
 
   function handleLogin() {
     console.log("Logging In")

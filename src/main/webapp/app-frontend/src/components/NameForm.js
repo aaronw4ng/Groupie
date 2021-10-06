@@ -3,7 +3,7 @@ import React, { Component } from "react"
 export default class NameForm extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { username: "", password: "", retypedPass: ""}
+    this.state = { username: "", password: "", retypedPass: "" }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
