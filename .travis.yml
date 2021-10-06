@@ -3,6 +3,9 @@ branches:
   only:
   - develop
 
+services:
+  - docker
+
 before_script:
   - docker-compose up -d --force-recreate
   - docker-compose ps
