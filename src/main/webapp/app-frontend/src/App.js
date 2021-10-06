@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
-import AccountCreation from './AccountCreation';
+import './styles/App.css';
+import AccountCreation from './components/AccountCreation';
 import { BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
-
-
 class App extends Component {
   render() {
     console.log("Host URL"+process.env.PUBLIC_URL);
@@ -14,14 +12,13 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Scheduling App</h1>
         </header>
-        <AccountCreation></AccountCreation>
+        <AccountCreation/>
           {/* <Switch>
                 <Route exact path= "/" render={() => (
                   <Redirect to="/customerlist"/>
                 )}/>
                  <Route exact path='/customerlist' component={Customers} />
           </Switch> */}
-
       </div>
     </Router>
     );
