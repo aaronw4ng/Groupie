@@ -19,14 +19,25 @@ public class User {
     }
 
     public void addBlockedUser(User user) {
+        // if this user is already blocked, then don't add them
+        for (User u:blockedUsers) {
+            // user is already blocked
+            if (u.getUsername().equalsIgnoreCase(user.getUsername())) {
+                return;
+            }
+        }
+        // user is not yet blocked, then add them to blocked list
         this.blockedUsers.add(user);
     }
 
     public void removeBlockedUser(User user) {
-        this.blockedUsers.remove(user);
+        // first check if user is on blocked list, if so then remove
+        // otherwise, do nothing
         if (!this.blockedUsers.contains(user)) {
             System.out.println("No such user found.");
+            return;
         }
+        this.blockedUsers.remove(user);
     }
 
     public void addReceivedProposal(Proposal proposal){
