@@ -7,7 +7,7 @@ export const validateUsername = () => {
 }
 
 // Function to validate passwords
-export const validatePasswords = () => {
+export const validatePasswords = (passwordInput, retypedPasswordInput) => {
   // Don't Match
   if (passwordInput !== retypedPasswordInput) {
     alert("Passwords don't match! Please try again")
@@ -22,14 +22,4 @@ export const validatePasswords = () => {
   return true
 }
 
-export function handleUsernameChange(value) {
-  setUsername(prevUsername => (prevUsername = value))
-}
 
-export function handlePasswordChange(value) {
-  setPassword(prevPass => (prevPass = value))
-}
-
-export function handleRetypedPasswordChange(value) {
-  setRetypedPassword(prevRetypedPass => (prevRetypedPass = value))
-}

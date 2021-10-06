@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import "./styles/App.css"
-import AccountCreation from "./components/AccountCreation"
-import LoginPage from "./components/LoginPage"
+import AccountCreation from "./components/Pages/AccountCreation"
+import LoginPage from "./components/Pages/LoginPage"
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 function App() {

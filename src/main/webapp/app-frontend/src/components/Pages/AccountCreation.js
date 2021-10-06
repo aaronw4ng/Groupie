@@ -16,9 +16,24 @@ function AccountCreation() {
   const [retypedPasswordInput, setRetypedPassword] = useState("")
   const history = useHistory()
 
+  // Util functions need to be present in AccountCreation since they need access to state Setter functions
+  function handleUsernameChange(value) {
+    setUsername(prevUsername => (prevUsername = value))
+  }
+  
+  function handlePasswordChange(value) {
+    setPassword(prevPass => (prevPass = value))
+  }
+
+
+  function handleRetypedPasswordChange(value) {
+    setRetypedPassword(prevRetypedPass => (prevRetypedPass = value))
+  }
+
   function handleCreation() {
+    console.log(passwordInput + retypedPasswordInput)
     // Validate passwords
-    if (validatePasswords() && validateUsername()) {
+    if (validatePasswords(passwordInput, retypedPasswordInput) && validateUsername()) {
       alert("Creating account...")
       // TODO: Send POST request to Elizabeth's servlet
 
