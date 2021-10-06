@@ -2,12 +2,15 @@ language: java
 branches:
   only:
   - develop
-addons:
-  mariadb: '10.6'
-# services:
-#   - mysql
 
 before_script:
-  - sudo service mysql restart
-  - mysql -e 'create database project27;'
-  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('csci310project') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+  - docker-compose up -d --force-recreate
+  - docker-compose ps
+
+script:
+  - mvn test
+
+cache:
+  directories:
+    - .autoconf
+    - $HOME/.m2
