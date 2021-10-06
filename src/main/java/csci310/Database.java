@@ -12,7 +12,8 @@ public class Database {
 	
 	public Database(String f) throws Exception{
 		// create connection
-		connection = DriverManager.getConnection("jdbc:mariadb://maria_db:3306/project27", "root", "csci310project");
+		Class.forName("org.sqlite.JDBC");
+		connection = DriverManager.getConnection("jdbc:sqlite:project27.db");
 		// load configuration
 		String filename = "config/" + f;
 		config = new Ini(new FileReader(filename));
@@ -22,13 +23,19 @@ public class Database {
 		this(dbConfigFilename);
 	}
 
+	public void close() throws Exception{
+		connection.close();
+	}
+
 	// check if a particular table exists in the database
 	public Boolean checkTableExists(String tableName) throws Exception{
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, tableName, null);
 		if (rs.next()) {
+			rs.close();
 			return true;
 		}
+		rs.close();
 		return false;
 	}
 
@@ -49,10 +56,10 @@ public class Database {
 				}
 			}
 			sql.append(")");
-			// System.out.println(sql.toString());
 			stmt.executeUpdate(sql.toString());
 			sql.setLength(0);
 		}
+		stmt.close();
 		return true;
 	}
 
@@ -60,8 +67,9 @@ public class Database {
 	public Boolean dropAllTables() throws Exception{
 		Statement stmt = connection.createStatement();
 		for (String tableName : config.keySet()){
-			stmt.executeUpdate("DROP TABLE IF EXISTS " + tableName);
+			stmt.executeUpdate("DROP TABLE IF EXISTS '" + tableName + "'");
 		}
+		stmt.close();
 		return true;
 	}
 
@@ -72,8 +80,12 @@ public class Database {
 		sql.append("SELECT * FROM users WHERE username = '" + _us.toLowerCase() + "'");
 		ResultSet rs = stmt.executeQuery(sql.toString());
 		if (rs.next()) {
+			stmt.close();
+			rs.close();
 			return true;
 		}
+		stmt.close();
+		rs.close();
 		return false;
 	}
 	
@@ -84,6 +96,7 @@ public class Database {
 		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
 		sql.append("INSERT INTO users (username, password) VALUES ('" + _us.toLowerCase() + "', '" + hashed + "')");
 		stmt.executeUpdate(sql.toString());
+		stmt.close();
 		return true;
 	}
 	
@@ -94,8 +107,13 @@ public class Database {
 		sql.append("SELECT password FROM users where username = '" + _us.toLowerCase() + "'");
 		ResultSet rs = stmt.executeQuery(sql.toString());
 		if (rs.next()){
-			return BCrypt.checkpw(_pd, rs.getString("password"));
+			String rs_password = rs.getString("password");
+			stmt.close();
+			rs.close();
+			return BCrypt.checkpw(_pd, rs_password);
 		}
+		stmt.close();
+		rs.close();
 		return false;
 	}
 	
@@ -106,6 +124,7 @@ public class Database {
 			StringBuilder sql = new StringBuilder();
 			sql.append("DELETE FROM users WHERE username = '" + _us.toLowerCase() + "'");
 			stmt.executeUpdate(sql.toString());
+			stmt.close();
 			return true;
 		}
 		return false;

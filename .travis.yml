@@ -2,19 +2,3 @@ language: java
 branches:
   only:
   - develop
-
-services:
-  - docker
-
-before_script:
-  - docker-compose run -d --force-recreate maria_db
-  - docker-compose ps
-  - docker-compose run --force-recreate 310-project mvn test
-
-script:
-  - mvn test
-
-cache:
-  directories:
-    - .autoconf
-    - $HOME/.m2

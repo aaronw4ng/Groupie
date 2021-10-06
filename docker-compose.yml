@@ -2,8 +2,6 @@ version: "2"
 services:
     310-project:
         build: .
-        depends_on:
-            - "maria_db"
         ports:
             - "6080:6080" # provide VNC access to container
             - "8080:8080" # provide direct access to web server
@@ -12,15 +10,5 @@ services:
             - .:/usr/local/310-project
         environment:
             SCREEN_RESOLUTION: "1280x720x24"
-        links:
-            - "maria_db"
-    maria_db:
-        image: mariadb
-        restart: always
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_ROOT_PASSWORD: "csci310project"
-            MYSQL_DATABASE: "project27"
 volumes:
     maven-cache: {}

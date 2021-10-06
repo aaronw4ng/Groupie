@@ -13,6 +13,7 @@ public class DatabaseTest {
 		testDB.createRequiredTables();
 		assertTrue(testDB.checkTableExists("users"));
 		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -24,6 +25,7 @@ public class DatabaseTest {
 		// TODO: check if all required tables exist
 		assertTrue(testDB.checkTableExists("users"));
 		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -34,6 +36,7 @@ public class DatabaseTest {
 		assertTrue(testDB.checkTableExists("users"));
 		testDB.dropAllTables();
 		assertTrue(testDB.checkTableExists("users") == false);
+		testDB.close();
 	}
 
 	@Test
@@ -45,6 +48,7 @@ public class DatabaseTest {
 		testDB.register("randomperson", "randompassword");
 		assertTrue(testDB.checkUserExists("randomperson"));
 		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -56,6 +60,7 @@ public class DatabaseTest {
 		assertTrue(testDB.login("dummy_user", "password"));
 		assertTrue(testDB.login("dummy_user", "badpassword") == false);
 		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -68,6 +73,7 @@ public class DatabaseTest {
 		assertTrue(testDB.login("dummy_user", "notpassword") == false);
 		assertTrue(testDB.login("notdummy_user", "password") == false);
 		testDB.dropAllTables();
+		testDB.close();
 	}
 	
 	@Test
@@ -81,5 +87,6 @@ public class DatabaseTest {
 		assertTrue(testDB.checkUserExists("dummy_user") == false);
 		assertTrue(testDB.deactivate("dummy_user", "password") == false);
 		testDB.dropAllTables();
+		testDB.close();
 	}
 }
