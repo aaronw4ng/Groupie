@@ -77,7 +77,7 @@ public class User {
         // TODO: Need to implement contains for proposal class in order for this to work
         // if proposal is not in received list, then do nothing
         if (!this.receivedProposals.contains(proposal)) {
-            System.out.println("No such proposal found.");
+            System.out.print("No such proposal found.");
             return;
         }
         this.receivedProposals.remove(proposal);
@@ -92,7 +92,7 @@ public class User {
         // TODO: Need to implement contains for proposal class in order for this to work
         // if proposal is not in sent list, then do nothing
         if (!this.sentProposals.contains(proposal)) {
-            System.out.println("No such proposal found.");
+            System.out.print("No such proposal found.");
             return;
         }
         this.sentProposals.remove(proposal);
@@ -112,5 +112,11 @@ public class User {
         User castUser = (User) otherUser;
         // Compare if they are same username since Users must have unique usernames and return accordingly
         return username.equalsIgnoreCase(castUser.getUsername());
+    }
+
+    public boolean login () { return true; }
+
+    public boolean register() {
+        return true;
     }
 }

@@ -119,4 +119,16 @@ public class UserTest {
         user.removeSentProposal(new_p);
         assertEquals(0, user.getSentProposals().size());
     }
+
+    @Test
+    public void testLoginSkeleton() {
+        boolean result = user.login();
+        assertEquals(result, true);
+    }
+
+    @Test
+    public void testRegisterSkeleton() {
+        boolean result = user.register();
+        assertEquals(result, true);
+    }
 }
