@@ -121,6 +121,12 @@ public class UserTest {
     }
 
     @Test
+    public void testEqualsWithInvalidInput() {
+        boolean shouldBeFalse = user.equals(null);
+        assertEquals(false, shouldBeFalse);
+    }
+
+    @Test
     public void testLoginSkeleton() {
         boolean result = user.login();
         assertEquals(result, true);
