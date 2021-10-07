@@ -13,23 +13,48 @@ function LoginPage() {
     console.log("Password: " + passwordInput)
     
     // TODO: Send POST request to Elizabeth's servlet
+      /*
+      // POST request using fetch()
+      fetch("/greeting", {
 
-    // const servletURL = ""
-    // const postBody = {
-    //   username: usernameInput,
-    //   password: passwordInput
-    // }
-    // const requestMetadata = {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify(postBody)
+          // Adding method type
+          method: "POST",
 
-    // }
+          // Adding body or contents to send
+          body: JSON.stringify({
+              username: usernameInput,
+              password: passwordInput
+          }),
 
-    // fetch(servletURL, requestMetadata)
+          // Adding headers to the request
+          headers: {
+              "Content-type": "application/json; charset=UTF-8"
+          }
+      }).then(response => response.text()).then(result => {console.log(result);})
 
+          // Converting to JSON
+          .then(response => response.json())
+
+          // Displaying results to console
+          .then(json => console.log(json));
+       */
+    /*
+      const servletURL = "/LoginServlet"
+     const postBody = {
+       username: usernameInput,
+       password: passwordInput
+     }
+     const requestMetadata = {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json"
+       },
+       body: JSON.stringify(postBody)
+
+     }
+
+     fetch(servletURL, requestMetadata)
+*/
 
   }
 
