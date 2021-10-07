@@ -1,5 +1,6 @@
 package csci310;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -10,12 +11,15 @@ public class User {
     private ArrayList<User> blockedUsers;
     private ArrayList<Proposal> receivedProposals;
     private ArrayList<Proposal> sentProposals;
+    private Database db;
 
-    public User(String username) {
+
+    public User(String username) throws Exception {
         this.username = username;
         this.blockedUsers = new ArrayList<>();
         this.receivedProposals = new ArrayList<>();
         this.sentProposals = new ArrayList<>();
+        this.db = new Database();
     }
 
     public void setUsername(String username) {
@@ -55,12 +59,13 @@ public class User {
         return sentProposals;
     }
 
-    public void addBlockedUser(User user) {
-        // if this user is already blocked, then don't add them
-        if (!blockedUsers.contains(user)) {
-            // user is not yet blocked, then add them to blocked list
-            blockedUsers.add(user);
-        }
+    public void addBlockedUser(User user) throws Exception {
+            // if this user is already blocked, then don't add them
+            if (!blockedUsers.contains(user)) {
+                // user is not yet blocked, then add them to blocked list
+                blockedUsers.add(user);
+            }
+            else {System.out.print("User already blocked."); }
     }
 
     public void removeBlockedUser(User user) {

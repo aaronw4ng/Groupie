@@ -31,7 +31,7 @@ public class UserTest {
     }
 
     @Test
-    public void testAddBlockedUser() {
+    public void testAddBlockedUser() throws Exception {
         User user1 = new User("User1");
         User blockedUser = new User("User2");
         user1.addBlockedUser(blockedUser);
@@ -39,7 +39,7 @@ public class UserTest {
     }
 
     @Test
-    public void testAddBlockedUserWhoIsAlreadyBlocked() {
+    public void testAddBlockedUserWhoIsAlreadyBlocked() throws Exception {
         User user1 = new User("User1");
         User blockedUser = new User("User2");
         user1.addBlockedUser(blockedUser);
@@ -48,7 +48,7 @@ public class UserTest {
     }
 
     @Test
-    public void testRemoveBlockedUser() {
+    public void testRemoveBlockedUser() throws Exception {
         User user1 = new User("User1");
         User blockedUser = new User("User2");
         user1.addBlockedUser(blockedUser);
@@ -57,7 +57,7 @@ public class UserTest {
     }
 
     @Test
-    public void testRemoveBlockedUserWhereUserIsNotBlocked() {
+    public void testRemoveBlockedUserWhereUserIsNotBlocked() throws Exception {
         User user1 = new User("User1");
         User blockedUser = new User("User2");
         User missingBlockedUser = new User("User Is Not Blocked");
@@ -67,7 +67,7 @@ public class UserTest {
     }
 
     @Test
-    public void testAddReceivedProposal() {
+    public void testAddReceivedProposal() throws Exception {
         Proposal new_p = new Proposal(other_user);
         User testUser = new User("testUser");
         testUser.addReceivedProposal(new_p);
@@ -94,7 +94,7 @@ public class UserTest {
     }
 
     @Test
-    public void testAddSentProposal() {
+    public void testAddSentProposal() throws Exception {
         Proposal new_p = new Proposal(user);
         User testUser = new User("testUser");
         testUser.addSentProposal(new_p);
