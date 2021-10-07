@@ -50,6 +50,22 @@ public class LoginServletTest {
         LoginServlet loginServlet = new LoginServlet();
         loginServlet.doGet(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals(result, new String("true"));
+        assertEquals(result, "true");
+    }
+
+    @Test
+    public void testDoGetUserDoesNotExist() throws Exception {
+        Mockito.when(request.getParameter("username")).thenReturn("TestUse2");
+        Mockito.when(request.getParameter("password")).thenReturn("TestPassword2");
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        Mockito.when(response.getWriter()).thenReturn(pw);
+
+        LoginServlet loginServlet = new LoginServlet();
+        loginServlet.doGet(request, response);
+        String result = sw.getBuffer().toString();
+        assertEquals(result, "false");
     }
 }
