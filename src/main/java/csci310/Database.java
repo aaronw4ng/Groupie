@@ -23,8 +23,11 @@ public class Database {
 		this(dbConfigFilename);
 	}
 
-	public void close() throws Exception{
-		connection.close();
+	public void close() throws Exception {
+		if (!connection.isClosed())
+			connection.close();
+		else
+			throw new Exception("Invalid operation.");
 	}
 
 	// check if a particular table exists in the database
