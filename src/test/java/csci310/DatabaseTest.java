@@ -5,6 +5,22 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class DatabaseTest {
+
+	@Test
+	public void testCloseErrorHandling() throws Exception {
+		Database testDB = new Database();
+		// close connection once
+		testDB.close();
+
+		// try to close connection again
+		try {
+			testDB.close();
+		} catch(Exception e) {
+			String message = "";
+			assertEquals(message, e.getMessage());
+		}
+	}
+
 	@Test
 	public void testCheckTableExists() throws Exception{
 		Database testDB = new Database();
