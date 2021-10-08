@@ -24,7 +24,7 @@ public class Database {
 	}
 
 	public void close() throws Exception {
-		if (!connection.isClosed() && connection != null)
+		if (!connection.isClosed())
 			connection.close();
 		else
 			throw new Exception("Invalid operation.");

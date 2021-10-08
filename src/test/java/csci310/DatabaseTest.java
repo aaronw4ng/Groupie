@@ -7,7 +7,7 @@ import org.junit.Test;
 public class DatabaseTest {
 
 	@Test
-	public void testCloseErrorHandling() throws Exception {
+	public void testCloseWhenAlreadyClosed() throws Exception {
 		Database testDB = new Database();
 		// close connection once
 		testDB.close();
@@ -68,26 +68,49 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testRegister() throws Exception{
+	public void testRegisterAndLogin() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		assertTrue(testDB.register("dummy_user", "password"));
 		assertTrue(testDB.login("dummy_user", "password"));
-		assertTrue(testDB.login("dummy_user", "badpassword") == false);
 		testDB.dropAllTables();
 		testDB.close();
 	}
 
 	@Test
-	public void testLogin() throws Exception{
+	public void testRegisterAndLoginCamelcase() throws Exception{
 		Database testDB = new Database();
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
-		assertTrue(testDB.register("dummy_user", "password"));
-		assertTrue(testDB.login("dummy_user", "password"));
-		assertTrue(testDB.login("dummy_user", "notpassword") == false);
-		assertTrue(testDB.login("notdummy_user", "password") == false);
+		assertTrue(testDB.register("duMmy_USer", "password"));
+		assertTrue(testDB.login("DUMMY_USER", "password"));
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testLoginWrongPassword() throws Exception{
+		Database testDB = new Database();
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user", "password");
+		Boolean result = testDB.login("user", "wrongpassword");
+		assertEquals(false, result);
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testLoginWrongUsername() throws Exception{
+		Database testDB = new Database();
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user", "password");
+		Boolean result = testDB.login("wronguser", "password");
+		assertEquals(false, result);
 		testDB.dropAllTables();
 		testDB.close();
 	}
