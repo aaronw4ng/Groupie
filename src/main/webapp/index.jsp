@@ -1,7 +1,7 @@
 <html>
 <body>
 <div>	
-	<a href="hello.jsp">Click me</a>
+	<a href="login.jsp">Click me</a>
 </div>
 <div>
 	<a href="/greeting">Or click me</a>
