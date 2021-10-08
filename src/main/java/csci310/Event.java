@@ -4,7 +4,9 @@ public class Event {
     private String eventName;
     private String description;
 
-    public Event() {}
+    public Event() {
+        this.eventName = "";
+    }
 
     public Event(String eventName) {
         this.eventName = eventName;

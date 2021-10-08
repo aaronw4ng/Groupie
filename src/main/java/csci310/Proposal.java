@@ -1,38 +1,35 @@
 package csci310;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Proposal {
     private User user;
-    private List<Event> events;
-    private List<User> invitedUsers;
+    private Map<String, Event> events;
+    private Map<String, User> invitedUsers;
     private Map<User, Response> mapOfResponses;
     private Event bestEvent;
     private boolean finalized = false;
-    private List<User> accepted;
-    private List<User> declined;
+    private Map<String, User> accepted;
+    private Map<String, User> declined;
 
     public Proposal(User user) {
         this.user = user;
-        events = new ArrayList<>();
-        invitedUsers = new ArrayList<>();
-        mapOfResponses = new HashMap<>();
-        accepted = new ArrayList<>();
-        declined = new ArrayList<>();
+        events = new TreeMap<>();
+        invitedUsers = new TreeMap<>();
+        mapOfResponses = new TreeMap<>();
+        accepted = new TreeMap<>();
+        declined = new TreeMap<>();
     }
 
     public User getOwner() {
         return this.user;
     }
 
-    public List<Event> getEvents() {
+    public Map<String, Event> getEvents() {
         return this.events;
     }
 
-    public List<User> getAllInvitedUsers() {
+    public Map<String, User> getAllInvitedUsers() {
         return this.invitedUsers;
     }
 
@@ -40,38 +37,29 @@ public class Proposal {
         return this.mapOfResponses;
     }
 
-    public List<User> getAcceptedList() {
+    public Map<String, User> getAcceptedList() {
         return this.accepted;
     }
 
-    public List<User> getDeclinedList() {
+    public Map<String, User> getDeclinedList() {
         return this.declined;
     }
 
     public void addEvent(Event event) {
-        events.add(event);
+        events.put(event.getEventName(), event);
     }
 
     public void removeEvent(Event event) {
         // find event to be removed
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i).getEventName().equalsIgnoreCase(event.getEventName())) {
-                events.remove(i);
-            }
-        }
+        events.remove(event.getEventName());
     }
 
     public void inviteUser(User user) {
-        invitedUsers.add(user);
+        invitedUsers.put(user.getUsername(), user);
     }
 
     public void removeUser(User user) {
         // find user to be removed
-        for (int i = 0; i < invitedUsers.size(); i++) {
-            if (invitedUsers.get(i).getUsername().equalsIgnoreCase(user.getUsername())) {
-                invitedUsers.remove(i);
-            }
-        }
+        invitedUsers.remove(user.getUsername());
     }
-
 }
