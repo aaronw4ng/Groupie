@@ -16,7 +16,7 @@ public class DatabaseTest {
 		try {
 			testDB.close();
 		} catch(Exception e) {
-			String message = "";
+			String message = "Invalid operation.";
 			assertEquals(message, e.getMessage());
 		}
 	}
