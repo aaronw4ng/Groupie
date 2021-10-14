@@ -38,7 +38,7 @@ public class ProposalTest {
     }
 
     @Test
-    public void testInviteUser() {
+    public void testInviteUser() throws Exception {
         User friend = new User("user y");
         int oldNumberOfInvitees = proposal.getAllInvitedUsers().size();
         proposal.inviteUser(friend);
@@ -47,7 +47,7 @@ public class ProposalTest {
     }
 
     @Test
-    public void testRemoveUser() {
+    public void testRemoveUser() throws Exception {
         User friend = new User("User1");
         proposal.inviteUser(friend);
         int oldNumberOfInvitees = proposal.getAllInvitedUsers().size();

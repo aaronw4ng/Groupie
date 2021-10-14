@@ -39,8 +39,8 @@ public class LoginServletTest {
         testDB.register("TestUser", "TestPassword");
         testDB.close();
 
-        Mockito.when(request.getParameter("username")).thenReturn("TestUser");
-        Mockito.when(request.getParameter("password")).thenReturn("TestPassword");
+        Mockito.when(request.getParameter("input-username")).thenReturn("TestUser");
+        Mockito.when(request.getParameter("input-password")).thenReturn("TestPassword");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -50,13 +50,13 @@ public class LoginServletTest {
         LoginServlet loginServlet = new LoginServlet();
         loginServlet.doGet(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals(result, "true");
+        assertEquals("true", result);
     }
 
     @Test
     public void testDoGetUserDoesNotExist() throws Exception {
-        Mockito.when(request.getParameter("username")).thenReturn("TestUse2");
-        Mockito.when(request.getParameter("password")).thenReturn("TestPassword2");
+        Mockito.when(request.getParameter("input-username")).thenReturn("TestUse2");
+        Mockito.when(request.getParameter("input-password")).thenReturn("TestPassword2");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -66,6 +66,6 @@ public class LoginServletTest {
         LoginServlet loginServlet = new LoginServlet();
         loginServlet.doGet(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals(result, "false");
+        assertEquals("false", result);
     }
 }
