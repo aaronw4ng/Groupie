@@ -2,13 +2,13 @@ package csci310.servlets;
 
 import csci310.Database;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 public class RegisterServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             Database database = new Database();
             PrintWriter out = response.getWriter();
@@ -25,7 +25,7 @@ public class RegisterServlet extends HttpServlet {
             }
             database.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ServletException("Register Servlet failed");
         }
     }
 }
