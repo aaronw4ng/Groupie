@@ -13,11 +13,13 @@ public class Database {
 	
 	// input: database_name, configfile_name
 	public Database(String a, String b) throws Exception{
+		dbName = a;
+		dbConfigFilename = b;
 		// create connection
 		Class.forName("org.sqlite.JDBC");
-		connection = DriverManager.getConnection("jdbc:sqlite:" + a);
+		connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
 		// load configuration
-		String filename = "config/" + b;
+		String filename = "config/" + dbConfigFilename;
 		config = new Ini(new FileReader(filename));
 		createRequiredTables();
 	}

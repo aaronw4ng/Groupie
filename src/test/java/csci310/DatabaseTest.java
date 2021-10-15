@@ -9,7 +9,8 @@ public class DatabaseTest {
 
 	@Test
 	public void testCloseWhenAlreadyClosed() throws Exception {
-		Database testDB = new Database("test.db");
+		// test default constructor since this test doesn't alter db content
+		Database testDB = new Database();
 		// close connection once
 		testDB.close();
 
@@ -131,5 +132,22 @@ public class DatabaseTest {
 		assertTrue(testDB.deactivate("dummy_user", "password") == false);
 		testDB.dropAllTables();
 		testDB.close();
+	}
+
+	@Test
+	public void testPersistantDatabase() throws Exception{
+		Database testDB1 = new Database("test.db");
+		testDB1.dropAllTables();
+		testDB1.createRequiredTables();
+		testDB1.register("user", "password");
+		Boolean result1 = testDB1.login("user", "password");
+		assertEquals(true, result1);
+		testDB1.close();
+
+		Database testDB2 = new Database("test.db");
+		Boolean result2 = testDB2.login("user", "password");
+		assertEquals(true, result2);
+		testDB2.dropAllTables();
+		testDB2.close();
 	}
 }
