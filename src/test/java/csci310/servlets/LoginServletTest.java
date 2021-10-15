@@ -39,8 +39,8 @@ public class LoginServletTest {
         testDB.register("TestUser", "TestPassword");
         testDB.close();
 
-        Mockito.when(request.getParameter("username")).thenReturn("TestUser");
-        Mockito.when(request.getParameter("password")).thenReturn("TestPassword");
+        Mockito.when(request.getParameter("input-username")).thenReturn("TestUser");
+        Mockito.when(request.getParameter("input-password")).thenReturn("TestPassword");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -50,13 +50,13 @@ public class LoginServletTest {
         LoginServlet loginServlet = new LoginServlet();
         loginServlet.doGet(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals(result, "true");
+        assertEquals("true", result);
     }
 
     @Test
     public void testDoGetUserDoesNotExist() throws Exception {
-        Mockito.when(request.getParameter("username")).thenReturn("TestUse2");
-        Mockito.when(request.getParameter("password")).thenReturn("TestPassword2");
+        Mockito.when(request.getParameter("input-username")).thenReturn("TestUse2");
+        Mockito.when(request.getParameter("input-password")).thenReturn("TestPassword2");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -66,6 +66,22 @@ public class LoginServletTest {
         LoginServlet loginServlet = new LoginServlet();
         loginServlet.doGet(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals(result, "false");
+        assertEquals("false", result);
+    }
+
+    @Test
+    public void testDoGetException() throws Exception {
+        HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
+        LoginServlet loginServlet = new LoginServlet();
+
+        Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
+
+        try {
+            loginServlet.doGet(failingRequest, failingResponse);
+            fail("Expected a Servlet Exception to be thrown");
+        } catch (ServletException servletException) {
+            assertEquals("Login Servlet failed", servletException.getMessage());
+        }
     }
 }
