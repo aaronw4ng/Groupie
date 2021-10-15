@@ -68,4 +68,20 @@ public class LoginServletTest {
         String result = sw.getBuffer().toString();
         assertEquals("false", result);
     }
+
+    @Test
+    public void testDoGetException() throws Exception {
+        HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
+        LoginServlet loginServlet = new LoginServlet();
+
+        Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
+
+        try {
+            loginServlet.doGet(failingRequest, failingResponse);
+            fail("Expected a Servlet Exception to be thrown");
+        } catch (ServletException servletException) {
+            assertEquals("Login Servlet failed", servletException.getMessage());
+        }
+    }
 }
