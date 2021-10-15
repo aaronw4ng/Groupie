@@ -19,6 +19,7 @@ public class Database {
 		// load configuration
 		String filename = "config/" + b;
 		config = new Ini(new FileReader(filename));
+		createRequiredTables();
 	}
 
 	// input: database_name
@@ -26,7 +27,7 @@ public class Database {
 		this(a, dbConfigFilename);
 	}
 
-	// no input
+	// no input, default initialization for actual implementation
 	public Database() throws Exception{
 		this(dbName, dbConfigFilename);
 	}

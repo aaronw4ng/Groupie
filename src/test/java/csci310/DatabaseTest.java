@@ -1,8 +1,9 @@
 package csci310;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
+import java.io.FileReader;
+import org.ini4j.Ini;
 
 public class DatabaseTest {
 
@@ -39,7 +40,10 @@ public class DatabaseTest {
 		assertTrue(testDB.checkTableExists("users") == false);
 		testDB.createRequiredTables();
 		// TODO: check if all required tables exist
-		assertTrue(testDB.checkTableExists("users"));
+		Ini testConfig = new Ini(new FileReader("config/db_config.ini"));
+		for (String tableName: testConfig.keySet()){
+			assertTrue(testDB.checkTableExists(tableName));
+		}
 		testDB.dropAllTables();
 		testDB.close();
 	}
