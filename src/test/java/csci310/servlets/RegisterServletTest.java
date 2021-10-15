@@ -6,9 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -72,5 +74,21 @@ public class RegisterServletTest {
         String result = sw.getBuffer().toString();
         // should be false because user already exists
         assertEquals("false", result);
+    }
+
+    @Test
+    public void testDoGetException() throws Exception {
+        HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
+        RegisterServlet registerServlet = new RegisterServlet();
+
+        Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
+
+        try {
+            registerServlet.doGet(failingRequest, failingResponse);
+            fail("Expected a Servlet Exception to be thrown");
+        } catch (ServletException servletException) {
+            assertEquals("Register Servlet failed", servletException.getMessage());
+        }
     }
 }
