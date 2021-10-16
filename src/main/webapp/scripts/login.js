@@ -1,4 +1,44 @@
 function handleLoginClick(event) {
     event.preventDefault()
+    const usernameInput = document.querySelector("#input-username").value
+    const passwordInput = document.querySelector("#input-password").value
+
+    console.log(usernameInput + " " + passwordInput)
+    
     console.log("Logging in")
+
+    $.ajax({
+        method: "POST",
+        url : "login",
+        data : {
+            username : usernameInput,
+            password : passwordInput
+        },
+        
+        success : function (result) {
+            console.log(result)
+            if (result == true) {
+                alert("SUCCESS")
+            }
+            else {
+                alert("FAILED")
+            }
+            
+        }
+    })
+
+
+    //  const servletURL = "login"
+    //  const postBody = {
+    //    username: usernameInput,
+    //    password: passwordInput
+    //  }
+    //  const requestMetadata = {
+    //    method: "GET",
+    //    headers: {
+    //      "Content-Type": "application/json"
+    //    },
+    //  }
+    //  fetch(servletURL, requestMetadata)
+    //     .then(data => console.log(data))
 }
