@@ -43,6 +43,7 @@ public class ProposalTest {
         int oldNumberOfInvitees = proposal.getAllInvitedUsers().size();
         proposal.inviteUser(friend);
         int newNumberOfInvitees = proposal.getAllInvitedUsers().size();
+        assertEquals("user x", proposal.getOwner().getUsername());
         assertTrue(oldNumberOfInvitees < newNumberOfInvitees);
     }
 
