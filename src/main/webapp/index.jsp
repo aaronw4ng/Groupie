@@ -1,29 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="/app-frontend/src/styles/index.css" />
+    <link rel="stylesheet" href="./styles/index.css" />
+    <script src="./scripts/login.js"></script>
 </head>
-<body>
-
-<div id="register-page" method="get">
-    <h1>Create Account</h1>
-    <h2>Create an account to get started with the scheduling app!</h2>
-    <form id="register-form" action="login">
-        <p class="input-header">Username</p>
-        <input class="field-input" type="text" name="input-username" placeholder="Username">
-        <p class="input-header">Password</p>
-        <input class="field-input" type="password" name="input-password" placeholder="Password">
-        <p class="input-header">Re-enter Password</p>
-        <input class="field-input" type="password" name="re-input-password" placeholder="Re-Enter Password">
-        <button name="btn-login">Create Account</button>
-    </form>
-
-<div>	
-	<a href="login.jsp">Click me</a>
-</div>
-<div>
-	<a href="/greeting">Or click me</a>
-
-</div>
-</body>
+    <body>
+        <div id="login-page">
+            <h1>Login</h1>
+            <form id="login-form">
+                <p class="input-header">Username</p>
+                <input class="field-input" type="text" name="input-username" placeholder="Username">
+                <p class="input-header">Password</p>
+                <input class="field-input" type="password" name="input-password" placeholder="Password">
+                <button onclick="handleLoginClick(event)" id="btn-login">LOGIN</button>
+            </form>
+        </div>
+    </body>
 </html>
