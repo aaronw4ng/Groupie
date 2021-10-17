@@ -1,13 +1,15 @@
 package csci310;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
+import java.io.FileReader;
+import org.ini4j.Ini;
 
 public class DatabaseTest {
 
 	@Test
 	public void testCloseWhenAlreadyClosed() throws Exception {
+		// test default constructor since this test doesn't alter db content
 		Database testDB = new Database();
 		// close connection once
 		testDB.close();
@@ -23,7 +25,7 @@ public class DatabaseTest {
 
 	@Test
 	public void testCheckTableExists() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		assertTrue(testDB.checkTableExists("users") == false);
 		testDB.createRequiredTables();
@@ -34,19 +36,22 @@ public class DatabaseTest {
 
 	@Test
 	public void testCreateRequiredTables() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		assertTrue(testDB.checkTableExists("users") == false);
 		testDB.createRequiredTables();
 		// TODO: check if all required tables exist
-		assertTrue(testDB.checkTableExists("users"));
+		Ini testConfig = new Ini(new FileReader("config/db_config.ini"));
+		for (String tableName: testConfig.keySet()){
+			assertTrue(testDB.checkTableExists(tableName));
+		}
 		testDB.dropAllTables();
 		testDB.close();
 	}
 
 	@Test
 	public void testDropAllTables() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		assertTrue(testDB.checkTableExists("users"));
@@ -57,7 +62,7 @@ public class DatabaseTest {
 
 	@Test
 	public void testCheckUserExists() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		assertTrue(testDB.checkUserExists("randomperson") == false);
@@ -69,7 +74,7 @@ public class DatabaseTest {
 
 	@Test
 	public void testRegisterAndLogin() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		assertTrue(testDB.register("dummy_user", "password"));
@@ -80,7 +85,7 @@ public class DatabaseTest {
 
 	@Test
 	public void testRegisterAndLoginCamelcase() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		assertTrue(testDB.register("duMmy_USer", "password"));
@@ -91,7 +96,7 @@ public class DatabaseTest {
 
 	@Test
 	public void testLoginWrongPassword() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 
@@ -104,7 +109,7 @@ public class DatabaseTest {
 
 	@Test
 	public void testLoginWrongUsername() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 
@@ -117,7 +122,7 @@ public class DatabaseTest {
 	
 	@Test
 	public void testDeactivate() throws Exception{
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		assertTrue(testDB.deactivate("dummy_user", "password") == false);
@@ -127,5 +132,22 @@ public class DatabaseTest {
 		assertTrue(testDB.deactivate("dummy_user", "password") == false);
 		testDB.dropAllTables();
 		testDB.close();
+	}
+
+	@Test
+	public void testPersistantDatabase() throws Exception{
+		Database testDB1 = new Database("test.db");
+		testDB1.dropAllTables();
+		testDB1.createRequiredTables();
+		testDB1.register("user", "password");
+		Boolean result1 = testDB1.login("user", "password");
+		assertEquals(true, result1);
+		testDB1.close();
+
+		Database testDB2 = new Database("test.db");
+		Boolean result2 = testDB2.login("user", "password");
+		assertEquals(true, result2);
+		testDB2.dropAllTables();
+		testDB2.close();
 	}
 }

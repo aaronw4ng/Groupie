@@ -6,7 +6,7 @@ public class Proposal {
     private User user;
     private Map<String, Event> events;
     private Map<String, User> invitedUsers;
-    private Map<User, Response> mapOfResponses;
+   // private Map<User, Response> mapOfResponses;
     private Event bestEvent;
     private boolean finalized = false;
     private Map<String, User> accepted;
@@ -16,7 +16,7 @@ public class Proposal {
         this.user = user;
         events = new TreeMap<>();
         invitedUsers = new TreeMap<>();
-        mapOfResponses = new TreeMap<>();
+        //mapOfResponses = new TreeMap<>();
         accepted = new TreeMap<>();
         declined = new TreeMap<>();
     }
@@ -31,18 +31,6 @@ public class Proposal {
 
     public Map<String, User> getAllInvitedUsers() {
         return this.invitedUsers;
-    }
-
-    public Map<User, Response> getResponses() {
-        return this.mapOfResponses;
-    }
-
-    public Map<String, User> getAcceptedList() {
-        return this.accepted;
-    }
-
-    public Map<String, User> getDeclinedList() {
-        return this.declined;
     }
 
     public void addEvent(Event event) {

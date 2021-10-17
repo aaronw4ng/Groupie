@@ -33,7 +33,7 @@ public class LoginServletTest {
 
     @Test
     public void testDoGet() throws Exception {
-        Database testDB = new Database();
+        Database testDB = new Database("test.db");
         testDB.dropAllTables();
         testDB.createRequiredTables();
         testDB.register("TestUser", "TestPassword");

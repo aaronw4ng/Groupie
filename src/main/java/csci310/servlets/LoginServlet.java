@@ -14,7 +14,7 @@ public class LoginServlet extends HttpServlet {
 		System.out.println(request.getParameter("username"));
         System.out.println(request.getParameter("password"));
         try {
-            Database database = new Database();
+            Database database = new Database("test.db");
             database.createRequiredTables();
             PrintWriter out = response.getWriter();
             String us = request.getParameter("username");
