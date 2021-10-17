@@ -10,7 +10,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            Database database = new Database();
+            Database database = new Database("test.db");
             PrintWriter out = response.getWriter();
             String usernameValue = request.getParameter("username");
             String passwordValue = request.getParameter("password");

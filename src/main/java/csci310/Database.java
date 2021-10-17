@@ -7,20 +7,31 @@ import java.util.*; // for StringBuilder
 
 public class Database {
 	private static Connection connection;
-	public static String dbConfigFilename = "db_config.ini";
+	private static String dbName = "project27.db";
+	private static String dbConfigFilename = "db_config.ini";
 	private static Ini config;
 	
-	public Database(String f) throws Exception{
+	// input: database_name, configfile_name
+	public Database(String a, String b) throws Exception{
+		dbName = a;
+		dbConfigFilename = b;
 		// create connection
 		Class.forName("org.sqlite.JDBC");
-		connection = DriverManager.getConnection("jdbc:sqlite:project27.db");
+		connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
 		// load configuration
-		String filename = "config/" + f;
+		String filename = "config/" + dbConfigFilename;
 		config = new Ini(new FileReader(filename));
+		createRequiredTables();
 	}
 
+	// input: database_name
+	public Database(String a) throws Exception{
+		this(a, dbConfigFilename);
+	}
+
+	// no input, default initialization for actual implementation
 	public Database() throws Exception{
-		this(dbConfigFilename);
+		this(dbName, dbConfigFilename);
 	}
 
 	public void close() throws Exception {

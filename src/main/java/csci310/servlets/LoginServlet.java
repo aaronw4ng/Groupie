@@ -13,7 +13,7 @@ public class LoginServlet extends HttpServlet {
         System.out.println(request.getParameter("input-username"));
         System.out.println(request.getParameter("input-password"));
         try {
-            Database database = new Database();
+            Database database = new Database("test.db");
             database.createRequiredTables();
             PrintWriter out = response.getWriter();
             String us = request.getParameter("input-username");
