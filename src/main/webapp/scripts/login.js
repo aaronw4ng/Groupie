@@ -8,7 +8,7 @@ function handleLoginClick(event) {
     console.log("Logging in")
 
     $.ajax({
-        method: "POST",
+        method: "GET",
         url : "login",
         data : {
             username : usernameInput,

@@ -13,7 +13,7 @@
                 <input class="field-input" type="text" id="input-username" placeholder="Username">
                 <p class="input-header">Password</p>
                 <input class="field-input" type="password" id="input-password" placeholder="Password">
-                <button onclick="handleLoginClick(event)" id="btn-login">LOGIN</button>
+                <button onclick="handleLoginClick(event)" id="btn-login">Login</button>
             </form>
         </div>
     </body>
