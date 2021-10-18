@@ -169,13 +169,10 @@ public class Database {
 			System.out.println("Unable to add following proposal: " + owner + " " + title + " " + descript);
 			return false;
 		}
-		rs.close();
-		stmt.close();
 
 		// insert proposal into proposals table
 		String query = "INSERT INTO proposals (owner_id, is_draft, title, description) VALUES(?,?,?,?)";
 		PreparedStatement pst;
-		//sql.append("INSERT INTO proposals (owner_id, is_draft, title, description) VALUES ('" + userID + "', '" + is_Draft + "', '" + title + "', '" + descript + "')");
 		pst = connection.prepareStatement(query);
 		pst.setString(1, String.valueOf(userID));
 		pst.setString(2, String.valueOf(is_Draft));
@@ -184,6 +181,35 @@ public class Database {
 		pst.executeUpdate();
 		// successful add to proposal table
 		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
+
+		// TODO: refactor
+		// Try to fetch the proposal id
+		String fetchProposalID = "SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'";
+		pst = connection.prepareStatement(fetchProposalID);
+		rs = pst.executeQuery();
+		/*
+		int proposalID = 0;
+		// found the proposal id
+		if (rs.next()) {
+			proposalID = rs.getInt("proposal_id");
+		}
+		// Add list of events associated with this proposal to the events table
+		for (String e: events) {
+			query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
+			pst = connection.prepareStatement(query);
+			pst.setString(1, String.valueOf(proposalID));
+			pst.setString(2, e);
+			pst.executeUpdate();
+			System.out.println("Add event: " + e + " for proposalID: " + proposalID);
+		}
+		 */
+		rs.close();
+		stmt.close();
+		return true;
+	}
+
+	// Add Event(s) to an existing proposal
+	public Boolean addEventsToProposal(int proposalId, List<String> events) {
 		return true;
 	}
 }

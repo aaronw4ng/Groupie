@@ -185,6 +185,8 @@ public class DatabaseTest {
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
+		List<String> events = new ArrayList<>();
+		events.add("Event 1");
 		Boolean isDraft = false;
 		Boolean status = testDB.createAProposal("Test User", title, descript, invitees, isDraft);
 		assertEquals(true, status);
@@ -192,6 +194,7 @@ public class DatabaseTest {
 		testDB.close();
 	}
 
+	// Unable to create a proposal if owner is not an existing user in database
 	@Test
 	public void testCreateAProposalOwnerDoesNotExist() throws Exception {
 		Database testDB = new Database("test.db");
@@ -200,9 +203,28 @@ public class DatabaseTest {
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
+		List<String> events = new ArrayList<>();
+		events.add("Event 1");
 		Boolean isDraft = false;
 		Boolean status = testDB.createAProposal("Test User", title, descript, invitees, isDraft);
 		assertEquals(false, status);
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testAddEventsToProposal() throws Exception {
+		Database testDB = new Database("test.db");
+		// add user to database first
+		testDB.register("Test User", "Test Password");
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Person 1");
+		List<String> events = new ArrayList<>();
+		events.add("Event 1");
+		events.add("Event 2");
+		testDB.createAProposal("Test User", "Title", "Description", invitees, false);
+		Boolean status = testDB.addEventsToProposal(1, events);
+		assertEquals(true, status);
 		testDB.dropAllTables();
 		testDB.close();
 	}
