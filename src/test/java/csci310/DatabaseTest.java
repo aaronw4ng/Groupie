@@ -153,13 +153,13 @@ public class DatabaseTest {
 	
 	@Test
 	public void testSecureDatabase() throws Exception{
-		Database testDB1 = new Database("test2.db");
+		Database testDB1 = new Database("test.db");
 		testDB1.close();
 		// access the database with wrong password
 		Database testDB2 = null;
 		Boolean errorFlag = false;
 		try {
-			testDB2 = new Database("test2.db", "db_config.ini", "WrongPassword");
+			testDB2 = new Database("test.db", "db_config.ini", "WrongPassword");
 		}
 		catch (Exception e){
 			// expect error since the password is wrong
@@ -167,7 +167,7 @@ public class DatabaseTest {
 		}
 		assertTrue(errorFlag);
 		// try again with correct password
-		testDB2 = new Database("test2.db", "db_config.ini", "ThisProjectIsSoMuchFun");
+		testDB2 = new Database("test.db", "db_config.ini", "ThisProjectIsSoMuchFun");
 		testDB2.close();
 	}
 }
