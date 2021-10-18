@@ -191,4 +191,19 @@ public class DatabaseTest {
 		testDB.dropAllTables();
 		testDB.close();
 	}
+
+	@Test
+	public void testCreateAProposalOwnerDoesNotExist() throws Exception {
+		Database testDB = new Database("test.db");
+		String title = "My Unsuccessful Proposal";
+		String descript = "This is a test description for an unsuccessful proposal!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		Boolean isDraft = false;
+		Boolean status = testDB.createAProposal("Test User", title, descript, invitees, isDraft);
+		assertEquals(false, status);
+		testDB.dropAllTables();
+		testDB.close();
+	}
 }
