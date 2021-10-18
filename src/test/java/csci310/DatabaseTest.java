@@ -3,6 +3,9 @@ package csci310;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ini4j.Ini;
 
 public class DatabaseTest {
@@ -169,5 +172,20 @@ public class DatabaseTest {
 		// try again with correct password
 		testDB2 = new Database("test.db", "db_config.ini", "ThisProjectIsSoMuchFun");
 		testDB2.close();
+	}
+
+	// Basic test for creating a proposal that is not a draft --> should successfully add the proposal
+	@Test
+	public void testCreateAProposal() throws Exception {
+		Database testDB = new Database("test.db");
+		User u = new User("Test User");
+		String title = "My Proposal";
+		String descript = "This is a test description for a proposal!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		Boolean isDraft = false;
+		Boolean status = testDB.createAProposal(u.getUsername(), title, descript, invitees, isDraft);
+		assertEquals(true, status);
 	}
 }
