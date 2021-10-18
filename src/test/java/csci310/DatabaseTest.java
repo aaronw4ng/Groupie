@@ -150,4 +150,24 @@ public class DatabaseTest {
 		testDB2.dropAllTables();
 		testDB2.close();
 	}
+	
+	@Test
+	public void testSecureDatabase() throws Exception{
+		Database testDB1 = new Database("test2.db");
+		testDB1.close();
+		// access the database with wrong password
+		Database testDB2 = null;
+		Boolean errorFlag = false;
+		try {
+			testDB2 = new Database("test2.db", "db_config.ini", "WrongPassword");
+		}
+		catch (Exception e){
+			// expect error since the password is wrong
+			errorFlag = true;
+		}
+		assertTrue(errorFlag);
+		// try again with correct password
+		testDB2 = new Database("test2.db", "db_config.ini", "ThisProjectIsSoMuchFun");
+		testDB2.close();
+	}
 }
