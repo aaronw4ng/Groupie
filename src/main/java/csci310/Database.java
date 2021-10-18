@@ -151,6 +151,39 @@ public class Database {
 	// create a proposal (note: draft proposal will have default values)
 	// returns true if proposal was successfully added; otherwise, returns false
 	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, Boolean is_Draft) throws  Exception {
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+
+		// find the owner's user_id from users table
+		sql.append("SELECT user_id FROM users where username = '" + owner.toLowerCase() + "'");
+		ResultSet rs = stmt.executeQuery(sql.toString());
+		int userID;
+		// if the owner exists, then try to create a proposal by using owner's user_id
+		if (rs.next()){
+			userID = rs.getInt("user_id");
+		}
+		// else owner does not exist, then cannot create a proposal
+		else {
+			rs.close();
+			stmt.close();
+			System.out.println("Unable to add following proposal: " + owner + " " + title + " " + descript);
+			return false;
+		}
+		rs.close();
+		stmt.close();
+
+		// insert proposal into proposals table
+		String query = "INSERT INTO proposals (owner_id, is_draft, title, description) VALUES(?,?,?,?)";
+		PreparedStatement pst;
+		//sql.append("INSERT INTO proposals (owner_id, is_draft, title, description) VALUES ('" + userID + "', '" + is_Draft + "', '" + title + "', '" + descript + "')");
+		pst = connection.prepareStatement(query);
+		pst.setString(1, String.valueOf(userID));
+		pst.setString(2, String.valueOf(is_Draft));
+		pst.setString(3, title);
+		pst.setString(4, descript);
+		pst.executeUpdate();
+		// successful add to proposal table
+		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
 		return true;
 	}
 }

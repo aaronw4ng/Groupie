@@ -178,14 +178,17 @@ public class DatabaseTest {
 	@Test
 	public void testCreateAProposal() throws Exception {
 		Database testDB = new Database("test.db");
-		User u = new User("Test User");
+		// add user to database first
+		testDB.register("Test User", "Test Password");
 		String title = "My Proposal";
 		String descript = "This is a test description for a proposal!";
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
 		Boolean isDraft = false;
-		Boolean status = testDB.createAProposal(u.getUsername(), title, descript, invitees, isDraft);
+		Boolean status = testDB.createAProposal("Test User", title, descript, invitees, isDraft);
 		assertEquals(true, status);
+		testDB.dropAllTables();
+		testDB.close();
 	}
 }
