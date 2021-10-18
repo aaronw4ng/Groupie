@@ -29,7 +29,7 @@ public class RegisterServletTest {
     @Test
     public void testDoGet() throws Exception {
         // clear the database
-        Database testDB = new Database();
+        Database testDB = new Database("test.db");
         testDB.dropAllTables();
         testDB.createRequiredTables();
         testDB.close();
@@ -52,7 +52,7 @@ public class RegisterServletTest {
     @Test
     public void testDoGetUserAlreadyExists() throws Exception {
         // clear the database
-        Database testDB = new Database();
+        Database testDB = new Database("test.db");
         testDB.dropAllTables();
         testDB.createRequiredTables();
         User existingUser = new User("existingUser");
