@@ -23,8 +23,8 @@ public class StepDefinitions {
 
 	private final WebDriver driver = new ChromeDriver();
 
-	@Given("user is on the Create User page")
-	public void user_is_on_the_Create_User_page() {
+	@Given ("user is on the Login page")
+	public void user_is_on_the_Login_page() {
 		driver.get(ROOT_URL);
 	}
 
@@ -43,6 +43,11 @@ public class StepDefinitions {
 		driver.findElement(By.id(string)).click();
 	}
 
+	@Given("user is on the Create User page")
+	public void user_is_on_the_Create_User_page() {
+		driver.get("http://localhost:8080/pages/create-account.jsp");
+	}
+
 	@When("user re-types {string}")
 	public void user_retypes_password(String string) {
 		driver.findElement(By.id("re-input-password")).sendKeys(string);
@@ -54,11 +59,6 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 		assertTrue(alert != null);
-	}
-
-	@Given ("user is on the Login page")
-	public void user_is_on_the_Login_page() {
-		driver.get(ROOT_URL);
 	}
 
 	@Then("user should be logged in")
