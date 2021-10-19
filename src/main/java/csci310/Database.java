@@ -209,7 +209,23 @@ public class Database {
 	}
 
 	// Add Event(s) to an existing proposal
-	public Boolean addEventsToProposal(int proposalId, List<String> events) {
+	public Boolean addEventsToProposal(int proposalId, List<String> events) throws Exception {
+		/*
+		int proposalID = 0;
+		// found the proposal id
+		if (rs.next()) {
+			proposalID = rs.getInt("proposal_id");
+		}
+		*/
+		// Add list of events associated with this proposal to the events table
+		for (String e: events) {
+			String query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
+			PreparedStatement pst = connection.prepareStatement(query);
+			pst.setString(1, String.valueOf(proposalId));
+			pst.setString(2, e);
+			pst.executeUpdate();
+			System.out.println("Add event: " + e + " for proposalID: " + proposalId);
+		}
 		return true;
 	}
 }
