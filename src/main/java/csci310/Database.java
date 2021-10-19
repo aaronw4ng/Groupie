@@ -198,38 +198,10 @@ public class Database {
 
 		// TODO
 		// Add invitees to proposal
-		// for each event, add invitee by looking up their user_id
-		/*
-		for (String e: events) {
-			// find event id
-			query = "SELECT event_id FROM events WHERE event_link = '" + e + "'";
-			PreparedStatement pst1 = connection.prepareStatement(query);
-			rs = pst1.executeQuery();
-			int eventID = 0;
-			if (rs.next()) {
-				eventID = rs.getInt("event_id");
-			}
+		addInviteesToProposal(proposalID, invited, events);
 
-			// find the invitee's user id
-			for (String invitee: invited) {
-				query = "SELECT user_id FROM users WHERE username = '" + invitee.toLowerCase() + "'";
-				PreparedStatement pst2 = connection.prepareStatement(query);
-				rs = pst2.executeQuery();
-				int inviteeID = 0;
-				if (rs.next()) {
-					inviteeID = rs.getInt("user_id");
-				}
-				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
-				PreparedStatement pst3 = connection.prepareStatement(insert);
-				pst3.setString(1, String.valueOf(proposalID));
-				pst3.setString(2, String.valueOf(inviteeID));
-				pst3.setString(3, String.valueOf(eventID));
-				pst3.executeUpdate();
-				System.out.println("Adding invitee: " + invitee + " for Event: " + e + " for Proposal Id: " + proposalID);
-			}
-		}
-*/
 		rs.close();
+		pst.close();
 		stmt.close();
 		return true;
 	}
@@ -243,17 +215,57 @@ public class Database {
 		// Add list of events associated with this proposal to the events table
 		for (String e: events) {
 			String query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
-			PreparedStatement pst = connection.prepareStatement(query);
-			pst.setString(1, String.valueOf(proposalId));
-			pst.setString(2, e);
-			pst.executeUpdate();
+			PreparedStatement pst1 = connection.prepareStatement(query);
+			pst1.setString(1, String.valueOf(proposalId));
+			pst1.setString(2, e);
+			pst1.executeUpdate();
 			System.out.println("Add event: " + e + " for proposalID: " + proposalId);
+			pst1.close();
 		}
 		return true;
 	}
 
 	// Add Invitees to an existing proposal
-	public Boolean addInviteesToProposal(int proposalId, List<String> invitees) throws Exception {
+	public Boolean addInviteesToProposal(int proposalId, List<String> invited, List<String> events) throws Exception {
+		// if events or invited are empty, then return false because nothing added to invitees table
+		if (invited.isEmpty() || events.isEmpty()) {
+			System.out.println("No one is invited or no events");
+			return false;
+		}
+		for (String e: events) {
+			// find event id
+			String query = "SELECT event_id FROM events WHERE event_link = '" + e + "'";
+			PreparedStatement pst2 = connection.prepareStatement(query);
+			ResultSet rs = pst2.executeQuery();
+			int eventID = 0;
+			if (rs.next()) {
+				eventID = rs.getInt("event_id");
+			}
+			rs.close();
+			pst2.close();
+
+			// find the invitee's user id
+			for (String invitee: invited) {
+				query = "SELECT user_id FROM users WHERE username = '" + invitee.toLowerCase() + "'";
+				PreparedStatement pst3 = connection.prepareStatement(query);
+				ResultSet rs2 = pst3.executeQuery();
+				int inviteeID = 0;
+				if (rs2.next()) {
+					inviteeID = rs2.getInt("user_id");
+				}
+				rs2.close();
+				pst3.close();
+				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
+				PreparedStatement pst4 = connection.prepareStatement(insert);
+				pst4.setString(1, String.valueOf(proposalId));
+				pst4.setString(2, String.valueOf(inviteeID));
+				pst4.setString(3, String.valueOf(eventID));
+				pst4.executeUpdate();
+				System.out.println("Adding invitee: " + invitee + " for Event: " + e + " for Proposal Id: " + proposalId);
+				pst4.close();
+			}
+		}
+
 		return true;
 	}
 }
