@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -61,12 +62,24 @@ public class StepDefinitions {
 		assertTrue(alert != null);
 	}
 
+	@Then("user should be on Login page")
+	public void user_should_be_on_Login_page() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("http://localhost:8080/index.jsp", currURL);
+	}
+
 	@Then("user should be logged in")
 	public void user_should_be_logged_in() {
 		// Check for success alert popup
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 		assertTrue(alert != null);
+	}
+
+	@Then("user should be on Create Account page")
+	public void user_should_be_on_Create_Account_page() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("http://localhost:8080/pages/create-account.jsp", currURL);
 	}
 
 	@After()

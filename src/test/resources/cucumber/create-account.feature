@@ -6,3 +6,8 @@ Scenario: Create new user
     And user re-types "password1"
     And user clicks "btn-create-account" button
     Then new account should be created
+
+Scenario: User goes back to Login
+    Given user is on the Create User page
+    When user clicks "btn-back" button
+    Then user should be on Login page
