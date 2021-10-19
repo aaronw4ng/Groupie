@@ -182,13 +182,12 @@ public class Database {
 		// successful add to proposal table
 		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
 
-		// TODO: refactor
 		// Try to fetch the proposal id
 		String fetchProposalID = "SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'";
 		pst = connection.prepareStatement(fetchProposalID);
 		rs = pst.executeQuery();
 
-		// TODO: can refactor this for better abstraction/modularity by making it own function
+		// TODO
 		int proposalID = 0;
 		// found the proposal id
 		if (rs.next()) {
@@ -197,6 +196,39 @@ public class Database {
 		// Add events to the proposal
 		addEventsToProposal(proposalID, events);
 
+		// TODO
+		// Add invitees to proposal
+		// for each event, add invitee by looking up their user_id
+		/*
+		for (String e: events) {
+			// find event id
+			query = "SELECT event_id FROM events WHERE event_link = '" + e + "'";
+			PreparedStatement pst1 = connection.prepareStatement(query);
+			rs = pst1.executeQuery();
+			int eventID = 0;
+			if (rs.next()) {
+				eventID = rs.getInt("event_id");
+			}
+
+			// find the invitee's user id
+			for (String invitee: invited) {
+				query = "SELECT user_id FROM users WHERE username = '" + invitee.toLowerCase() + "'";
+				PreparedStatement pst2 = connection.prepareStatement(query);
+				rs = pst2.executeQuery();
+				int inviteeID = 0;
+				if (rs.next()) {
+					inviteeID = rs.getInt("user_id");
+				}
+				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
+				PreparedStatement pst3 = connection.prepareStatement(insert);
+				pst3.setString(1, String.valueOf(proposalID));
+				pst3.setString(2, String.valueOf(inviteeID));
+				pst3.setString(3, String.valueOf(eventID));
+				pst3.executeUpdate();
+				System.out.println("Adding invitee: " + invitee + " for Event: " + e + " for Proposal Id: " + proposalID);
+			}
+		}
+		*/
 		rs.close();
 		stmt.close();
 		return true;
