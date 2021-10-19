@@ -234,4 +234,17 @@ public class DatabaseTest {
 		testDB.dropAllTables();
 		testDB.close();
 	}
+
+	@Test
+	public void testAddInviteesToProposal() throws Exception {
+		Database testDB = new Database("test.db");
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		invitees.add("Invitee 3");
+		Boolean status = testDB.addInviteesToProposal(1, invitees);
+		assertEquals(true, status);
+		testDB.dropAllTables();
+		testDB.close();
+	}
 }

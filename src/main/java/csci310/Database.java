@@ -228,7 +228,7 @@ public class Database {
 				System.out.println("Adding invitee: " + invitee + " for Event: " + e + " for Proposal Id: " + proposalID);
 			}
 		}
-		*/
+*/
 		rs.close();
 		stmt.close();
 		return true;
@@ -249,6 +249,11 @@ public class Database {
 			pst.executeUpdate();
 			System.out.println("Add event: " + e + " for proposalID: " + proposalId);
 		}
+		return true;
+	}
+
+	// Add Invitees to an existing proposal
+	public Boolean addInviteesToProposal(int proposalId, List<String> invitees) throws Exception {
 		return true;
 	}
 }
