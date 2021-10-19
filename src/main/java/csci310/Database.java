@@ -150,7 +150,7 @@ public class Database {
 
 	// create a proposal (note: draft proposal will have default values)
 	// returns true if proposal was successfully added; otherwise, returns false
-	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, Boolean is_Draft) throws  Exception {
+	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<String> events, Boolean is_Draft) throws  Exception {
 		Statement stmt = connection.createStatement();
 		StringBuilder sql = new StringBuilder();
 
@@ -187,22 +187,16 @@ public class Database {
 		String fetchProposalID = "SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'";
 		pst = connection.prepareStatement(fetchProposalID);
 		rs = pst.executeQuery();
-		/*
+
+		// TODO: can refactor this for better abstraction/modularity by making it own function
 		int proposalID = 0;
 		// found the proposal id
 		if (rs.next()) {
 			proposalID = rs.getInt("proposal_id");
 		}
-		// Add list of events associated with this proposal to the events table
-		for (String e: events) {
-			query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
-			pst = connection.prepareStatement(query);
-			pst.setString(1, String.valueOf(proposalID));
-			pst.setString(2, e);
-			pst.executeUpdate();
-			System.out.println("Add event: " + e + " for proposalID: " + proposalID);
-		}
-		 */
+		// Add events to the proposal
+		addEventsToProposal(proposalID, events);
+
 		rs.close();
 		stmt.close();
 		return true;
@@ -210,13 +204,10 @@ public class Database {
 
 	// Add Event(s) to an existing proposal
 	public Boolean addEventsToProposal(int proposalId, List<String> events) throws Exception {
-		/*
-		int proposalID = 0;
-		// found the proposal id
-		if (rs.next()) {
-			proposalID = rs.getInt("proposal_id");
+		// empty list, then return false
+		if (events.isEmpty()) {
+			return false;
 		}
-		*/
 		// Add list of events associated with this proposal to the events table
 		for (String e: events) {
 			String query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
