@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -23,8 +24,8 @@ public class StepDefinitions {
 
 	private final WebDriver driver = new ChromeDriver();
 
-	@Given("user is on the Create User page")
-	public void user_is_on_the_Create_User_page() {
+	@Given ("user is on the Login page")
+	public void user_is_on_the_Login_page() {
 		driver.get(ROOT_URL);
 	}
 
@@ -43,6 +44,11 @@ public class StepDefinitions {
 		driver.findElement(By.id(string)).click();
 	}
 
+	@Given("user is on the Create User page")
+	public void user_is_on_the_Create_User_page() {
+		driver.get("http://localhost:8080/pages/create-account.jsp");
+	}
+
 	@When("user re-types {string}")
 	public void user_retypes_password(String string) {
 		driver.findElement(By.id("re-input-password")).sendKeys(string);
@@ -56,9 +62,10 @@ public class StepDefinitions {
 		assertTrue(alert != null);
 	}
 
-	@Given ("user is on the Login page")
-	public void user_is_on_the_Login_page() {
-		driver.get(ROOT_URL);
+	@Then("user should be on Login page")
+	public void user_should_be_on_Login_page() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("http://localhost:8080/index.jsp", currURL);
 	}
 
 	@Then("user should be logged in")
@@ -67,6 +74,12 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 		assertTrue(alert != null);
+	}
+
+	@Then("user should be on Create Account page")
+	public void user_should_be_on_Create_Account_page() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("http://localhost:8080/pages/create-account.jsp", currURL);
 	}
 
 	@After()

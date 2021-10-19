@@ -1,0 +1,23 @@
+body {
+    position: relative;
+}
+.account-page, .account-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.account-page > p {
+    margin-top : 0;
+    margin-bottom: 3rem;
+    color: rgb(133, 133, 133)
+}
+
+#btn-back {
+    width: 5rem;
+}
+#btn-create-account {
+    width: 10rem;
+}
+
