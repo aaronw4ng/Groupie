@@ -1,0 +1,52 @@
+body {
+   padding: 5%;
+}
+
+  h1, p {
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  textarea {
+  width: 700px;
+  }
+
+  button {
+    font-family: 'Open Sans', sans-serif;
+  }
+  button:hover {
+    background-color: goldenrod;
+    color: rgba(91, 2, 116, 0.975);
+    }
+
+  .title {
+    font-weight: 500;
+  }
+
+  .principal {
+      font-weight: 800;
+      padding: 15px 15px;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      background-color: rgba(91, 2, 116, 0.975);
+      margin-top: 1rem;
+  }
+
+  .add {
+    font-weight: 800;
+    color: rgba(91, 2, 116, 0.975);
+    border: none;
+    background-color: white;
+  }
+
+  .add:hover {
+    color: black;
+    border-radius: 20px;
+    padding: 3px;
+  }

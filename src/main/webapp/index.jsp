@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Group Date Planner</title>
     <link rel="stylesheet" href="./styles/index.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="./scripts/login.js"></script>
@@ -14,6 +15,7 @@
                 <p class="input-header">Password</p>
                 <input class="field-input" type="password" id="input-password" placeholder="Password">
                 <button onclick="handleLoginClick(event)" id="btn-login">Login</button>
+                <a class="btn-register" href="./pages/create-account.jsp" id="btn-register" >Create Account</a>
             </form>
         </div>
     </body>

@@ -48,3 +48,21 @@ body {
     width: 25rem;
     margin-bottom: 3px;
   }
+
+  .btn-register {
+        background-color: rgba(91, 2, 116, 0.975);
+        color: white;
+        padding: 25px 25px;
+        text-decoration: none;
+        border-radius: 10px;
+    }
+
+    .btn-register:hover {
+        background-color: goldenrod;
+        color: rgba(91, 2, 116, 0.975);
+    }
+
+    button:hover {
+        background-color: goldenrod;
+        color: rgba(91, 2, 116, 0.975);
+        }
