@@ -174,6 +174,24 @@ public class DatabaseTest {
 		testDB2.close();
 	}
 
+	// test for querying user_id
+	@Test
+	public void testQueryUserID() throws Exception{
+		Database testDB = new Database("test.db");
+		int owner_id;
+		try{
+			owner_id = testDB.queryUserID("TestUser");
+			fail();
+		}
+		catch (Exception e){
+			// expecting an error here
+			assertTrue(true);
+		}
+		testDB.register("TestUser", "TestPassword");
+		owner_id = testDB.queryUserID("TestUser");
+		assertTrue(owner_id >= 0);
+	}
+
 	// Basic test for creating a proposal that is not a draft --> should successfully add the proposal
 	@Test
 	public void testCreateAProposal() throws Exception {
