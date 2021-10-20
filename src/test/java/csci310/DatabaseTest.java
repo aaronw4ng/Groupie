@@ -13,7 +13,7 @@ public class DatabaseTest {
 	@Test
 	public void testCloseWhenAlreadyClosed() throws Exception {
 		// test default constructor since this test doesn't alter db content
-		Database testDB = new Database();
+		Database testDB = new Database("test.db");
 		// close connection once
 		testDB.close();
 

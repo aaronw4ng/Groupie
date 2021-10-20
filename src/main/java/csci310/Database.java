@@ -9,10 +9,10 @@ import java.util.*; // for StringBuilder
 
 public class Database {
 	private static Connection connection;
-	private static String dbName = "project27.db";
-	private static String dbConfigFilename = "db_config.ini";
-	private static String dbKey = "ThisProjectIsSoMuchFun";
-	private static Ini config;
+	private String dbName;
+	private String dbConfigFilename;
+	private String dbKey;
+	private Ini config;
 	
 	// input: database_name, configfile_name
 	public Database(String a, String b, String k) throws Exception{
@@ -30,12 +30,12 @@ public class Database {
 
 	// input: database_name
 	public Database(String a) throws Exception{
-		this(a, dbConfigFilename, dbKey);
+		this(a, "db_config.ini", "ThisProjectIsSoMuchFun");
 	}
 
 	// no input, default initialization for actual implementation
 	public Database() throws Exception{
-		this(dbName, dbConfigFilename, dbKey);
+		this("project27.db", "db_config.ini", "ThisProjectIsSoMuchFun");
 	}
 
 	public void close() throws Exception {
