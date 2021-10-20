@@ -149,27 +149,33 @@ public class Database {
 	}
 
 	public int queryUserID(String owner) throws Exception{
-		return 0;
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT user_id FROM users where username = '" + owner.toLowerCase() + "'");
+		ResultSet rs = stmt.executeQuery(sql.toString());
+		if (rs.next()){
+			int userID = rs.getInt("user_id");
+			rs.close();
+			stmt.close();
+			return userID;
+		}
+		else{
+			rs.close();
+			stmt.close();
+			throw new Exception("User not found!");
+		}
 	}
 
 	// create a proposal (note: draft proposal will have default values)
 	// returns true if proposal was successfully added; otherwise, returns false
 	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<String> events, Boolean is_Draft) throws  Exception {
-		Statement stmt = connection.createStatement();
-		StringBuilder sql = new StringBuilder();
-
-		// find the owner's user_id from users table
-		sql.append("SELECT user_id FROM users where username = '" + owner.toLowerCase() + "'");
-		ResultSet rs = stmt.executeQuery(sql.toString());
 		int userID;
 		// if the owner exists, then try to create a proposal by using owner's user_id
-		if (rs.next()){
-			userID = rs.getInt("user_id");
+		try{
+			userID = queryUserID(owner);
 		}
-		// else owner does not exist, then cannot create a proposal
-		else {
-			rs.close();
-			stmt.close();
+		catch (Exception e){
+			// else owner does not exist, then cannot create a proposal
 			System.out.println("Unable to add following proposal: " + owner + " " + title + " " + descript);
 			return false;
 		}
@@ -189,7 +195,7 @@ public class Database {
 		// Try to fetch the proposal id
 		String fetchProposalID = "SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'";
 		pst = connection.prepareStatement(fetchProposalID);
-		rs = pst.executeQuery();
+		ResultSet rs = pst.executeQuery();
 
 		// TODO
 		int proposalID = 0;
@@ -206,7 +212,6 @@ public class Database {
 
 		rs.close();
 		pst.close();
-		stmt.close();
 		return true;
 	}
 
