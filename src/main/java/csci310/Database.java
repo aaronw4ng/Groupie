@@ -9,10 +9,10 @@ import java.util.*; // for StringBuilder
 
 public class Database {
 	private static Connection connection;
-	private static String dbName = "project27.db";
-	private static String dbConfigFilename = "db_config.ini";
-	private static String dbKey = "ThisProjectIsSoMuchFun";
-	private static Ini config;
+	private String dbName;
+	private String dbConfigFilename;
+	private String dbKey;
+	private Ini config;
 	
 	// input: database_name, configfile_name
 	public Database(String a, String b, String k) throws Exception{
@@ -30,12 +30,12 @@ public class Database {
 
 	// input: database_name
 	public Database(String a) throws Exception{
-		this(a, dbConfigFilename, dbKey);
+		this(a, "db_config.ini", "ThisProjectIsSoMuchFun");
 	}
 
 	// no input, default initialization for actual implementation
 	public Database() throws Exception{
-		this(dbName, dbConfigFilename, dbKey);
+		this("project27.db", "db_config.ini", "ThisProjectIsSoMuchFun");
 	}
 
 	public void close() throws Exception {
@@ -146,5 +146,135 @@ public class Database {
 			return true;
 		}
 		return false;
+	}
+
+	public int queryUserID(String owner) throws Exception{
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT user_id FROM users where username = '" + owner.toLowerCase() + "'");
+		ResultSet rs = stmt.executeQuery(sql.toString());
+		if (rs.next()){
+			int userID = rs.getInt("user_id");
+			rs.close();
+			stmt.close();
+			return userID;
+		}
+		else{
+			rs.close();
+			stmt.close();
+			throw new Exception("User not found!");
+		}
+	}
+
+	// create a proposal (note: draft proposal will have default values)
+	// returns true if proposal was successfully added; otherwise, returns false
+	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<String> events, Boolean is_Draft) throws  Exception {
+		int userID;
+		// if the owner exists, then try to create a proposal by using owner's user_id
+		try{
+			userID = queryUserID(owner);
+		}
+		catch (Exception e){
+			// else owner does not exist, then cannot create a proposal
+			System.out.println("Unable to add following proposal: " + owner + " " + title + " " + descript);
+			return false;
+		}
+
+		// insert proposal into proposals table
+		String query = "INSERT INTO proposals (owner_id, is_draft, title, description) VALUES(?,?,?,?)";
+		PreparedStatement pst;
+		pst = connection.prepareStatement(query);
+		pst.setString(1, String.valueOf(userID));
+		pst.setString(2, String.valueOf(is_Draft));
+		pst.setString(3, title);
+		pst.setString(4, descript);
+		pst.executeUpdate();
+		// successful add to proposal table
+		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
+
+		// Try to fetch the proposal id
+		String fetchProposalID = "SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'";
+		pst = connection.prepareStatement(fetchProposalID);
+		ResultSet rs = pst.executeQuery();
+
+		// TODO
+		int proposalID = 0;
+		// found the proposal id
+		if (rs.next()) {
+			proposalID = rs.getInt("proposal_id");
+		}
+		// Add events to the proposal
+		addEventsToProposal(proposalID, events);
+
+		// TODO
+		// Add invitees to proposal
+		addInviteesToProposal(proposalID, invited, events);
+
+		rs.close();
+		pst.close();
+		return true;
+	}
+
+	// Add Event(s) to an existing proposal
+	public Boolean addEventsToProposal(int proposalId, List<String> events) throws Exception {
+		// empty list, then return false
+		if (events.isEmpty()) {
+			return false;
+		}
+		// Add list of events associated with this proposal to the events table
+		for (String e: events) {
+			String query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
+			PreparedStatement pst1 = connection.prepareStatement(query);
+			pst1.setString(1, String.valueOf(proposalId));
+			pst1.setString(2, e);
+			pst1.executeUpdate();
+			System.out.println("Add event: " + e + " for proposalID: " + proposalId);
+			pst1.close();
+		}
+		return true;
+	}
+
+	// Add Invitees to an existing proposal
+	public Boolean addInviteesToProposal(int proposalId, List<String> invited, List<String> events) throws Exception {
+		// if events or invited are empty, then return false because nothing added to invitees table
+		if (invited.isEmpty() || events.isEmpty()) {
+			System.out.println("No one is invited or no events");
+			return false;
+		}
+		for (String e: events) {
+			// find event id
+			String query = "SELECT event_id FROM events WHERE event_link = '" + e + "'";
+			PreparedStatement pst2 = connection.prepareStatement(query);
+			ResultSet rs = pst2.executeQuery();
+			int eventID = 0;
+			if (rs.next()) {
+				eventID = rs.getInt("event_id");
+			}
+			rs.close();
+			pst2.close();
+
+			// find the invitee's user id
+			for (String invitee: invited) {
+				query = "SELECT user_id FROM users WHERE username = '" + invitee.toLowerCase() + "'";
+				PreparedStatement pst3 = connection.prepareStatement(query);
+				ResultSet rs2 = pst3.executeQuery();
+				int inviteeID = 0;
+				if (rs2.next()) {
+					inviteeID = rs2.getInt("user_id");
+				}
+				rs2.close();
+				pst3.close();
+				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
+				PreparedStatement pst4 = connection.prepareStatement(insert);
+				pst4.setString(1, String.valueOf(proposalId));
+				pst4.setString(2, String.valueOf(inviteeID));
+				pst4.setString(3, String.valueOf(eventID));
+				pst4.executeUpdate();
+				System.out.println("Adding invitee: " + invitee + " for Event: " + e + " for Proposal Id: " + proposalId);
+				pst4.close();
+			}
+		}
+
+		return true;
 	}
 }

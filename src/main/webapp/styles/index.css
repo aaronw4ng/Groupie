@@ -1,68 +1,78 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    padding: 10rem;
-  }
-  
-  button {
-    width: 25rem;
-    height: 4rem;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    background-color: rgba(91, 2, 116, 0.975);
-    transition: 0.3s all;
-    margin-bottom: 3rem;
-  }
-  
-  h1 {
-    margin-bottom: 1rem;
-  }
-  
-  h2 {
-    font-size: 2rem;
-    font-weight: 100;
-    margin-bottom: 5rem;
-  }
-  
-  .field {
-    width: 25rem;
-    height: 4rem;
-    border: 1px solid rgba(121, 121, 121, 0.3);
-    border-radius: 1rem;
-    background-color: rgba(246, 246, 246, 0.564);
-    transition: 0.3s all;
-    margin-bottom: 3rem;
-  }
-  
-  .inputBox {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .inputHeader {
-    text-align: left;
-    margin-left: auto;
-    margin-right: auto;
-    width: 25rem;
-    margin-bottom: 3px;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  padding: 10rem;
+}
+
+button {
+  width: 15rem;
+  height: 3rem;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  background-color: #9762A5;
+  transition: 0.3s all;
+  margin-bottom: 3rem;
+}
+
+button:hover {
+  background-color: #65416D;
+  cursor: pointer;
+}
+
+.field {
+  width: 15rem;
+  height: 3rem;
+  padding-left: 0.5rem;
+  border: 1px solid rgba(121, 121, 121, 0.3);
+  border-radius: 1rem;
+  background-color: rgba(246, 246, 246, 0.564);
+  transition: 0.3s all;
+  margin-bottom: 1.5rem;
+}
+
+.input-header {
+  margin-left: 0;
+  width: 15rem;
+  margin-bottom: 3px;
+  margin-top: 0;
+  font-weight: 500;
+}
+
+.btn-register {
+  background-color: rgba(91, 2, 116, 0.975);
+  color: white;
+  padding: 25px 25px;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.btn-register:hover {
+  background-color: goldenrod;
+  color: rgba(91, 2, 116, 0.975);
+}
+
+button:hover {
+  background-color: goldenrod;
+  color: rgba(91, 2, 116, 0.975);
   }
 
-  .btn-register {
-        background-color: rgba(91, 2, 116, 0.975);
-        color: white;
-        padding: 25px 25px;
-        text-decoration: none;
-        border-radius: 10px;
-    }
-
-    .btn-register:hover {
-        background-color: goldenrod;
-        color: rgba(91, 2, 116, 0.975);
-    }
-
-    button:hover {
-        background-color: goldenrod;
-        color: rgba(91, 2, 116, 0.975);
-        }
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-left: 1rem;
+  width : 100%;
+  background-color: #9762A5;
+  color : white;
+}
+#footer {
+  background-color: rgb(235, 233, 233);
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #333;
+}

@@ -42,3 +42,8 @@ function handleLoginClick(event) {
     //  fetch(servletURL, requestMetadata)
     //     .then(data => console.log(data))
 }
+
+document.querySelector("#btn-create-page").onclick = function() {
+    console.log("CLICKED")
+    document.location.href = "./pages/create-account.jsp"
+}
