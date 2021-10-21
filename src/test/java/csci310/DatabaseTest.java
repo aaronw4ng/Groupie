@@ -185,11 +185,13 @@ public class DatabaseTest {
 		}
 		catch (Exception e){
 			// expecting an error here
-			assertTrue(true);
+			assertEquals("User not found!", e.getMessage());
 		}
 		testDB.register("TestUser", "TestPassword");
 		owner_id = testDB.queryUserID("TestUser");
-		assertTrue(owner_id >= 0);
+		assertEquals(1, owner_id);
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	// test for querying proposal_id
