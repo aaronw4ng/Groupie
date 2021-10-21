@@ -43,7 +43,7 @@ public class RegisterServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         RegisterServlet registerServlet = new RegisterServlet();
-        registerServlet.doGet(request, response);
+        registerServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         // should be true since username has not yet been used and also only user in the database
         assertEquals("true", result);
@@ -70,7 +70,7 @@ public class RegisterServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         RegisterServlet registerServlet = new RegisterServlet();
-        registerServlet.doGet(request, response);
+        registerServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         // should be false because user already exists
         assertEquals("false", result);
@@ -85,7 +85,7 @@ public class RegisterServletTest {
         Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
 
         try {
-            registerServlet.doGet(failingRequest, failingResponse);
+            registerServlet.doPost(failingRequest, failingResponse);
             fail("Expected a Servlet Exception to be thrown");
         } catch (ServletException servletException) {
             assertEquals("Register Servlet failed", servletException.getMessage());

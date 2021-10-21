@@ -2,17 +2,17 @@ function handleRegisterClick(event) {
   event.preventDefault()
   const usernameInput = document.querySelector("#input-username").value
   const passwordInput = document.querySelector("#input-password").value
-  const rePasswordInput = document.querySelector("#reinput-password").value
+  const rePasswordInput = document.querySelector("#re-input-password").value
 
-  console.log(usefrnameInput + " " + passwordInput + " " + rePasswordInput)
+  console.log(usernameInput + " " + passwordInput + " " + rePasswordInput)
 
   // Validate passwords
 
   console.log("Creating Account...")
   if (validatePasswords(passwordInput, rePasswordInput)) {
     $.ajax({
-      method: "GET",
-      url: "register",
+      method: "POST",
+      url: "../register",
       data: {
         username: usernameInput,
         password: passwordInput,
@@ -20,7 +20,7 @@ function handleRegisterClick(event) {
 
       success: function (result) {
         console.log(result)
-        if (result == true) {
+        if (result == "true") {
           alert("SUCCESS")
         } else {
           alert("FAILED")
@@ -45,7 +45,7 @@ function handleRegisterClick(event) {
 }
 
 // Function to validate passwords
-export const validatePasswords = (passwordInput, retypedPasswordInput) => {
+function validatePasswords(passwordInput, retypedPasswordInput) {
   // Don't Match
   if (passwordInput !== retypedPasswordInput) {
     alert("Passwords don't match! Please try again")
@@ -58,4 +58,10 @@ export const validatePasswords = (passwordInput, retypedPasswordInput) => {
     return false
   }
   return true
+}
+
+document.querySelector("#btn-back").onclick = function(event) {
+  event.preventDefault()
+  console.log("CLICKED BACK")
+  document.location.href = "../index.jsp"
 }
