@@ -3,6 +3,7 @@ body {
   padding: 0;
   font-family: sans-serif;
   padding: 10rem;
+  position: relative;
 }
 
 button {
@@ -60,6 +61,9 @@ button:hover {
 
 .header {
   position: absolute;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-between;
   top: 0;
   left: 0;
   padding-left: 1rem;
@@ -67,6 +71,26 @@ button:hover {
   background-color: #9762A5;
   color : white;
 }
+
+.header-links {
+  margin-right: 3rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.header-links a {
+  color : white;
+  text-decoration: none;
+  padding: 1rem;
+}
+
+.highlight-link {
+  border : 1px solid white;
+  border-radius: 1rem;
+  font-weight: bold;
+}
+
 #footer {
   background-color: rgb(235, 233, 233);
   text-align: center;

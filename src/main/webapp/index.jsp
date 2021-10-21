@@ -18,7 +18,6 @@
                 <p class="input-header">Password</p>
                 <input class="field" type="password" id="input-password" placeholder="Password">
                 <button onclick="handleLoginClick(event)" id="btn-login">Login</button>
-                <a class="btn-register" href="./pages/create-account.jsp" id="btn-register" >Create Account</a>
             </form>
             <button id="btn-create-page">Create Account</button>
         </div>
