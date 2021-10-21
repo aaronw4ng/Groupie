@@ -192,6 +192,17 @@ public class DatabaseTest {
 		assertTrue(owner_id >= 0);
 	}
 
+	// test for querying proposal_id
+	@Test
+	public void testQueryProposalID() throws Exception{
+		Database testDB = new Database("test.db");
+		testDB.register("Test User", "Test Password");
+		int proposal_id = testDB.queryProposalID("Test User", "My Proposal");
+		assertEquals(1, proposal_id);
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
 	// Basic test for creating a proposal that is not a draft --> should successfully add the proposal
 	@Test
 	public void testCreateAProposal() throws Exception {

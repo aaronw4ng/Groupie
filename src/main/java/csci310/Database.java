@@ -166,6 +166,10 @@ public class Database {
 		}
 	}
 
+	public int queryProposalID(String owner, String title) {
+		return 1;
+	}
+
 	// create a proposal (note: draft proposal will have default values)
 	// returns true if proposal was successfully added; otherwise, returns false
 	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<String> events, Boolean is_Draft) throws  Exception {
