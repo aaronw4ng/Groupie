@@ -19,6 +19,7 @@ function handleLoginClick(event) {
             console.log(result)
             if (result == true) {
                 alert("SUCCESS")
+                document.location.href = "./pages/create-proposal.jsp"
             }
             else {
                 alert("FAILED")
@@ -41,7 +42,7 @@ function handleLoginClick(event) {
     //  }
     //  fetch(servletURL, requestMetadata)
     //     .then(data => console.log(data))
-    document.location.href = "./pages/create-proposal.jsp"
+    
 }
 
 document.querySelector("#btn-create-page").onclick = function() {
