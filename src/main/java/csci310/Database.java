@@ -260,17 +260,9 @@ public class Database {
 			rs.close();
 			pst2.close();
 
-			// find the invitee's user id
+			// find the invitee's user id and then insert the invitee into table
 			for (String invitee: invited) {
-				query = "SELECT user_id FROM users WHERE username = '" + invitee.toLowerCase() + "'";
-				PreparedStatement pst3 = connection.prepareStatement(query);
-				ResultSet rs2 = pst3.executeQuery();
-				int inviteeID = 0;
-				if (rs2.next()) {
-					inviteeID = rs2.getInt("user_id");
-				}
-				rs2.close();
-				pst3.close();
+				int inviteeID = queryUserID(invitee);
 				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
 				PreparedStatement pst4 = connection.prepareStatement(insert);
 				pst4.setString(1, String.valueOf(proposalId));
