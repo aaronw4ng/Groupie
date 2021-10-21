@@ -197,7 +197,21 @@ public class DatabaseTest {
 	public void testQueryProposalID() throws Exception{
 		Database testDB = new Database("test.db");
 		testDB.register("Test User", "Test Password");
-		int proposal_id = testDB.queryProposalID("Test User", "My Proposal");
+		int proposal_id;
+		try{
+			proposal_id = testDB.queryProposalID("Test User", "My Proposal");
+			fail();
+		}
+		catch (Exception e){
+			// expecting an error here
+			assertEquals("Proposal not found!", e.getMessage());
+		}
+		List<String> invited = new ArrayList<>();
+		invited.add("Invitee 1");
+		List<String> events = new ArrayList<>();
+		events.add("Event 1");
+		testDB.createAProposal("Test User", "My Proposal", "This is a description", invited, events, false);
+		proposal_id = testDB.queryProposalID("Test User", "My Proposal");
 		assertEquals(1, proposal_id);
 		testDB.dropAllTables();
 		testDB.close();

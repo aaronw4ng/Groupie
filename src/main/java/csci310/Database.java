@@ -166,8 +166,23 @@ public class Database {
 		}
 	}
 
-	public int queryProposalID(String owner, String title) {
-		return 1;
+	public int queryProposalID(String owner, String title) throws Exception {
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		int userID = queryUserID(owner);
+		sql.append("SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'");
+		ResultSet rs = stmt.executeQuery(sql.toString());
+		if (rs.next()){
+			int proposalID = rs.getInt("proposal_id");
+			rs.close();
+			stmt.close();
+			return userID;
+		}
+		else{
+			rs.close();
+			stmt.close();
+			throw new Exception("Proposal not found!");
+		}
 	}
 
 	// create a proposal (note: draft proposal will have default values)
@@ -197,24 +212,12 @@ public class Database {
 		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
 
 		// Try to fetch the proposal id
-		String fetchProposalID = "SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'";
-		pst = connection.prepareStatement(fetchProposalID);
-		ResultSet rs = pst.executeQuery();
-
-		// TODO
-		int proposalID = 0;
-		// found the proposal id
-		if (rs.next()) {
-			proposalID = rs.getInt("proposal_id");
-		}
+		int proposalID = queryProposalID(owner, title);
 		// Add events to the proposal
 		addEventsToProposal(proposalID, events);
-
-		// TODO
 		// Add invitees to proposal
 		addInviteesToProposal(proposalID, invited, events);
 
-		rs.close();
 		pst.close();
 		return true;
 	}
