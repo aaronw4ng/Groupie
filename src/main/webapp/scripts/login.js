@@ -3,7 +3,7 @@ function handleLoginClick(event) {
     const usernameInput = document.querySelector("#input-username").value
     const passwordInput = document.querySelector("#input-password").value
 
-    console.log(usefrnameInput + " " + passwordInput)
+    console.log(usernameInput + " " + passwordInput)
     
     console.log("Logging in")
 
