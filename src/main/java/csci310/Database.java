@@ -58,7 +58,7 @@ public class Database {
 	}
 
 	// initialize all required tables in the database
-	public Boolean createRequiredTables() throws Exception{
+	public void createRequiredTables() throws Exception{
 		Statement stmt = connection.createStatement();
 		StringBuilder sql = new StringBuilder();
 		for (String tableName: config.keySet()){
@@ -78,17 +78,15 @@ public class Database {
 			sql.setLength(0);
 		}
 		stmt.close();
-		return true;
 	}
 
 	// drop all tables
-	public Boolean dropAllTables() throws Exception{
+	public void dropAllTables() throws Exception{
 		Statement stmt = connection.createStatement();
 		for (String tableName : config.keySet()){
 			stmt.executeUpdate("DROP TABLE IF EXISTS '" + tableName + "'");
 		}
 		stmt.close();
-		return true;
 	}
 
 	// check if user exists in the database
@@ -113,8 +111,12 @@ public class Database {
 		StringBuilder sql = new StringBuilder();
 		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
 		sql.append("INSERT INTO users (username, password) VALUES ('" + _us.toLowerCase() + "', '" + hashed + "')");
-		stmt.executeUpdate(sql.toString());
-		stmt.close();
+		try {
+			stmt.executeUpdate(sql.toString());
+			stmt.close();
+		} catch(Exception e) {
+			return false;
+		}
 		return true;
 	}
 	

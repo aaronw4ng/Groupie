@@ -98,6 +98,19 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testRegisterUserAlreadyExists() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user", "password");
+		Boolean result = testDB.register("user", "password");
+		assertEquals(false, result);
+
+
+	}
+
+	@Test
 	public void testLoginWrongPassword() throws Exception{
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
