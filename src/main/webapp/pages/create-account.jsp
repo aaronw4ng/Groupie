@@ -20,7 +20,7 @@
             <input class="field" type="password" id="re-input-password" placeholder="Confirm Password">
             <div class="btn-row">
                 <button id="btn-create-account">Create Account</button>
-                <button id="btn-back">Back</button>
+                <button id="btn-back">Cancel</button>
             </div>
             
         </form>
