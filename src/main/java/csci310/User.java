@@ -19,7 +19,7 @@ public class User {
         this.blockedUsers = new ArrayList<>();
         this.receivedProposals = new ArrayList<>();
         this.sentProposals = new ArrayList<>();
-        this.db = new Database();
+        this.db = new Database("test.db");
     }
 
     public void setUsername(String username) {
