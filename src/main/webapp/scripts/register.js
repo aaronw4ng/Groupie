@@ -9,7 +9,7 @@ function handleRegisterClick(event) {
   // Validate passwords
 
   console.log("Creating Account...")
-  if (validatePasswords(passwordInput, rePasswordInput)) {
+  if (validateFields(usernameInput, passwordInput, rePasswordInput)) {
     $.ajax({
       method: "POST",
       url: "../register",
@@ -44,20 +44,54 @@ function handleRegisterClick(event) {
   //     .then(data => console.log(data))
 }
 
+// Warning Message Set Up
+function setWarnings(descriptionContainer, warningContainer, inputField, message) {
+  descriptionContainer.style.display = "none"
+  inputField.classList.add("error-input")
+  warningContainer.style.display = "block"
+  let warningMessage = `
+  <p>${message}</p>
+  `
+  warningContainer.innerHTML = warningMessage
+}
+
+// Tear down warnings
+function cleanWarnings(descriptionContainer, warningContainer, inputField) {
+  descriptionContainer.style.display = "block"
+  if (inputField.classList.contains("error-input")) {
+    inputField.classList.remove("error-input")
+  }
+  warningContainer.style.display = "none"
+}
+
 // Function to validate passwords
-function validatePasswords(passwordInput, retypedPasswordInput) {
+function validateFields(usernameInput, passwordInput, retypedPasswordInput) {
+  let isValid = true
+  let warningMessageContainer = document.querySelectorAll(".warning-message")
+  let descriptionContainer = document.querySelector(".instructions")
+  let passwordInputField = document.querySelector("#input-password")
+  let passwordReInputField = document.querySelector("#re-input-password")
+
+  // Clean Any Previous Warnings
+  cleanWarnings(descriptionContainer, warningMessageContainer[0], passwordInputField)
+  cleanWarnings(descriptionContainer, warningMessageContainer[1], passwordReInputField)
+
+  // Empty Fields
+  if (usernameInput.length == 0 || passwordInput.length == 0 || retypedPasswordInput.length == 0) {
+    alert("Fields cannot be empty")
+  }
   // Don't Match
   if (passwordInput !== retypedPasswordInput) {
-    alert("Passwords don't match! Please try again")
-    return false
+    setWarnings(descriptionContainer, warningMessageContainer[1], passwordReInputField, "Passwords must match")
+    isValid = false
   }
 
   // Not long enough
   if (passwordInput.length < 8) {
-    alert("Passwords not long enough! Please try again")
-    return false
+    setWarnings(descriptionContainer, warningMessageContainer[0], passwordInputField, "Password not at least 8 characters")
+    isValid = false
   }
-  return true
+  return isValid
 }
 
 document.querySelector("#btn-back").onclick = function(event) {
