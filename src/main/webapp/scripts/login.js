@@ -17,7 +17,7 @@ function handleLoginClick(event) {
         
         success : function (result) {
             console.log(result)
-            if (result == true) {
+            if (result == "true") {
                 alert("SUCCESS")
                 document.location.href = "./pages/create-proposal.jsp"
             }
