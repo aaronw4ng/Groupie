@@ -10,7 +10,7 @@ import csci310.Database;
 
 public class LoginServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		System.out.println(request.getParameter("username"));
         System.out.println(request.getParameter("password"));
         try {
