@@ -32,8 +32,8 @@ public class LoginServletTest {
     }
 
     @Test
-    public void testDoGet() throws Exception {
-        Database testDB = new Database();
+    public void testDoPost() throws Exception {
+        Database testDB = new Database("test.db");
         testDB.dropAllTables();
         testDB.createRequiredTables();
         testDB.register("TestUser", "TestPassword");
@@ -48,13 +48,13 @@ public class LoginServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         LoginServlet loginServlet = new LoginServlet();
-        loginServlet.doGet(request, response);
+        loginServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals(result, "true");
+        assertEquals("true", result);
     }
 
     @Test
-    public void testDoGetUserDoesNotExist() throws Exception {
+    public void testDoPostUserDoesNotExist() throws Exception {
         Mockito.when(request.getParameter("username")).thenReturn("TestUse2");
         Mockito.when(request.getParameter("password")).thenReturn("TestPassword2");
 
@@ -64,8 +64,24 @@ public class LoginServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         LoginServlet loginServlet = new LoginServlet();
-        loginServlet.doGet(request, response);
+        loginServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals(result, "false");
+        assertEquals("false", result);
+    }
+
+    @Test
+    public void testDoPostException() throws Exception {
+        HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
+        LoginServlet loginServlet = new LoginServlet();
+
+        Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
+
+        try {
+            loginServlet.doPost(failingRequest, failingResponse);
+            fail("Expected a Servlet Exception to be thrown");
+        } catch (ServletException servletException) {
+            assertEquals("Login Servlet failed", servletException.getMessage());
+        }
     }
 }

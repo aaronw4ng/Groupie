@@ -4,11 +4,16 @@ import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -19,24 +24,62 @@ public class StepDefinitions {
 
 	private final WebDriver driver = new ChromeDriver();
 
-	@Given("I am on the index page")
-	public void i_am_on_the_index_page() {
+	@Given ("user is on the Login page")
+	public void user_is_on_the_Login_page() {
 		driver.get(ROOT_URL);
 	}
 
-	@When("I click the link {string}")
-	public void i_click_the_link(String linkText) {
-		driver.findElement(By.linkText(linkText)).click();
+	@When("user inputs {string} in username")
+	public void user_inputs_username(String string) {
+		driver.findElement(By.id("input-username")).sendKeys(string);
 	}
 
-	@Then("I should see header {string}")
-	public void i_should_see_header(String header) {
-		assertTrue(driver.findElement(By.cssSelector("h2")).getText().contains(header));
+	@When("user inputs {string} in password")
+	public void user_inputs_password(String string) {
+		driver.findElement(By.id("input-password")).sendKeys(string);
 	}
-	
-	@Then("I should see text {string}")
-	public void i_should_see_text(String text) {
-		assertTrue(driver.getPageSource().contains(text));
+
+	@When("user clicks {string} button")
+	public void user_clicks_button(String string) {
+		driver.findElement(By.id(string)).click();
+	}
+
+	@Given("user is on the Create User page")
+	public void user_is_on_the_Create_User_page() {
+		driver.get("http://localhost:8080/pages/create-account.jsp");
+	}
+
+	@When("user re-types {string}")
+	public void user_retypes_password(String string) {
+		driver.findElement(By.id("re-input-password")).sendKeys(string);
+	}
+
+	@Then("new account should be created")
+	public void new_account_should_be_created() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertTrue(alert != null);
+	}
+
+	@Then("user should be on Login page")
+	public void user_should_be_on_Login_page() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("http://localhost:8080/index.jsp", currURL);
+	}
+
+	@Then("user should be logged in")
+	public void user_should_be_logged_in() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertTrue(alert != null);
+	}
+
+	@Then("user should be on Create Account page")
+	public void user_should_be_on_Create_Account_page() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("http://localhost:8080/pages/create-account.jsp", currURL);
 	}
 
 	@After()
