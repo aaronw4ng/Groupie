@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/account.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -19,8 +20,8 @@
             <p class="input-header">Confirm Password</p>
             <input class="field" type="password" id="re-input-password" placeholder="Confirm Password">
             <div class="btn-row">
-                <button id="btn-create-account">Create Account</button>
-                <button id="btn-back">Back</button>
+                <button id="btn-create-account" onclick="handleRegisterClick(event)">Create Account</button>
+                <button id="btn-back">Cancel</button>
             </div>
             
         </form>
@@ -30,6 +31,6 @@
         <p>team 27</p>
     </div>
 
-    <script src="../scripts/create-account.js"></script>
+    <script src="../scripts/register.js"></script>
 </body>
 </html>

@@ -98,6 +98,19 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testRegisterUserAlreadyExists() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user", "password");
+		Boolean result = testDB.register("user", "password");
+		assertEquals(false, result);
+
+
+	}
+
+	@Test
 	public void testLoginWrongPassword() throws Exception{
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
@@ -185,11 +198,40 @@ public class DatabaseTest {
 		}
 		catch (Exception e){
 			// expecting an error here
-			assertTrue(true);
+			assertEquals("User not found!", e.getMessage());
 		}
 		testDB.register("TestUser", "TestPassword");
 		owner_id = testDB.queryUserID("TestUser");
-		assertTrue(owner_id >= 0);
+		assertEquals(1, owner_id);
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	// test for querying proposal_id
+	@Test
+	public void testQueryProposalID() throws Exception{
+		Database testDB = new Database("test.db");
+		testDB.register("Test User", "Test Password");
+		int proposal_id;
+		try{
+			proposal_id = testDB.queryProposalID("Test User", "My Proposal");
+			fail();
+		}
+		catch (Exception e){
+			// expecting an error here
+			assertEquals("Proposal not found!", e.getMessage());
+		}
+		List<String> invited = new ArrayList<>();
+		invited.add("Invitee 1");
+		// register invitee 1 as user
+		testDB.register("Invitee 1", "PS1");
+		List<String> events = new ArrayList<>();
+		events.add("Event 1");
+		testDB.createAProposal("Test User", "My Proposal", "This is a description", invited, events, false);
+		proposal_id = testDB.queryProposalID("Test User", "My Proposal");
+		assertEquals(1, proposal_id);
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	// Basic test for creating a proposal that is not a draft --> should successfully add the proposal
@@ -203,6 +245,9 @@ public class DatabaseTest {
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1");
+		testDB.register("Invitee 2", "PS2");
 		List<String> events = new ArrayList<>();
 		events.add("Birthday");
 		events.add("BTS Concert");
@@ -263,6 +308,10 @@ public class DatabaseTest {
 		invited.add("Invitee 1");
 		invited.add("Invitee 2");
 		invited.add("Invitee 3");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1");
+		testDB.register("Invitee 2", "PS2");
+		testDB.register("Invitee 3", "PS3");
 		Boolean status = testDB.addInviteesToProposal(1, invited, events);
 		assertEquals(true, status);
 		testDB.dropAllTables();

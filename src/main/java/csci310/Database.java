@@ -58,7 +58,7 @@ public class Database {
 	}
 
 	// initialize all required tables in the database
-	public Boolean createRequiredTables() throws Exception{
+	public void createRequiredTables() throws Exception{
 		Statement stmt = connection.createStatement();
 		StringBuilder sql = new StringBuilder();
 		for (String tableName: config.keySet()){
@@ -78,17 +78,15 @@ public class Database {
 			sql.setLength(0);
 		}
 		stmt.close();
-		return true;
 	}
 
 	// drop all tables
-	public Boolean dropAllTables() throws Exception{
+	public void dropAllTables() throws Exception{
 		Statement stmt = connection.createStatement();
 		for (String tableName : config.keySet()){
 			stmt.executeUpdate("DROP TABLE IF EXISTS '" + tableName + "'");
 		}
 		stmt.close();
-		return true;
 	}
 
 	// check if user exists in the database
@@ -113,8 +111,12 @@ public class Database {
 		StringBuilder sql = new StringBuilder();
 		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
 		sql.append("INSERT INTO users (username, password) VALUES ('" + _us.toLowerCase() + "', '" + hashed + "')");
-		stmt.executeUpdate(sql.toString());
-		stmt.close();
+		try {
+			stmt.executeUpdate(sql.toString());
+			stmt.close();
+		} catch(Exception e) {
+			return false;
+		}
 		return true;
 	}
 	
@@ -166,6 +168,25 @@ public class Database {
 		}
 	}
 
+	public int queryProposalID(String owner, String title) throws Exception {
+		Statement stmt = connection.createStatement();
+		StringBuilder sql = new StringBuilder();
+		int userID = queryUserID(owner);
+		sql.append("SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'");
+		ResultSet rs = stmt.executeQuery(sql.toString());
+		if (rs.next()){
+			int proposalID = rs.getInt("proposal_id");
+			rs.close();
+			stmt.close();
+			return userID;
+		}
+		else{
+			rs.close();
+			stmt.close();
+			throw new Exception("Proposal not found!");
+		}
+	}
+
 	// create a proposal (note: draft proposal will have default values)
 	// returns true if proposal was successfully added; otherwise, returns false
 	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<String> events, Boolean is_Draft) throws  Exception {
@@ -193,24 +214,12 @@ public class Database {
 		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
 
 		// Try to fetch the proposal id
-		String fetchProposalID = "SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'";
-		pst = connection.prepareStatement(fetchProposalID);
-		ResultSet rs = pst.executeQuery();
-
-		// TODO
-		int proposalID = 0;
-		// found the proposal id
-		if (rs.next()) {
-			proposalID = rs.getInt("proposal_id");
-		}
+		int proposalID = queryProposalID(owner, title);
 		// Add events to the proposal
 		addEventsToProposal(proposalID, events);
-
-		// TODO
 		// Add invitees to proposal
 		addInviteesToProposal(proposalID, invited, events);
 
-		rs.close();
 		pst.close();
 		return true;
 	}
@@ -253,17 +262,9 @@ public class Database {
 			rs.close();
 			pst2.close();
 
-			// find the invitee's user id
+			// find the invitee's user id and then insert the invitee into table
 			for (String invitee: invited) {
-				query = "SELECT user_id FROM users WHERE username = '" + invitee.toLowerCase() + "'";
-				PreparedStatement pst3 = connection.prepareStatement(query);
-				ResultSet rs2 = pst3.executeQuery();
-				int inviteeID = 0;
-				if (rs2.next()) {
-					inviteeID = rs2.getInt("user_id");
-				}
-				rs2.close();
-				pst3.close();
+				int inviteeID = queryUserID(invitee);
 				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
 				PreparedStatement pst4 = connection.prepareStatement(insert);
 				pst4.setString(1, String.valueOf(proposalId));
