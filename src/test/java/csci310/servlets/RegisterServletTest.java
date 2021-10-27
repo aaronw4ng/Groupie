@@ -22,6 +22,7 @@ public class RegisterServletTest {
 
     @Before
     public void setUp() throws Exception {
+        ServletAdapter.db_name = "test.db";
         request = Mockito.mock(HttpServletRequest.class);
         response = Mockito.mock(HttpServletResponse.class);
     }

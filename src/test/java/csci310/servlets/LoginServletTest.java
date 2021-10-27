@@ -27,6 +27,7 @@ public class LoginServletTest {
     public void setUp() throws Exception {
         user = new User("User");
         user.setUsername("test");
+        ServletAdapter.db_name = "test.db";
         request = Mockito.mock(HttpServletRequest.class);
         response = Mockito.mock(HttpServletResponse.class);
     }
