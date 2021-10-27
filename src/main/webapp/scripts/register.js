@@ -3,9 +3,7 @@ function handleRegisterClick(event) {
   const usernameInput = document.querySelector("#input-username").value
   const passwordInput = document.querySelector("#input-password").value
   const rePasswordInput = document.querySelector("#re-input-password").value
-  let warningMessageContainer = document.querySelector(".warning-message")
 
-  console.log(usernameInput + " " + passwordInput + " " + rePasswordInput)
 
   // Validate passwords
 
@@ -22,7 +20,7 @@ function handleRegisterClick(event) {
       success: function (result) {
         console.log(result)
         if (result == "true") {
-          alert("Account successfully created")
+          alert("Account successfully created!")
         } else {
           let usernameInputField = document.querySelector("#input-username")
           let warningMessageContainer = document.querySelector(".warning-message")
@@ -36,20 +34,6 @@ function handleRegisterClick(event) {
       },
     })
   }
-
-  //  const servletURL = "login"
-  //  const postBody = {
-  //    username: usernameInput,
-  //    password: passwordInput
-  //  }
-  //  const requestMetadata = {
-  //    method: "GET",
-  //    headers: {
-  //      "Content-Type": "application/json"
-  //    },
-  //  }
-  //  fetch(servletURL, requestMetadata)
-  //     .then(data => console.log(data))
 }
 
 // Warning Message Set Up

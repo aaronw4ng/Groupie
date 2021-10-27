@@ -4,7 +4,6 @@ function handleLoginClick(event) {
     const passwordInput = document.querySelector("#input-password").value
     let warningMessageContainer = document.querySelector(".warning-message")
 
-    console.log(usernameInput + " " + passwordInput)
     
     console.log("Logging in")
     if (validateFields(usernameInput, passwordInput)) {
@@ -19,7 +18,7 @@ function handleLoginClick(event) {
             success : function (result) {
                 console.log(result)
                 if (result == "true") {
-                    alert("SUCCESS")
+                    alert("Login successful!")
                     document.location.href = "./pages/create-proposal.jsp"
                 }
                 else {
