@@ -8,6 +8,7 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -37,6 +38,20 @@ public class StepDefinitions {
 	@When("user inputs {string} in password")
 	public void user_inputs_password(String string) {
 		driver.findElement(By.id("input-password")).sendKeys(string);
+	}
+
+	@Then("user should be shown {string} error message")
+	public void user_should_be_shown_error_message(String string) {
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		String[] warnings = string.split(",");
+		for (String names : warnings) {
+			WebElement element = driver.findElement(By.className("warning-message")).findElement(By.name(names));
+			assertTrue(element != null);
+		}
 	}
 
 	@When("user clicks {string} button")
