@@ -9,6 +9,8 @@ import org.mockito.Mockito;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletConfig;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,12 +21,17 @@ import static org.junit.Assert.*;
 public class RegisterServletTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
+    private ServletConfig config;
+    private ServletContext context;
 
     @Before
     public void setUp() throws Exception {
         ServletAdapter.db_name = "test.db";
         request = Mockito.mock(HttpServletRequest.class);
         response = Mockito.mock(HttpServletResponse.class);
+        config = Mockito.mock(ServletConfig.class);
+        context = Mockito.mock(ServletContext.class);
+        Mockito.doReturn(context).when(config).getServletContext();
     }
 
     @Test
@@ -44,6 +51,7 @@ public class RegisterServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         RegisterServlet registerServlet = new RegisterServlet();
+        registerServlet.init(config);
         registerServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         // should be true since username has not yet been used and also only user in the database
@@ -71,6 +79,7 @@ public class RegisterServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         RegisterServlet registerServlet = new RegisterServlet();
+        registerServlet.init(config);
         registerServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         // should be false because user already exists
@@ -82,6 +91,7 @@ public class RegisterServletTest {
         HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
         HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
         RegisterServlet registerServlet = new RegisterServlet();
+        registerServlet.init(config);
 
         Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
 
