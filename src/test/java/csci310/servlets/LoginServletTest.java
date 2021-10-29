@@ -10,6 +10,8 @@ import static org.junit.Assert.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletConfig;
 
 import org.mockito.*;
 
@@ -21,14 +23,20 @@ import java.io.StringWriter;
 public class LoginServletTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
+    private ServletConfig config;
+    private ServletContext context;
     User user;
 
     @Before
     public void setUp() throws Exception {
         user = new User("User");
         user.setUsername("test");
+        ServletAdapter.db_name = "test.db";
         request = Mockito.mock(HttpServletRequest.class);
         response = Mockito.mock(HttpServletResponse.class);
+        config = Mockito.mock(ServletConfig.class);
+        context = Mockito.mock(ServletContext.class);
+        Mockito.doReturn(context).when(config).getServletContext();
     }
 
     @Test
@@ -48,6 +56,7 @@ public class LoginServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         LoginServlet loginServlet = new LoginServlet();
+        loginServlet.init(config);
         loginServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         assertEquals("true", result);
@@ -64,6 +73,7 @@ public class LoginServletTest {
         Mockito.when(response.getWriter()).thenReturn(pw);
 
         LoginServlet loginServlet = new LoginServlet();
+        loginServlet.init(config);
         loginServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         assertEquals("false", result);
@@ -74,6 +84,7 @@ public class LoginServletTest {
         HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
         HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
         LoginServlet loginServlet = new LoginServlet();
+        loginServlet.init(config);
 
         Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
 
