@@ -16,7 +16,7 @@ public class TicketmasterTest {
     @Test
     public void testSearchEvents() throws Exception {
         String result = ticketmaster.searchEvents("BTS");
-        assertEquals("All results related to BTS", result);
+        assertTrue(result.contains("BTS"));
         System.out.println(result);
     }
 }

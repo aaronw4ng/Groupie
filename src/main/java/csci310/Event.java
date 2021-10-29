@@ -2,7 +2,7 @@ package csci310;
 
 public class Event {
     private String eventName;
-    private String description;
+    private String url;
 
     public Event() {
         this.eventName = "";
@@ -15,4 +15,6 @@ public class Event {
     public String getEventName() {
         return this.eventName;
     }
+
+    public void setURLEvent(String url) { this.url = url; }
 }
