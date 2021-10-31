@@ -9,9 +9,25 @@ import com.google.gson.*;
 
 public class Ticketmaster {
     // search up event through keyword
-    String searchEvents(String keyword) throws IOException {
-        String inline = "";
-        String host = "https://app.ticketmaster.com/discovery/v2/events.json?keyword=" + keyword + "&apikey=NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";
+    // if empty fields are passed, then assuming they are not using those things for search result
+    String searchEvents(String keyword, String postalCode, String city) throws IOException {
+        String result = "";
+        String host = "https://app.ticketmaster.com/discovery/v2/events.json?";
+        String api_key = "NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";
+        // if keyword is not empty string, then add it to the query
+        if (keyword != "") {
+            host = host + "keyword=" + keyword;
+        }
+        // if the zipCode is not empty string, then add it to the query
+        if (postalCode != "") {
+            host = host + "&postalCode=" + postalCode;
+        }
+        // if the city is not empty string, then add it to the query
+        if (city != "") {
+            host = host + "&city=" + city;
+        }
+        // add api key to query at the very end after all parameters
+        host = host + "&apikey=" + api_key;
         URL url = new URL(host);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -21,22 +37,27 @@ public class Ticketmaster {
 
         //Write all the JSON data into a string using a scanner
         while (scanner.hasNext()) {
-            inline += scanner.nextLine();
+            result += scanner.nextLine();
         }
         //Close the scanner
         scanner.close();
 
-        JsonObject jobj = new Gson().fromJson(inline, JsonObject.class);
+
+        // turn into json object in order to extract embedded items
+        JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
         String events = jobj.get("_embedded").toString();
+
+        // turn into json object again in order to array of events
         JsonObject eventsObj = new Gson().fromJson(events, JsonObject.class);
         JsonArray eventsArray = eventsObj.getAsJsonArray("events");
 
         ArrayList<Event> refinedListOfEvents = new ArrayList<>();
-        // turn into json array
-        JsonArray jsonArray = new JsonArray();
-        // iterate through each event and get the name
+
+        // iterate through each event and get the name and url
         for (int i = 0; i < eventsArray.size(); i++) {
+            // should check for null before parsing any data
             String event = eventsArray.get(i).toString();
+            // turn each individual event into json object
             JsonObject eventDetails = new Gson().fromJson(event, JsonObject.class);
             // create a new event w/ name
             Event newEvent = new Event(eventDetails.get("name").toString());
@@ -44,9 +65,9 @@ public class Ticketmaster {
             newEvent.setURLEvent(eventDetails.get("url").toString());
             refinedListOfEvents.add(newEvent);
         }
+        // convert the refined results of list into events back into json format
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(refinedListOfEvents);
-
         return json;
     }
 }
