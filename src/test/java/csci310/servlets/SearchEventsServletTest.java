@@ -39,4 +39,22 @@ public class SearchEventsServletTest {
         String result = sw.getBuffer().toString();
         assertTrue(result.contains("BTS"));
     }
+
+    @Test
+    public void testDoPostNoEventsFound() throws Exception {
+        Mockito.when(request.getParameter("keyword")).thenReturn("asdfg");
+        Mockito.when(request.getParameter("zipCode")).thenReturn("");
+        Mockito.when(request.getParameter("city")).thenReturn("");
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        Mockito.when(response.getWriter()).thenReturn(pw);
+        SearchEventsServlet searchEventsServlet = new SearchEventsServlet();
+        searchEventsServlet.doPost(request, response);
+        String result = sw.getBuffer().toString();
+        assertEquals("No results found!", result);
+    }
+
+
 }
