@@ -18,4 +18,7 @@
     <servlet-name>RegisterServlet</servlet-name>
     <url-pattern>/register/*</url-pattern>
   </servlet-mapping>
+  <listener>
+    <listener-class>csci310.AppServletContextListener</listener-class>
+  </listener>
 </web-app>
