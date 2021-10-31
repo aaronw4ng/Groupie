@@ -10,7 +10,7 @@ import com.google.gson.*;
 public class Ticketmaster {
     // search up event through keyword
     // if empty fields are passed, then assuming they are not using those things for search result
-    String searchEvents(String keyword, String postalCode, String city) throws Exception {
+    public String searchEvents(String keyword, String postalCode, String city) throws Exception {
         String result = "";
         String host = "https://app.ticketmaster.com/discovery/v2/events.json?";
         String api_key = "NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";

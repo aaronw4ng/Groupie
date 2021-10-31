@@ -10,6 +10,10 @@
     <servlet-name>RegisterServlet</servlet-name>
     <servlet-class>csci310.servlets.RegisterServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>SearchEventsServlet</servlet-name>
+    <servlet-class>csci310.servlets.SearchEventsServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -17,5 +21,9 @@
   <servlet-mapping>
     <servlet-name>RegisterServlet</servlet-name>
     <url-pattern>/register/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SearchEventsServlet</servlet-name>
+    <url-pattern>/searchEvents</url-pattern>
   </servlet-mapping>
 </web-app>
