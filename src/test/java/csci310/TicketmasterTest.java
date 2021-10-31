@@ -19,33 +19,40 @@ public class TicketmasterTest {
     public void testSearchEvents() throws Exception {
         String result = ticketmaster.searchEvents("BTS", "90301", "Inglewood");
         assertTrue(result.contains("BTS"));
-        System.out.println(result);
+     //   System.out.println(result);
     }
 
     @Test
     public void testSearchEventsMissingKeyword() throws Exception {
         String result = ticketmaster.searchEvents("", "90301", "Inglewood");
         assertFalse(result.isEmpty());
-        System.out.println(result);
+     //   System.out.println(result);
     }
 
     @Test
     public void testSearchEventsMissingZipCode() throws Exception {
         String result = ticketmaster.searchEvents("BTS", "", "Inglewood");
         assertTrue(result.contains("BTS"));
-        System.out.println(result);
+      //  System.out.println(result);
     }
 
     @Test
     public void testSearchEventsMissingCity() throws Exception {
         String result = ticketmaster.searchEvents("BTS", "90301", "");
         assertTrue(result.contains("BTS"));
-        System.out.println(result);
+      //  System.out.println(result);
     }
 
     @Test
-    public void testSearchEventsFailure() throws Exception {
-
+    public void testSearchEventsNoEventsFound() throws Exception {
+        // exception should be thrown because no results corresponding to the fields providing
+        try {
+            String result = ticketmaster.searchEvents("qwerty", "", "");
+            fail();
+        }
+        catch (Exception e) {
+            assertEquals("No results found!", e.getMessage());
+        }
     }
 
 }
