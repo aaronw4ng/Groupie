@@ -3,6 +3,7 @@ package csci310;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import com.google.gson.*;
 
@@ -14,6 +15,7 @@ public class Ticketmaster {
         String result = "";
         String host = "https://app.ticketmaster.com/discovery/v2/events.json?";
         String api_key = "NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";
+        // refactor below to form the host as a separate function to make it easier to test
         // if keyword is not empty string, then add it to the query
         if (keyword != "") {
             host = host + "keyword=" + keyword;
@@ -37,6 +39,8 @@ public class Ticketmaster {
         // add api key to query at the very end after all parameters
         host = host + "&apikey=" + api_key;
         try {
+            // refactor url and httpurlrequest and can do separate file for mock json
+            // want to only test it once; ifile stream?
             URL url = new URL(host);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -51,7 +55,9 @@ public class Ticketmaster {
             //Close the scanner
             scanner.close();
 
-
+            Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
+            gson1.toJson(result);
+           // System.out.println(result);
             // turn into json object in order to extract embedded items
             JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
             JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
@@ -64,17 +70,29 @@ public class Ticketmaster {
                 // turn each individual event into json object
                 JsonObject eventDetails = new Gson().fromJson(event, JsonObject.class);
                 // create a new event w/ name
-                Event newEvent = new Event(eventDetails.get("name").toString());
+                Event newEvent = new Event(eventDetails.get("name").getAsString());
                 // get url of event
-                newEvent.setURLEvent(eventDetails.get("url").toString());
+                newEvent.setURLEvent(eventDetails.get("url").getAsString());
                 // get start date and time of event
                 newEvent.setStartDateTime(eventDetails.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString());
+                // get venues of event
+                JsonArray venuesArray = eventDetails.getAsJsonObject("_embedded").getAsJsonArray("venues");
+                List<Venue> venues  = new ArrayList<>();
+                for (int j = 0; j < venuesArray.size(); j++) {
+                   String venueName = venuesArray.get(j).getAsJsonObject().get("name").getAsString();
+                   String address = venuesArray.get(j).getAsJsonObject().getAsJsonObject("address").get("line1").getAsString();
+                   String venueCity = venuesArray.get(j).getAsJsonObject().getAsJsonObject("city").get("name").getAsString();
+                   String state = venuesArray.get(j).getAsJsonObject().getAsJsonObject("state").get("stateCode").getAsString();
+                   String country = venuesArray.get(j).getAsJsonObject().getAsJsonObject("country").get("countryCode").getAsString();
+                   Venue venue = new Venue(venueName, address, venueCity, state, country);
+                   venues.add(venue);
+                }
+                newEvent.setVenues(venues);
                 refinedListOfEvents.add(newEvent);
             }
             // convert the refined results of list into events back into json format
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(refinedListOfEvents);
-            return json;
+            return gson.toJson(refinedListOfEvents);
         }
         // Results were empty aka no events found or something went wrong when trying to connect
         catch (Exception e) {
