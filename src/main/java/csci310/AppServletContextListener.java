@@ -20,6 +20,7 @@ public class AppServletContextListener implements ServletContextListener{
         catch (Exception e){
             System.out.println("failed to establish database connection");
         }
+        System.out.println("Context Initialized");
     }
 
     @Override
@@ -32,5 +33,6 @@ public class AppServletContextListener implements ServletContextListener{
             System.out.println(e.getMessage());
         }
         database = null;
+        System.out.println("Context Destroyed");
     }
 }
