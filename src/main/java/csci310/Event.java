@@ -3,6 +3,7 @@ package csci310;
 public class Event {
     private String eventName;
     private String url;
+    private String startDateTime;
 
     public Event() {
         this.eventName = "";
@@ -17,4 +18,6 @@ public class Event {
     }
 
     public void setURLEvent(String url) { this.url = url; }
+
+    public void setStartDateTime(String dateTime) { this.startDateTime = dateTime; }
 }

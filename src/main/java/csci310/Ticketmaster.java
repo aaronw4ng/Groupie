@@ -53,15 +53,8 @@ public class Ticketmaster {
 
 
             // turn into json object in order to extract embedded items
-            JsonObject jobj;
-            String events;
-            jobj = new Gson().fromJson(result, JsonObject.class);
-            events = jobj.get("_embedded").toString();
-
-            // turn into json object again in order to array of events
-            JsonObject eventsObj = new Gson().fromJson(events, JsonObject.class);
-            JsonArray eventsArray = eventsObj.getAsJsonArray("events");
-
+            JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
+            JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
             ArrayList<Event> refinedListOfEvents = new ArrayList<>();
 
             // iterate through each event and get the name and url
@@ -74,6 +67,8 @@ public class Ticketmaster {
                 Event newEvent = new Event(eventDetails.get("name").toString());
                 // get url of event
                 newEvent.setURLEvent(eventDetails.get("url").toString());
+                // get start date and time of event
+                newEvent.setStartDateTime(eventDetails.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString());
                 refinedListOfEvents.add(newEvent);
             }
             // convert the refined results of list into events back into json format
