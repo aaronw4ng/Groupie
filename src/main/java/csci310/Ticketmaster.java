@@ -55,9 +55,6 @@ public class Ticketmaster {
             //Close the scanner
             scanner.close();
 
-            Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
-            gson1.toJson(result);
-           // System.out.println(result);
             // turn into json object in order to extract embedded items
             JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
             JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
