@@ -15,8 +15,10 @@ public class SearchEventsServlet extends HttpServlet {
             String keyword = request.getParameter("keyword");
             String zipCode = request.getParameter("zipCode");
             String city = request.getParameter("city");
+            String startDate = request.getParameter("startDate");
+            String endDate = request.getParameter("endDate");
             Ticketmaster ticketmaster = new Ticketmaster();
-            String events = ticketmaster.searchEvents(keyword, zipCode, city);
+            String events = ticketmaster.searchEvents(keyword, zipCode, city, startDate, endDate);
             // if reached here, then did get some results
             out.print(events);
             System.out.println(events);

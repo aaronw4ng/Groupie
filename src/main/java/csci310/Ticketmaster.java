@@ -1,6 +1,5 @@
 package csci310;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,7 +9,8 @@ import com.google.gson.*;
 public class Ticketmaster {
     // search up event through keyword
     // if empty fields are passed, then assuming they are not using those things for search result
-    public String searchEvents(String keyword, String postalCode, String city) throws Exception {
+    // startDateTime & endDateTime should be formatted as  YYYY-MM-DDT00:00:00.000Z
+    public String searchEvents(String keyword, String postalCode, String city, String startDate, String endDate) throws Exception {
         String result = "";
         String host = "https://app.ticketmaster.com/discovery/v2/events.json?";
         String api_key = "NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";
@@ -25,6 +25,14 @@ public class Ticketmaster {
         // if the city is not empty string, then add it to the query
         if (city != "") {
             host = host + "&city=" + city;
+        }
+        // if the start date is not empty, then add it to the query
+        if (startDate != "") {
+            host = host + "&startDateTime=" + startDate;
+        }
+        // if the end date is not empty, then add it to the query
+        if (endDate != "") {
+            host = host + "&endDateTime=" + endDate;
         }
         // add api key to query at the very end after all parameters
         host = host + "&apikey=" + api_key;

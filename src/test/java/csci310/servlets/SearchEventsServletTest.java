@@ -1,6 +1,5 @@
 package csci310.servlets;
 
-import csci310.Ticketmaster;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -8,7 +7,6 @@ import org.mockito.Mockito;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -29,6 +27,8 @@ public class SearchEventsServletTest {
         Mockito.when(request.getParameter("keyword")).thenReturn("BTS");
         Mockito.when(request.getParameter("zipCode")).thenReturn("90301");
         Mockito.when(request.getParameter("city")).thenReturn("");
+        Mockito.when(request.getParameter("startDate")).thenReturn("");
+        Mockito.when(request.getParameter("endDate")).thenReturn("");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -45,6 +45,8 @@ public class SearchEventsServletTest {
         Mockito.when(request.getParameter("keyword")).thenReturn("asdfg");
         Mockito.when(request.getParameter("zipCode")).thenReturn("");
         Mockito.when(request.getParameter("city")).thenReturn("");
+        Mockito.when(request.getParameter("startDate")).thenReturn("");
+        Mockito.when(request.getParameter("endDate")).thenReturn("");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
