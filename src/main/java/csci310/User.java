@@ -11,7 +11,6 @@ public class User {
     private ArrayList<User> blockedUsers;
     private ArrayList<Proposal> receivedProposals;
     private ArrayList<Proposal> sentProposals;
-    private Database db;
 
 
     public User(String username) throws Exception {
@@ -19,7 +18,6 @@ public class User {
         this.blockedUsers = new ArrayList<>();
         this.receivedProposals = new ArrayList<>();
         this.sentProposals = new ArrayList<>();
-        this.db = new Database("test.db");
     }
 
     public void setUsername(String username) {
