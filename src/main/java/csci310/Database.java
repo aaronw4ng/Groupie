@@ -91,10 +91,9 @@ public class Database {
 
 	// check if user exists in the database
 	public Boolean checkUserExists(String _us) throws Exception{
-		Statement stmt = connection.createStatement();
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM users WHERE username = '" + _us.toLowerCase() + "'");
-		ResultSet rs = stmt.executeQuery(sql.toString());
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?" );
+		stmt.setString(1, _us.toLowerCase());
+		ResultSet rs = stmt.executeQuery();
 		if (rs.next()) {
 			stmt.close();
 			rs.close();
