@@ -165,16 +165,16 @@ public class Database {
 	}
 
 	public int queryProposalID(String owner, String title) throws Exception {
-		Statement stmt = connection.createStatement();
-		StringBuilder sql = new StringBuilder();
 		int userID = queryUserID(owner);
-		sql.append("SELECT proposal_id FROM proposals WHERE owner_id = " + userID + " AND title = '" + title + "'");
-		ResultSet rs = stmt.executeQuery(sql.toString());
+		PreparedStatement stmt = connection.prepareStatement("SELECT proposal_id FROM proposals WHERE owner_id = ? AND title = ?");
+		stmt.setString(1, Integer.toString(userID));
+		stmt.setString(2, title);
+		ResultSet rs = stmt.executeQuery();
 		if (rs.next()){
 			int proposalID = rs.getInt("proposal_id");
 			rs.close();
 			stmt.close();
-			return userID;
+			return proposalID;
 		}
 		else{
 			rs.close();
