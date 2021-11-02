@@ -148,10 +148,9 @@ public class Database {
 	}
 
 	public int queryUserID(String owner) throws Exception{
-		Statement stmt = connection.createStatement();
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT user_id FROM users where username = '" + owner.toLowerCase() + "'");
-		ResultSet rs = stmt.executeQuery(sql.toString());
+		PreparedStatement stmt = connection.prepareStatement("SELECT user_id FROM users where username = ?");
+		stmt.setString(1, owner.toLowerCase());
+		ResultSet rs = stmt.executeQuery();
 		if (rs.next()){
 			int userID = rs.getInt("user_id");
 			rs.close();
