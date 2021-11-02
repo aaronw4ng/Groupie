@@ -121,10 +121,9 @@ public class Database {
 	
 	// check if hashed password matches with stored hashed password in the DB
 	public Boolean login(String _us, String _pd) throws Exception{
-		Statement stmt = connection.createStatement();
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT password FROM users where username = '" + _us.toLowerCase() + "'");
-		ResultSet rs = stmt.executeQuery(sql.toString());
+		PreparedStatement stmt = connection.prepareStatement("SELECT password FROM users where username = ?");
+		stmt.setString(1, _us.toLowerCase());
+		ResultSet rs = stmt.executeQuery();
 		if (rs.next()){
 			String rs_password = rs.getString("password");
 			stmt.close();
