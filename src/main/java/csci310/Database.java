@@ -138,10 +138,9 @@ public class Database {
 	// remove the according user from table
 	public Boolean deactivate(String _us, String _pd) throws Exception{
 		if (login(_us, _pd)){
-			Statement stmt = connection.createStatement();
-			StringBuilder sql = new StringBuilder();
-			sql.append("DELETE FROM users WHERE username = '" + _us.toLowerCase() + "'");
-			stmt.executeUpdate(sql.toString());
+			PreparedStatement stmt = connection.prepareStatement("DELETE FROM users WHERE username = ?");
+			stmt.setString(1, _us.toLowerCase());
+			stmt.executeUpdate();
 			stmt.close();
 			return true;
 		}
