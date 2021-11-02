@@ -106,12 +106,12 @@ public class Database {
 	
 	// add user and hashed password to the table
 	public Boolean register(String _us, String _pd) throws Exception{
-		Statement stmt = connection.createStatement();
-		StringBuilder sql = new StringBuilder();
 		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
-		sql.append("INSERT INTO users (username, password) VALUES ('" + _us.toLowerCase() + "', '" + hashed + "')");
+		PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password) VALUES(?, ?)");
+		stmt.setString(1, _us.toLowerCase());
+		stmt.setString(2, hashed);
 		try {
-			stmt.executeUpdate(sql.toString());
+			stmt.executeUpdate();
 			stmt.close();
 		} catch(Exception e) {
 			return false;
