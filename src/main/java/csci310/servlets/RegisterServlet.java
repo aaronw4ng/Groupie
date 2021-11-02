@@ -9,8 +9,8 @@ import java.io.PrintWriter;
 public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        Database database = (Database) this.getServletConfig().getServletContext().getAttribute("database");
         try {
-            Database database = new Database("test.db");
             PrintWriter out = response.getWriter();
             String usernameValue = request.getParameter("username");
             String passwordValue = request.getParameter("password");
@@ -23,7 +23,6 @@ public class RegisterServlet extends HttpServlet {
                 database.register(usernameValue, passwordValue);
                 out.print(true);
             }
-            database.close();
         } catch (Exception e) {
             throw new ServletException("Register Servlet failed");
         }
