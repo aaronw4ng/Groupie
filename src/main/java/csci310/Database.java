@@ -167,7 +167,7 @@ public class Database {
 	public int queryProposalID(String owner, String title) throws Exception {
 		int userID = queryUserID(owner);
 		PreparedStatement stmt = connection.prepareStatement("SELECT proposal_id FROM proposals WHERE owner_id = ? AND title = ?");
-		stmt.setString(1, Integer.toString(userID));
+		stmt.setString(1, String.valueOf(userID));
 		stmt.setString(2, title);
 		ResultSet rs = stmt.executeQuery();
 		if (rs.next()){
@@ -229,12 +229,12 @@ public class Database {
 		// Add list of events associated with this proposal to the events table
 		for (String e: events) {
 			String query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
-			PreparedStatement pst1 = connection.prepareStatement(query);
-			pst1.setString(1, String.valueOf(proposalId));
-			pst1.setString(2, e);
-			pst1.executeUpdate();
+			PreparedStatement pst = connection.prepareStatement(query);
+			pst.setString(1, String.valueOf(proposalId));
+			pst.setString(2, e);
+			pst.executeUpdate();
 			System.out.println("Add event: " + e + " for proposalID: " + proposalId);
-			pst1.close();
+			pst.close();
 		}
 		return true;
 	}
@@ -249,26 +249,26 @@ public class Database {
 		for (String e: events) {
 			// find event id
 			String query = "SELECT event_id FROM events WHERE event_link = '" + e + "'";
-			PreparedStatement pst2 = connection.prepareStatement(query);
-			ResultSet rs = pst2.executeQuery();
+			PreparedStatement pst1 = connection.prepareStatement(query);
+			ResultSet rs = pst1.executeQuery();
 			int eventID = 0;
 			if (rs.next()) {
 				eventID = rs.getInt("event_id");
 			}
 			rs.close();
-			pst2.close();
+			pst1.close();
 
 			// find the invitee's user id and then insert the invitee into table
 			for (String invitee: invited) {
 				int inviteeID = queryUserID(invitee);
 				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
-				PreparedStatement pst4 = connection.prepareStatement(insert);
-				pst4.setString(1, String.valueOf(proposalId));
-				pst4.setString(2, String.valueOf(inviteeID));
-				pst4.setString(3, String.valueOf(eventID));
-				pst4.executeUpdate();
+				PreparedStatement pst2 = connection.prepareStatement(insert);
+				pst2.setString(1, String.valueOf(proposalId));
+				pst2.setString(2, String.valueOf(inviteeID));
+				pst2.setString(3, String.valueOf(eventID));
+				pst2.executeUpdate();
 				System.out.println("Adding invitee: " + invitee + " for Event: " + e + " for Proposal Id: " + proposalId);
-				pst4.close();
+				pst2.close();
 			}
 		}
 
