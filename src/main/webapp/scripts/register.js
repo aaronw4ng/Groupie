@@ -97,6 +97,13 @@ function validateFields(usernameInput, passwordInput, retypedPasswordInput) {
     isValid = false
   }
 
+  // Username REGEX
+  // var regexp = /^\S*$/;
+  // if (!usernameInput.match(regexp)){
+  //   setWarnings(descriptionContainer, warningMessageContainer, usernameInputField, "Username contains illegal character", "illegal-username")
+  //   isValid = false
+  // }
+
   // Not long enough
   if (passwordInput.length < 8) {
     setWarnings(descriptionContainer, warningMessageContainer, passwordInputField, "Password not at least 8 characters.", "password-length")

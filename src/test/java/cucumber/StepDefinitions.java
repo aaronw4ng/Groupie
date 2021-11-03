@@ -17,13 +17,23 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 /**
  * Step definitions for Cucumber tests.
  */
 public class StepDefinitions {
 	private static final String ROOT_URL = "http://localhost:8080/";
 
+	private int USERNAME_LENGTH = 10;
+	private String USERNAME_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
 	private final WebDriver driver = new ChromeDriver();
+
+	private String random_username(int usernameLength, String chars) {
+		return RandomStringUtils.random(usernameLength, chars);
+
+	}
 
 	@Given ("user is on the Login page")
 	public void user_is_on_the_Login_page() {
@@ -62,6 +72,12 @@ public class StepDefinitions {
 	@Given("user is on the Create User page")
 	public void user_is_on_the_Create_User_page() {
 		driver.get("http://localhost:8080/pages/create-account.jsp");
+	}
+
+	@When("user inputs random username in username") 
+	public void user_inputs_random_username_in_username() {
+		String username = random_username(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		driver.findElement(By.id("input-username")).sendKeys(username);
 	}
 
 	@When("user re-types {string}")
