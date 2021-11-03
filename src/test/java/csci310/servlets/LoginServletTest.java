@@ -1,8 +1,12 @@
 package csci310.servlets;
 
+import csci310.AppServletContextListener;
 import csci310.Database;
 import csci310.User;
+
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletConfig;
 
 import org.mockito.*;
@@ -23,29 +28,46 @@ import java.io.StringWriter;
 public class LoginServletTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
-    private ServletConfig config;
-    private ServletContext context;
     User user;
+
+    // for mocking server initialization
+    private static ServletContext context;
+    private static AppServletContextListener listener;
+    private static ServletContextEvent event;
+    private static ServletConfig config;
+    
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        // database initialization
+        AppServletContextListener.db_name = "test.db";
+        context = Mockito.mock(ServletContext.class);
+        config = Mockito.mock(ServletConfig.class);
+        listener = new AppServletContextListener();
+        event = new ServletContextEvent(context);
+        listener.contextInitialized(event);
+        Mockito.doReturn(listener.database).when(context).getAttribute("database");
+        Mockito.doReturn(context).when(config).getServletContext();
+    }
 
     @Before
     public void setUp() throws Exception {
         user = new User("User");
         user.setUsername("test");
-        ServletAdapter.db_name = "test.db";
         request = Mockito.mock(HttpServletRequest.class);
         response = Mockito.mock(HttpServletResponse.class);
-        config = Mockito.mock(ServletConfig.class);
-        context = Mockito.mock(ServletContext.class);
-        Mockito.doReturn(context).when(config).getServletContext();
     }
-
+    
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        listener.contextDestroyed(event);
+    } 
+    
     @Test
     public void testDoPost() throws Exception {
-        Database testDB = new Database("test.db");
+        Database testDB = listener.database;
         testDB.dropAllTables();
         testDB.createRequiredTables();
         testDB.register("TestUser", "TestPassword");
-        testDB.close();
 
         Mockito.when(request.getParameter("username")).thenReturn("TestUser");
         Mockito.when(request.getParameter("password")).thenReturn("TestPassword");

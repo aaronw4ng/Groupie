@@ -6,9 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.PrintWriter;
 
-public class RegisterServlet extends ServletAdapter {
+public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        Database database = (Database) this.getServletConfig().getServletContext().getAttribute("database");
         try {
             PrintWriter out = response.getWriter();
             String usernameValue = request.getParameter("username");
