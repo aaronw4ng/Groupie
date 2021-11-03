@@ -21,7 +21,7 @@ public class SearchEventsServlet extends HttpServlet {
             String events = ticketmaster.searchEvents(keyword, zipCode, city, startDate, endDate);
             // if reached here, then did get some results
             out.print(events);
-            System.out.println(events);
+         //   System.out.println(events);
         }
         // No results found for search or something else went wrong, then let front end no results found
         catch (Exception e) {
