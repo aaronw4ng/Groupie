@@ -104,6 +104,7 @@ button:hover {
   bottom: 0;
   left: 0;
   color: #333;
+  height : 2.5rem;
 }
 
 .instructions {
