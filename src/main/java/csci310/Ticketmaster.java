@@ -8,6 +8,18 @@ import java.util.Scanner;
 import com.google.gson.*;
 
 public class Ticketmaster {
+    public String buildHostString(String keyword, String postalCode, String city, String startDate, String endDate) {
+        return "";
+    }
+
+    public String getSearchResult(String hostString) {
+        return "";
+    }
+
+    public Event parseEvent(String eventString) {
+        return new Event();
+    }
+
     // search up event through keyword
     // if empty fields are passed, then assuming they are not using those things for search result
     // startDateTime & endDateTime should be formatted as  YYYY-MM-DDT00:00:00.000Z
@@ -93,6 +105,7 @@ public class Ticketmaster {
         }
         // Results were empty aka no events found or something went wrong when trying to connect
         catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("No results found!");
         }
     }

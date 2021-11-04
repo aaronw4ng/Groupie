@@ -16,6 +16,24 @@ public class TicketmasterTest {
     // look over tests for search events
 
     @Test
+    public void testBuildHostString() {
+        String host = ticketmaster.buildHostString("A", "B", "C", "D", "E");
+        assertEquals("A, B, C, D, E", host);
+    }
+
+    @Test
+    public void testGetSearchResult() {
+        String result = ticketmaster.getSearchResult("host");
+        assertNotEquals(result, "");
+    }
+
+    @Test
+    public void testParseEvent() {
+        Event result = ticketmaster.parseEvent("host");
+        assertNotEquals(result, "");
+    }
+
+    @Test
     public void testSearchEvents() throws Exception {
         String result = ticketmaster.searchEvents("BTS", "90301", "Inglewood", "2021-11-01T00:00:00Z", "2021-11-30T00:00:00Z");
         assertTrue(result.contains("BTS"));
