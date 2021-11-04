@@ -63,6 +63,10 @@ public class Ticketmaster {
         return new Event();
     }
 
+    public ArrayList<Event> parseEventsArray(String result) {
+        return null;
+    }
+
     // search up event through keyword
     // if empty fields are passed, then assuming they are not using those things for search result
     // startDateTime & endDateTime should be formatted as  YYYY-MM-DDT00:00:00.000Z

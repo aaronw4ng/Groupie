@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 public class TicketmasterTest {
     Ticketmaster ticketmaster;
 
@@ -17,7 +19,7 @@ public class TicketmasterTest {
 
     @Test
     public void testBuildHostString() {
-        String host = ticketmaster.buildHostString("A", "B", "C", "D", "E");
+        String host = ticketmaster.buildHostString("BTS", "90301", "Inglewood", "2021-11-01T00:00:00Z", "2021-11-30T00:00:00Z");
         assertEquals("A, B, C, D, E", host);
     }
 
@@ -31,6 +33,14 @@ public class TicketmasterTest {
     public void testParseEvent() {
         Event result = ticketmaster.parseEvent("host");
         assertNotEquals(result, "");
+    }
+
+    @Test
+    public void testParseEventsArray() throws Exception{
+        String host = ticketmaster.buildHostString("BTS", "90301", "Inglewood", "2021-11-01T00:00:00Z", "2021-11-30T00:00:00Z");
+        String result = ticketmaster.getSearchResult(host);
+        ArrayList<Event> events = ticketmaster.parseEventsArray(result);
+        assertNotEquals(events.size(), 0);
     }
 
     @Test
