@@ -61,7 +61,7 @@ body {
   }
 
 
-  @media (max-width : 991px) {
+  @media (max-device-width : 776px) {
     .header {
       font-size: 1.5em;
     }
