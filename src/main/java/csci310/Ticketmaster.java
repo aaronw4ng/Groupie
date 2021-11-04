@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import com.google.gson.*;
+import java.lang.Thread;
 
 public class Ticketmaster {
     public String buildHostString(String keyword, String postalCode, String city, String startDate, String endDate) {
@@ -42,6 +43,9 @@ public class Ticketmaster {
         // want to only test it once; ifile stream?
         String result = "";
         URL url = new URL(hostString);
+
+        // temporary hotfix for limiting api calls
+        Thread.sleep(250);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.connect();
@@ -107,7 +111,7 @@ public class Ticketmaster {
         }
         // Results were empty aka no events found or something went wrong when trying to connect
         catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             throw new Exception("No results found!");
         }
     }
