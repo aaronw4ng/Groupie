@@ -25,18 +25,19 @@
       <p class="input-header title">Proposal Name</p>
       <input class="field-input" type="text" id="input-proposal-name" placeholder="Name"><br/>
       <p class="input-header">List of Proposed Events</p>
-      <p>Event 1: <input type="text"> </p>
-      <button class="add">+ Another Event </button>
+      <p>events: </p> <button id="btn-event-find" onclick="handleFindEventClick(event)">+ add event</button>
       <p class="input-header">Search for Users to Invite</p>
       <input class="field-input" id="input-invitees" placeholder="Search"><br/>
       <br/><button name="btn-send-proposal" class = "principal">Send Proposal</button>
-      <button name="btn-save-draft" class = "principal">Save Draft</button>
+      <button name="btn-save-draft" class ="principal">Save Draft</button>
     </form>
   </div>
 
   <div id="footer">
     <p>team 27</p>
   </div>
+
+  <script src="../scripts/create-proposal.js"></script>
 
 </body>
 </html>
