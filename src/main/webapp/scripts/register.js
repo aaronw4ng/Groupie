@@ -1,13 +1,21 @@
+// Variables needed for helper functions
+var usernameInputField = document.querySelector("#input-username")
+var warningMessageContainer = document.querySelector(".warning-message")
+var descriptionContainer = document.querySelector(".instructions")
+
+// Clear inputs on page refresh
+function clearFields() {
+    document.getElementsByClassName("account-form")[0].reset()
+}
+window.addEventListener("load", clearFields, false);
+
+// Handle on 'Create Account'
 function handleRegisterClick(event) {
   event.preventDefault()
   const usernameInput = document.querySelector("#input-username").value
   const passwordInput = document.querySelector("#input-password").value
   const rePasswordInput = document.querySelector("#re-input-password").value
 
-
-  // Validate passwords
-
-  console.log("Creating Account...")
   if (validateFields(usernameInput, passwordInput, rePasswordInput)) {
     $.ajax({
       method: "POST",
@@ -16,39 +24,33 @@ function handleRegisterClick(event) {
         username: usernameInput,
         password: passwordInput,
       },
-
+      // Check if username taken
       success: function (result) {
         console.log(result)
         if (result == "true") {
           alert("Account successfully created!")
         } else {
-          let usernameInputField = document.querySelector("#input-username")
-          let warningMessageContainer = document.querySelector(".warning-message")
-          let warningMessage = `
-          <p name='username-taken'>Username has already been taken</p>
-          `
-          warningMessageContainer.innerHTML += warningMessage
-          warningMessageContainer.style.display = "block"
-          usernameInputField.classList.add("error-input")
+          setWarnings(usernameInputField, "Username has already been taken", "username-taken")
         }
       },
     })
   }
+  return false
 }
 
 // Warning Message Set Up
-function setWarnings(descriptionContainer, warningContainer, inputField, message, messageName) {
+function setWarnings(inputField, message, messageName) {
   descriptionContainer.style.display = "none"
   inputField.classList.add("error-input")
-  warningContainer.style.display = "block"
+  warningMessageContainer.style.display = "block"
   let warningMessage = `
   <p name=${messageName}>${message}</p>
   `
-  warningContainer.innerHTML += warningMessage
+  warningMessageContainer.innerHTML += warningMessage
 }
 
 // Tear down warnings
-function cleanWarnings(descriptionContainer, inputField) {
+function cleanWarnings(inputField) {
   descriptionContainer.style.display = "block"
   if (inputField.classList.contains("error-input")) {
     inputField.classList.remove("error-input")
@@ -57,56 +59,38 @@ function cleanWarnings(descriptionContainer, inputField) {
 
 // Function to validate passwords
 function validateFields(usernameInput, passwordInput, retypedPasswordInput) {
+  // querySelector returns null if empty -> use for validation
   let isValid = true
-  let warningMessageContainer = document.querySelector(".warning-message")
-  let descriptionContainer = document.querySelector(".instructions")
-  let usernameInputField = document.querySelector("#input-username")
+  let isEmpty = false
+
   let passwordInputField = document.querySelector("#input-password")
   let passwordReInputField = document.querySelector("#re-input-password")
 
   // Clean Any Previous Warnings
-  cleanWarnings(descriptionContainer, usernameInputField)
-  cleanWarnings(descriptionContainer, passwordInputField)
-  cleanWarnings(descriptionContainer, passwordReInputField)
+  cleanWarnings(usernameInputField)
+  cleanWarnings(passwordInputField)
+  cleanWarnings(passwordReInputField)
   warningMessageContainer.innerHTML = ""
   warningMessageContainer.style.display = "none"
 
-  let isEmpty = false
   // Empty Fields
-  if (usernameInput.length == 0) {
+  if (!usernameInput || !passwordInput || !retypedPasswordInput) {
     isValid = false
     isEmpty = true
-    setWarnings(descriptionContainer, warningMessageContainer, usernameInputField, "Username can't be empty.", "empty-username")
+    if (!usernameInput) setWarnings(usernameInputField, "Username can't be empty.", "empty-username")
+    if (!passwordInput) setWarnings(passwordInputField, "Password can't be empty.", "empty-password")
+    if (!retypedPasswordInput) setWarnings(passwordReInputField, "Password confirmation can't be empty.", "empty-confirm-password")
   }
-  if (passwordInput.length == 0) {
-    isValid = false
-    isEmpty = true
-    setWarnings(descriptionContainer, warningMessageContainer, passwordInputField, "Password can't be empty.", "empty-password")
-  }
-  if (retypedPasswordInput.length == 0) {
-    isValid = false
-    isEmpty = true
-    setWarnings(descriptionContainer, warningMessageContainer, passwordReInputField, "Password confirmation can't be empty.", "empty-confirm-password")
-  }
-  if (isEmpty) {
-    return isValid
-  }
+  if (isEmpty) return isValid
+
   // Don't Match
   if (passwordInput !== retypedPasswordInput) {
-    setWarnings(descriptionContainer, warningMessageContainer, passwordReInputField, "Passwords must match.", "password-match")
+    setWarnings(passwordReInputField, "Passwords must match.", "password-match")
     isValid = false
   }
-
-  // Username REGEX
-  // var regexp = /^\S*$/;
-  // if (!usernameInput.match(regexp)){
-  //   setWarnings(descriptionContainer, warningMessageContainer, usernameInputField, "Username contains illegal character", "illegal-username")
-  //   isValid = false
-  // }
-
   // Not long enough
   if (passwordInput.length < 8) {
-    setWarnings(descriptionContainer, warningMessageContainer, passwordInputField, "Password not at least 8 characters.", "password-length")
+    setWarnings(passwordInputField, "Password not at least 8 characters.", "password-length")
     isValid = false
   }
   return isValid
