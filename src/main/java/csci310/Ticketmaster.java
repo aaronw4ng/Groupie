@@ -7,24 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 import com.google.gson.*;
 
+import org.openqa.selenium.net.UrlChecker;
+
 public class Ticketmaster {
     public String buildHostString(String keyword, String postalCode, String city, String startDate, String endDate) {
-        return "";
-    }
-
-    public String getSearchResult(String hostString) {
-        return "";
-    }
-
-    public Event parseEvent(String eventString) {
-        return new Event();
-    }
-
-    // search up event through keyword
-    // if empty fields are passed, then assuming they are not using those things for search result
-    // startDateTime & endDateTime should be formatted as  YYYY-MM-DDT00:00:00.000Z
-    public String searchEvents(String keyword, String postalCode, String city, String startDate, String endDate) throws Exception {
-        String result = "";
         String host = "https://app.ticketmaster.com/discovery/v2/events.json?";
         String api_key = "NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";
         // refactor below to form the host as a separate function to make it easier to test
@@ -50,22 +36,40 @@ public class Ticketmaster {
         }
         // add api key to query at the very end after all parameters
         host = host + "&apikey=" + api_key;
+        return host;
+    }
+
+    public String getSearchResult(String hostString) throws Exception {
+        // refactor url and httpurlrequest and can do separate file for mock json
+        // want to only test it once; ifile stream?
+        String result = "";
+        URL url = new URL(hostString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.connect();
+
+        Scanner scanner = new Scanner(url.openStream());
+
+        //Write all the JSON data into a string using a scanner
+        while (scanner.hasNext()) {
+            result += scanner.nextLine();
+        }
+        //Close the scanner
+        scanner.close();
+        return result;
+    }
+
+    public Event parseEvent(String eventString) {
+        return new Event();
+    }
+
+    // search up event through keyword
+    // if empty fields are passed, then assuming they are not using those things for search result
+    // startDateTime & endDateTime should be formatted as  YYYY-MM-DDT00:00:00.000Z
+    public String searchEvents(String keyword, String postalCode, String city, String startDate, String endDate) throws Exception {
+        String host = this.buildHostString(keyword, postalCode, city, startDate, endDate);
         try {
-            // refactor url and httpurlrequest and can do separate file for mock json
-            // want to only test it once; ifile stream?
-            URL url = new URL(host);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-
-            Scanner scanner = new Scanner(url.openStream());
-
-            //Write all the JSON data into a string using a scanner
-            while (scanner.hasNext()) {
-                result += scanner.nextLine();
-            }
-            //Close the scanner
-            scanner.close();
+            String result = this.getSearchResult(host);
 
             // turn into json object in order to extract embedded items
             JsonObject jobj = new Gson().fromJson(result, JsonObject.class);

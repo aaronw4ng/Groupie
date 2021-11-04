@@ -22,7 +22,7 @@ public class TicketmasterTest {
     }
 
     @Test
-    public void testGetSearchResult() {
+    public void testGetSearchResult() throws Exception{
         String result = ticketmaster.getSearchResult("host");
         assertNotEquals(result, "");
     }
