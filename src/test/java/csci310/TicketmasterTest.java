@@ -5,20 +5,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.lang.Thread;
-
 public class TicketmasterTest {
     Ticketmaster ticketmaster;
 
     @Before
     public void setUp() throws Exception {
         ticketmaster = new Ticketmaster();
-    }
-
-    @Before
-    public void init() throws Exception {
-        // hotfix for the API call limit
-        Thread.sleep(200);
     }
 
     // look over tests for search events
