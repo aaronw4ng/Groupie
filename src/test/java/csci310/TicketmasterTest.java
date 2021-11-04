@@ -2,10 +2,10 @@ package csci310;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.lang.Thread;
 
 public class TicketmasterTest {
     Ticketmaster ticketmaster;
@@ -15,24 +15,43 @@ public class TicketmasterTest {
         ticketmaster = new Ticketmaster();
     }
 
+    @Before
+    public void init() throws Exception {
+        // hotfix for the API call limit
+        Thread.sleep(200);
+    }
+
     // look over tests for search events
 
     @Test
     public void testBuildHostString() {
         String host = ticketmaster.buildHostString("BTS", "90301", "Inglewood", "2021-11-01T00:00:00Z", "2021-11-30T00:00:00Z");
-        assertEquals("A, B, C, D, E", host);
+        assertTrue(host.contains("https://app.ticketmaster.com/discovery/v2/events.json?"));
+        assertTrue(host.contains("BTS"));
+        assertTrue(host.contains("90301"));
+        assertTrue(host.contains("Inglewood"));
+        assertTrue(host.contains("2021-11-01T00:00:00Z"));
+        assertTrue(host.contains("2021-11-30T00:00:00Z"));
+        assertTrue(host.contains("apikey="));
+    }
+    @Test
+    public void testBuildHostStringNoInput() {
+        String host = ticketmaster.buildHostString("", "", "", "", "");
+        assertTrue(host.contains("https://app.ticketmaster.com/discovery/v2/events.json?"));
+        assertFalse(host.contains("keyword"));
+        assertFalse(host.contains("postalCode"));
+        assertFalse(host.contains("city"));
+        assertFalse(host.contains("startDateTime"));
+        assertFalse(host.contains("endDateTime"));
+        assertTrue(host.contains("apikey"));
     }
 
     @Test
     public void testGetSearchResult() throws Exception{
-        String result = ticketmaster.getSearchResult("host");
-        assertNotEquals(result, "");
-    }
-
-    @Test
-    public void testParseEvent() {
-        Event result = ticketmaster.parseEvent("host");
-        assertNotEquals(result, "");
+        String host = ticketmaster.buildHostString("", "", "", "", "");
+        String result = ticketmaster.getSearchResult(host);
+        assertFalse(result == "");
+        assertTrue(result.contains("_embedded"));
     }
 
     @Test
