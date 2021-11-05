@@ -101,3 +101,29 @@ body {
         font-size: small;
     }
 }
+
+
+#datelabel {
+    color: #9762A5;
+    font-size: medium;
+}
+
+input,
+label {
+    margin: .4rem 0;
+}
+
+input,
+#date {
+    border: 2px #D2D1D1 solid;
+    color: grey;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+#toggleFilters {
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 2rem;
+}
