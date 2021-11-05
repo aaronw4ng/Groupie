@@ -6,7 +6,25 @@ Scenario: User logs in with valid credentials
     And user clicks "btn-login" button
     Then user should be logged in
 
+Scenario: User attempts login with empty password field
+    Given user is on the Login page
+    When user inputs "username1" in username
+    And user clicks "btn-login" button
+    Then user should be shown "empty-password" error message
+
+Scenario: User attempts login with empty username field
+    Given user is on the Login page
+    And user inputs "password1" in password
+    And user clicks "btn-login" button
+    Then user should be shown "empty-username" error message
+
+Scenario: User attempts login with all fields empty
+    Given user is on the Login page 
+    And user clicks "btn-login" button
+    Then user should be shown "empty-username,empty-password" error message
+
 Scenario: User clicks the create account button
     Given user is on the Login page
     When user clicks "btn-create-page" button
     Then user should be on Create Account page
+

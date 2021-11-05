@@ -1,8 +1,13 @@
 package csci310;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Event {
     private String eventName;
-    private String description;
+    private String url;
+    private String startDateTime;
+    private List<Venue> venues = new ArrayList<>();
 
     public Event() {
         this.eventName = "";
@@ -15,4 +20,10 @@ public class Event {
     public String getEventName() {
         return this.eventName;
     }
+
+    public void setURLEvent(String url) { this.url = url; }
+
+    public void setStartDateTime(String dateTime) { this.startDateTime = dateTime; }
+
+    public void setVenues(List<Venue> places) { this.venues = places; }
 }
