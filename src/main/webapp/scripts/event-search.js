@@ -63,3 +63,19 @@ function handleResultSelection(index) {
     let selectedEvent = json[index]
     console.log(selectedEvent)
 }
+
+var button = document.getElementById('toggleFilters');
+button.onclick = function() {
+    var div = document.getElementById('search-filters');
+    if (div.style.display !== 'none') {
+        div.style.display = 'none';
+    }
+    else {
+        div.style.display = 'block';
+    }
+};
+
+function setFilters() {
+    var div = document.getElementById('search-filters');
+    div.style.display = 'none'
+}
