@@ -21,6 +21,10 @@ public class Event {
         return this.eventName;
     }
 
+    public String getUrl() {
+        return this.url;
+    }
+
     public void setURLEvent(String url) { this.url = url; }
 
     public void setStartDateTime(String dateTime) { this.startDateTime = dateTime; }
