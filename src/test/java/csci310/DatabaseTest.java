@@ -225,8 +225,10 @@ public class DatabaseTest {
 		invited.add("Invitee 1");
 		// register invitee 1 as user
 		testDB.register("Invitee 1", "PS1");
-		List<String> events = new ArrayList<>();
-		events.add("Event 1");
+		List<Event> events = new ArrayList<>();
+		List<Venue> venues = new ArrayList<>();
+		venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
 		testDB.createAProposal("Test User", "My Proposal", "This is a description", invited, events, false);
 		proposal_id = testDB.queryProposalID("Test User", "My Proposal");
 		assertEquals(1, proposal_id);
@@ -248,9 +250,13 @@ public class DatabaseTest {
 		// add invitees as users
 		testDB.register("Invitee 1", "PS1");
 		testDB.register("Invitee 2", "PS2");
-		List<String> events = new ArrayList<>();
-		events.add("Birthday");
-		events.add("BTS Concert");
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
 		Boolean isDraft = false;
 		Boolean status = testDB.createAProposal("Test User", title, descript, invitees, events, isDraft);
 		assertEquals(true, status);
@@ -267,8 +273,10 @@ public class DatabaseTest {
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
-		List<String> events = new ArrayList<>();
-		events.add("Birthday");
+		List<Event> events = new ArrayList<>();
+		List<Venue> venues = new ArrayList<>();
+		venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
 		Boolean isDraft = false;
 		Boolean status = testDB.createAProposal("Test User", title, descript, invitees, events, isDraft);
 		assertEquals(false, status);
@@ -279,9 +287,13 @@ public class DatabaseTest {
 	@Test
 	public void testAddEventsToProposal() throws Exception {
 		Database testDB = new Database("test.db");
-		List<String> events = new ArrayList<>();
-		events.add("Event 1");
-		events.add("Event 2");
+		List<Event> events = new ArrayList<>();
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("Venue1Name", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent1", "TestURL", "TestStartDate", venues1));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("Venue2Name", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent2", "TestURL", "TestStartDate", venues2));
 		Boolean status = testDB.addEventsToProposal(1, events);
 		assertEquals(true, status);
 		testDB.dropAllTables();
@@ -291,7 +303,8 @@ public class DatabaseTest {
 	@Test
 	public void testAddEventsToProposalEmptyList() throws Exception {
 		Database testDB = new Database("test.db");
-		List<String> events = new ArrayList<>();
+		// empty list of events
+		List<Event> events = new ArrayList<>();
 		Boolean status = testDB.addEventsToProposal(1, events);
 		assertEquals(false, status);
 		testDB.dropAllTables();
@@ -301,9 +314,10 @@ public class DatabaseTest {
 	@Test
 	public void testAddInviteesToProposal() throws Exception {
 		Database testDB = new Database("test.db");
-		List<String> events = new ArrayList<>();
-		events.add("Event 1");
-		events.add("Event 2");
+		List<Event> events = new ArrayList<>();
+		List<Venue> venues = new ArrayList<>();
+		venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
 		List<String> invited = new ArrayList<>();
 		invited.add("Invitee 1");
 		invited.add("Invitee 2");
@@ -321,9 +335,13 @@ public class DatabaseTest {
 	@Test
 	public void testAddInviteesToProposalNoInvitees() throws Exception {
 		Database testDB = new Database("test.db");
-		List<String> events = new ArrayList<>();
-		events.add("Event 1");
-		events.add("Event 2");
+		List<Event> events = new ArrayList<>();
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("Venue1Name", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent1", "TestURL", "TestStartDate", venues1));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("Venue2Name", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent2", "TestURL", "TestStartDate", venues2));
 		List<String> invited = new ArrayList<>();
 		Boolean status = testDB.addInviteesToProposal(1, invited, events);
 		assertEquals(false, status);
@@ -334,7 +352,7 @@ public class DatabaseTest {
 	@Test
 	public void testAddInviteesToProposalNoEvents() throws Exception {
 		Database testDB = new Database("test.db");
-		List<String> events = new ArrayList<>();
+		List<Event> events = new ArrayList<>();
 		List<String> invited = new ArrayList<>();
 		invited.add("Invitee 1");
 		invited.add("Invitee 2");
