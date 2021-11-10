@@ -62,6 +62,13 @@ public class TicketmasterTest {
     }
 
     @Test
+    public void testSearchEventsOnlyKeyword() throws Exception {
+        String result = ticketmaster.searchEvents("BTS", "", "", "", "");
+        assertTrue(result.contains("BTS"));
+        //   System.out.println(result);
+    }
+
+    @Test
     public void testSearchEventsMissingKeyword() throws Exception {
         String result = ticketmaster.searchEvents("", "90301", "Inglewood", "", "");
         assertFalse(result.isEmpty());

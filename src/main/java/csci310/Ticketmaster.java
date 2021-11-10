@@ -38,6 +38,10 @@ public class Ticketmaster {
         return host;
     }
 
+
+    // isolate the below function into own class like TicketmasterWrapper
+    // and add TicketmasterWrapper class static member variable to Ticketmaster class
+    // can then mock this class member
     public String getSearchResult(String hostString) throws Exception {
         // refactor url and httpurlrequest and can do separate file for mock json
         // want to only test it once; ifile stream?
@@ -63,6 +67,7 @@ public class Ticketmaster {
 
     public ArrayList<Event> parseEventsArray(String result) {
         // turn into json object in order to extract embedded items
+        System.out.println(result);
         JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
         JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
         ArrayList<Event> refinedListOfEvents = new ArrayList<>();
@@ -73,26 +78,42 @@ public class Ticketmaster {
             String event = eventsArray.get(i).toString();
             // turn each individual event into json object
             JsonObject eventDetails = new Gson().fromJson(event, JsonObject.class);
-            // create a new event w/ name
-            Event newEvent = new Event(eventDetails.get("name").getAsString());
-            // get url of event
-            newEvent.setURLEvent(eventDetails.get("url").getAsString());
-            // get start date and time of event
-            newEvent.setStartDateTime(eventDetails.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString());
-            // get venues of event
-            JsonArray venuesArray = eventDetails.getAsJsonObject("_embedded").getAsJsonArray("venues");
-            List<Venue> venues  = new ArrayList<>();
-            for (int j = 0; j < venuesArray.size(); j++) {
-               String venueName = venuesArray.get(j).getAsJsonObject().get("name").getAsString();
-               String address = venuesArray.get(j).getAsJsonObject().getAsJsonObject("address").get("line1").getAsString();
-               String venueCity = venuesArray.get(j).getAsJsonObject().getAsJsonObject("city").get("name").getAsString();
-               String state = venuesArray.get(j).getAsJsonObject().getAsJsonObject("state").get("stateCode").getAsString();
-               String country = venuesArray.get(j).getAsJsonObject().getAsJsonObject("country").get("countryCode").getAsString();
-               Venue venue = new Venue(venueName, address, venueCity, state, country);
-               venues.add(venue);
+            try {
+                // create a new event w/ name
+                // first check if there's event name
+                Event newEvent = new Event(eventDetails.get("name").getAsString());
+                // get url of event
+                newEvent.setURLEvent(eventDetails.get("url").getAsString());
+                // get start date and time of event
+                newEvent.setStartDateTime(eventDetails.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString());
+                // get venues of event
+                JsonArray venuesArray = eventDetails.getAsJsonObject("_embedded").getAsJsonArray("venues");
+                List<Venue> venues = new ArrayList<>();
+                for (int j = 0; j < venuesArray.size(); j++) {
+                    // try parsing the current event's venues; if it is missing any fields, then ignore event
+                    try {
+                        String venueName = venuesArray.get(j).getAsJsonObject().get("name").getAsString();
+                        String address = venuesArray.get(j).getAsJsonObject().getAsJsonObject("address").get("line1").getAsString();
+                        String venueCity = venuesArray.get(j).getAsJsonObject().getAsJsonObject("city").get("name").getAsString();
+                        String state = venuesArray.get(j).getAsJsonObject().getAsJsonObject("state").get("stateCode").getAsString();
+                        String country = venuesArray.get(j).getAsJsonObject().getAsJsonObject("country").get("countryCode").getAsString();
+                        Venue venue = new Venue(venueName, address, venueCity, state, country);
+                        venues.add(venue);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+                // if event does have at least one venue, then add the event
+                if (!venues.isEmpty()) {
+                    newEvent.setVenues(venues);
+                    refinedListOfEvents.add(newEvent);
+                }
             }
-            newEvent.setVenues(venues);
-            refinedListOfEvents.add(newEvent);
+            // current event is missing necessary details, so just skip it
+            catch (Exception e) {
+                System.out.println("Was unable to parse current event");
+                System.out.println(e.getMessage());
+            }
         }
         return refinedListOfEvents;
     }
