@@ -185,7 +185,7 @@ public class Database {
 
 	// create a proposal (note: draft proposal will have default values)
 	// returns true if proposal was successfully added; otherwise, returns false
-	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<String> events, Boolean is_Draft) throws Exception {
+	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<Event> events, Boolean is_Draft) throws Exception {
 		int userID;
 		// if the owner exists, then try to create a proposal by using owner's user_id
 		try{
@@ -221,35 +221,46 @@ public class Database {
 	}
 
 	// Add Event(s) to an existing proposal
-	public Boolean addEventsToProposal(int proposalId, List<String> events) throws Exception {
+	public Boolean addEventsToProposal(int proposalId, List<Event> events) throws Exception {
 		// empty list, then return false
 		if (events.isEmpty()) {
 			return false;
 		}
 		// Add list of events associated with this proposal to the events table
-		for (String e: events) {
-			String query = "INSERT INTO events (proposal_id, event_link) VALUES (?,?)";
+		for (Event e: events) {
+			String query = "INSERT INTO events (proposal_id, event_name, event_link, start_date_time, venue_name, venue_address, venue_city, venue_state, venue_country) VALUES (?,?,?,?,?,?,?,?,?)";
 			PreparedStatement pst = connection.prepareStatement(query);
 			pst.setString(1, String.valueOf(proposalId));
-			pst.setString(2, e);
+			pst.setString(2, e.getEventName());
+			pst.setString(3, e.getUrl());
+			pst.setString(4, e.getStartDateTime());
+			// use the first venue
+			List<Venue> venues = e.getVenues();
+			pst.setString(5, venues.get(0).name);
+			pst.setString(6, venues.get(0).address);
+			pst.setString(7, venues.get(0).city);
+			pst.setString(8, venues.get(0).state);
+			pst.setString(9, venues.get(0).country);
 			pst.executeUpdate();
-			System.out.println("Add event: " + e + " for proposalID: " + proposalId);
+			System.out.println("Add event: " + e.getEventName() + " for proposalID: " + proposalId);
 			pst.close();
 		}
 		return true;
 	}
 
 	// Add Invitees to an existing proposal
-	public Boolean addInviteesToProposal(int proposalId, List<String> invited, List<String> events) throws Exception {
+	public Boolean addInviteesToProposal(int proposalId, List<String> invited, List<Event> events) throws Exception {
 		// if events or invited are empty, then return false because nothing added to invitees table
 		if (invited.isEmpty() || events.isEmpty()) {
 			System.out.println("No one is invited or no events");
 			return false;
 		}
-		for (String e: events) {
+		for (Event e: events) {
 			// find event id
-			String query = "SELECT event_id FROM events WHERE event_link = '" + e + "'";
+			String query = "SELECT event_id FROM events WHERE event_link = ? AND proposal_id = ?";
 			PreparedStatement pst1 = connection.prepareStatement(query);
+			pst1.setString(1, e.getUrl());
+			pst1.setString(2, String.valueOf(proposalId));
 			ResultSet rs = pst1.executeQuery();
 			int eventID = 0;
 			if (rs.next()) {
@@ -267,7 +278,7 @@ public class Database {
 				pst2.setString(2, String.valueOf(inviteeID));
 				pst2.setString(3, String.valueOf(eventID));
 				pst2.executeUpdate();
-				System.out.println("Adding invitee: " + invitee + " for Event: " + e + " for Proposal Id: " + proposalId);
+				System.out.println("Adding invitee: " + invitee + " for Event: " + e.getEventName() + " for Proposal Id: " + proposalId);
 				pst2.close();
 			}
 		}

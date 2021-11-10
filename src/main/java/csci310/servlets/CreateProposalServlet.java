@@ -36,18 +36,9 @@ public class CreateProposalServlet extends HttpServlet {
             Type eventListType = new TypeToken<ArrayList<Event>>(){}.getType();
             List<Event> eventsList = new Gson().fromJson(events, eventListType);
             Boolean isDraft = Boolean.valueOf(request.getParameter("isDraft"));
-            System.out.println(invitedList.size());
-            System.out.println(eventsList.size());
-
-            // TODO: change -> using a temp list to get only the event url
-            // Need to also change createAProposal and add Events function to database
-            List<String> tempList = new ArrayList<>();
-            for (Event e: eventsList) {
-                tempList.add(e.getUrl());
-            }
 
             // successful proposal creation
-            if (database.createAProposal(owner, title, descript, invitedList, tempList, isDraft)) {
+            if (database.createAProposal(owner, title, descript, invitedList, eventsList, isDraft)) {
                 request.setAttribute("status", true);
                 out.print(true);
             }
