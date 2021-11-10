@@ -9,8 +9,11 @@
         <Arg name="next">http/1.1</Arg>
         <Arg name="sslContextFactory">
       	  <New id="sslContextFactory" class="org.eclipse.jetty.util.ssl.SslContextFactory$Server">
-                <Set name="keyStorePath"><Property name="jetty.keystore.path"/></Set>
-                <Set name="keyStorePassword"><Property name="jetty.keystore.password"/></Set>
+                <Set name="KeyStorePath"><Property name="jetty.home" default="." />etc/keystore</Set>
+                <Set name="KeyStorePassword">OBF:project27</Set>
+                <Set name="KeyManagerPassword">OBF:project27</Set>
+                <Set name="TrustStorePath"><Property name="jetty.home" default="." />etc/keystore</Set>
+                <Set name="TrustStorePassword">OBF:project27</Set>
             </New>
         </Arg>
       </New>
