@@ -10,10 +10,10 @@
         <Arg name="sslContextFactory">
       	  <New id="sslContextFactory" class="org.eclipse.jetty.util.ssl.SslContextFactory$Server">
                 <Set name="KeyStorePath"><Property name="jetty.home" default="." />etc/keystore</Set>
-                <Set name="KeyStorePassword">OBF:project27</Set>
-                <Set name="KeyManagerPassword">OBF:project27</Set>
+                <Set name="KeyStorePassword">OBF:1m7s1lmn1y0q1tom1t331to81y101lj31m4m</Set>
+                <Set name="KeyManagerPassword">OBF:1m7s1lmn1y0q1tom1t331to81y101lj31m4m</Set>
                 <Set name="TrustStorePath"><Property name="jetty.home" default="." />etc/keystore</Set>
-                <Set name="TrustStorePassword">OBF:project27</Set>
+                <Set name="TrustStorePassword">OBF:1m7s1lmn1y0q1tom1t331to81y101lj31m4m</Set>
             </New>
         </Arg>
       </New>
