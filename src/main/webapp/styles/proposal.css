@@ -1,23 +1,21 @@
 body {
-   padding: 5%;
+  min-height: 100vh;
+  position: relative;
 }
-
-  h1, p {
-    font-family: 'Open Sans', sans-serif;
-  }
 
   h2 {
     margin-bottom: 1rem;
-    font-family: 'Open Sans', sans-serif;
     font-weight: 300;
   }
+  #create-proposal-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2.5rem;
 
+  }
   textarea {
   width: 700px;
-  }
-
-  button {
-    font-family: 'Open Sans', sans-serif;
   }
   button:hover {
     background-color: goldenrod;
@@ -49,4 +47,59 @@ body {
     color: black;
     border-radius: 20px;
     padding: 3px;
+  }
+
+  .btn-row {
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .principal {
+    margin-right : 1rem;
+  }
+
+
+  @media (max-device-width : 776px) {
+    .header {
+      font-size: 1.5em;
+    }
+    #create-proposal-page > h1 {
+      font-size: 4rem;
+    }
+    .title {
+      font-size : 3rem;
+    }
+    .input-header {
+      font-size: 2.5rem;
+      width : 100%;
+      margin: 2rem;
+    }
+    .field-input {
+      width : 25rem;
+      font-size: 2rem;
+    }
+    #btn-event-find {
+      width : 20rem;
+      height : 5rem;
+      font-size : 2rem;
+    }
+    .btn-row {
+      margin-top: 2rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .principal {
+      width : 20rem;
+      height : 5rem;
+      font-size : 2rem;
+    }
+    #footer {
+      font-size: 1.5em;
+      height : 4.5rem;
+    }
   }

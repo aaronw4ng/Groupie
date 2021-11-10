@@ -37,6 +37,7 @@ public class SearchEventsServletTest {
         SearchEventsServlet searchEventsServlet = new SearchEventsServlet();
         searchEventsServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
+        System.out.println(result);
         assertTrue(result.contains("BTS"));
     }
 
@@ -55,6 +56,7 @@ public class SearchEventsServletTest {
         SearchEventsServlet searchEventsServlet = new SearchEventsServlet();
         searchEventsServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
+        System.out.println(result);
         assertEquals("No results found!", result);
     }
 

@@ -26,7 +26,7 @@
             <div class="warning-message"></div>
 
             <div class="btn-row">
-                <button id="btn-create-account" onclick="handleRegisterClick(event)">Create Account</button>
+                <button id="btn-create-account" type="button" onclick="handleRegisterClick(event)">Create Account</button>
                 <button id="btn-back">Cancel</button>
             </div>
             
