@@ -38,6 +38,10 @@ public class Ticketmaster {
         return host;
     }
 
+
+    // isolate the below function into own class like TicketmasterWrapper
+    // and add TicketmasterWrapper class static member variable to Ticketmaster class
+    // can then mock this class member
     public String getSearchResult(String hostString) throws Exception {
         // refactor url and httpurlrequest and can do separate file for mock json
         // want to only test it once; ifile stream?
