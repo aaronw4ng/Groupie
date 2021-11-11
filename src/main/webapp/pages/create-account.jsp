@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/account.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>groupie | make account</title>
 </head>
 <body>
     <div class="header">
@@ -39,4 +40,5 @@
 
     <script src="../scripts/register.js"></script>
 </body>
+    <jsp:include page="autologout.jsp"></jsp:include>
 </html>

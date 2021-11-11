@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Group Date Planner</title>
+  <title>groupie | search</title>
   <link rel="stylesheet" href="../styles/index.css" />
   <link rel="stylesheet" href="../styles/events.css" />
   <script src="https://kit.fontawesome.com/d4a13a138b.js" crossorigin="anonymous"></script>
@@ -82,5 +82,5 @@
   </div>
   <script src="../scripts/event-search.js"></script>
 </body>
-
+  <jsp:include page="autologout.jsp"></jsp:include>
 </html>

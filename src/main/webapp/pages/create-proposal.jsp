@@ -3,8 +3,7 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/proposal.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <title>Create Proposal | GDP</title>
+    <title>groupie | proposal</title>
 </head>
 <body>
   <div class="header">
@@ -42,6 +41,6 @@
   </div>
 
   <script src="../scripts/create-proposal.js"></script>
-
 </body>
+  <jsp:include page="autologout.jsp"></jsp:include>
 </html>
