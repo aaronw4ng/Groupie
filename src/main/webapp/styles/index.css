@@ -23,6 +23,16 @@ button:hover {
   cursor: pointer;
 }
 
+button[disabled]:hover {
+    background-color: gray;
+    color: white;
+}
+
+button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
 .field {
   width: 15rem;
   height: 3rem;
