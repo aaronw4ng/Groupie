@@ -8,7 +8,7 @@ document.onkeypress = resetTimer;
 let idleTimeout;
 function resetTimer() {
     clearTimeout(idleTimeout);
-    console.log("resetting");
+    // console.log("resetting");
     idleTimeout = setTimeout(() => location.href = "../index.jsp", 60000);
     idleTime = 0;
 }

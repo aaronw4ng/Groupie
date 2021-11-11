@@ -33,13 +33,13 @@
 
             <div id="start-date">
               <label for="start" id="datelabel">start date</label>
-              <input type="date" id="start" name="date-start" value="2021-11-03" min="2021-11-03" max="2100-11-03" />
+              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03" />
             </div>
           </div>
           <div class="search-item">
             <div id="end-date">
               <label for="end" id="datelabel">end date</label>
-              <input type="date" id="end" name="date-end" value="2021-11-03" min="2021-11-03" max="2100-11-03" />
+              <input type="date" id="end" name="date-end" value="" min="2021-11-03" max="2100-11-03" />
             </div>
           </div>
 
