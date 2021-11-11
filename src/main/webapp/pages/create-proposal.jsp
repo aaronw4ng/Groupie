@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/proposal.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>Create Proposal | GDP</title>
 </head>
 <body>
@@ -22,11 +23,15 @@
       <p class="input-header title">proposal name</p>
       <input class="field-input" type="text" id="input-proposal-name" placeholder="Name"><br/>
       <p class="input-header">proposed events</p>
+      <!-- Container for selected events display -->
+      <div class="events-container">
+
+      </div>
       <button id="btn-event-find" onclick="handleFindEventClick(event)">+ add event</button>
       <p class="input-header">invite users</p>
       <input class="field-input" id="input-invitees" placeholder="Search">
       <div class="btn-row">
-        <button name="btn-send-proposal" class = "principal">Send Proposal</button>
+        <button onclick="handleCreateProposalClick(event)" name="btn-send-proposal" class = "principal">Send Proposal</button>
         <button name="btn-save-draft" class ="principal">Save Draft</button>
       </div>
     </form>

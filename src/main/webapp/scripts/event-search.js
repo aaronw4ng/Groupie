@@ -1,3 +1,7 @@
+if (sessionStorage.getItem("selected") == null) {
+    sessionStorage.setItem("selected", "[]")
+}
+
 function handleSubmit(event) {
     event.preventDefault();
     const keywordInput = document.querySelector("#event-search-input").value
@@ -34,6 +38,10 @@ function handleSubmit(event) {
     let resultsContainer = document.querySelector(".event-results-container")
     // Result count text
     let resultsCount = document.querySelector("#event-search-result-count")
+
+    // Clear Results Container and Results Count container
+    clearContainer(resultsContainer)
+    resultsCount.innerHTML = ""
 
 
     // AJAX call to SearchEventsServlet
@@ -82,13 +90,30 @@ function handleSubmit(event) {
     })
 }
 
+function clearContainer(container) {
+    // Make sure Result Count container stays inside div
+    while(container.childElementCount > 1) {
+        container.removeChild(container.lastChild)
+    }
+}
+
 function handleResultSelection(index) {
     console.log("Event index: " + index)
     let eventsArr = sessionStorage.getItem("events")
     let json = JSON.parse(eventsArr)
     let selectedEvent = json[index]
-    console.log(selectedEvent)
+    // back into JSON
+    selectedEvent = JSON.stringify(selectedEvent)
+    // Add selected event to selected array in session storage
+    let selectedArr = JSON.parse(sessionStorage.getItem("selected"))
+    selectedArr.push(selectedEvent)
+    sessionStorage.setItem("selected", JSON.stringify(selectedArr))
+    console.log(selectedArr)
+
+    document.location.href = "./create-proposal.jsp"
 }
+
+// Search Filters
 
 var button = document.getElementById('toggleFilters');
 button.onclick = function() {
