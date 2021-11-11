@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/proposal.css" />
-    <title>Create Proposal | GDP</title>
+    <title>groupie | proposal</title>
 </head>
 <body>
   <div class="header">
@@ -37,6 +37,6 @@
   </div>
 
   <script src="../scripts/create-proposal.js"></script>
-
 </body>
+  <jsp:include page="autologout.jsp"></jsp:include>
 </html>
