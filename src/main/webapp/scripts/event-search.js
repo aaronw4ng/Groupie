@@ -16,15 +16,15 @@ function handleSubmit(event) {
     if (startDateInput != "") {
         let startDateArr = startDateInput.split("-")
         console.log(startDateArr)
-        let yearString = startDateArr[0].substring(2, 4)
-        startDateInput = startDateArr[1] + "/" + startDateArr[2] + "/" + yearString
+        let yearString = startDateArr[0]
+        startDateInput = yearString + "-" + startDateArr[1] + "-" + startDateArr[2] + "T00:00:00Z"
         console.log(startDateInput)
     }
 
     if (endDateInput != "") {
         let endDateArr = endDateInput.split("-")
-        let yearString = endDateArr[0].substring(2, 4)
-        endDateInput = endDateArr[1] + "/" + endDateArr[2] + "/" + yearString
+        let yearString = endDateArr[0]
+        endDateInput = yearString + "-" + endDateArr[1] + "-" + endDateArr[2] + "T00:00:00Z"
     }
 
     // ********* TESTS **********
