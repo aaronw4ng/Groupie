@@ -11,9 +11,11 @@ import org.mockito.Mockito;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -136,5 +138,22 @@ public class CreateProposalServletTest {
         createProposalServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         assertEquals("false", result);
+    }
+
+    @Test
+    public void testDoPostException() throws Exception {
+        HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
+        CreateProposalServlet createProposalServlet = new CreateProposalServlet();
+        createProposalServlet.init(config);
+
+        Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
+
+        try {
+            createProposalServlet.doPost(failingRequest, failingResponse);
+            fail("Expected a Servlet Exception to be thrown");
+        } catch (ServletException servletException) {
+            assertEquals("Create Proposal Servlet failed", servletException.getMessage());
+        }
     }
 }
