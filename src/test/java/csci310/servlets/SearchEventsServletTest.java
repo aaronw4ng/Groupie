@@ -99,9 +99,10 @@ public class SearchEventsServletTest {
         Mockito.when(request.getParameter("city")).thenReturn("");
         Mockito.when(request.getParameter("startDate")).thenReturn("");
         Mockito.when(request.getParameter("endDate")).thenReturn("");
+        Mockito.when(request.getParameter("genre")).thenReturn("");
 
         // save mock data
-        String host = ticketmaster.buildHostString("BTS", "90301", "", "", "");
+        String host = ticketmaster.buildHostString("BTS", "90301", "", "", "", "");
         saveMockData("searchEventsTestDoPost", ticketmaster.getSearchResult(host), host);
 
         StringWriter sw = new StringWriter();
@@ -123,9 +124,10 @@ public class SearchEventsServletTest {
         Mockito.when(request.getParameter("city")).thenReturn("");
         Mockito.when(request.getParameter("startDate")).thenReturn("");
         Mockito.when(request.getParameter("endDate")).thenReturn("");
+        Mockito.when(request.getParameter("genre")).thenReturn("");
 
         // save mock data
-        String host = ticketmaster.buildHostString("asdfg", "", "", "", "");
+        String host = ticketmaster.buildHostString("asdfg", "", "", "", "", "");
         saveMockData("searchEventsTestDoPostNoEventsFound", ticketmaster.getSearchResult(host), host);
 
         StringWriter sw = new StringWriter();
