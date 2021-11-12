@@ -89,6 +89,21 @@ body {
     color : white
   }
 
+  /* User Selection */
+
+  .user-card {
+    background: #FBFBFB;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+  .user-card.unavailable {
+    color : #D2D1D1;
+    cursor: default;
+  }
+
 
   @media (max-device-width : 776px) {
     .header {

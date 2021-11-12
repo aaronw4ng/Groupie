@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/proposal.css" />
+    <script src="https://kit.fontawesome.com/d4a13a138b.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>groupie | proposal</title>
 </head>
@@ -28,8 +29,20 @@
 
       </div>
       <button id="btn-event-find" onclick="handleFindEventClick(event)">+ add event</button>
+
+      <!-- USER INVITE -->
       <p class="input-header">invite users</p>
-      <input class="field-input" id="input-invitees" placeholder="Search">
+      <div id="added-user-container">
+
+      </div>
+      <input class="field-input" id="user-search-input" placeholder="username" onkeyup="handleInputChange(event)">
+      <div id="user-results-container">
+        <div class="user-card">
+          <p><i class="fas fa-users"></i> username</p>
+        </div>
+      </div>
+
+      <!-- PROPOSAL BUTTONS -->
       <div class="btn-row">
         <button onclick="handleCreateProposalClick(event)" name="btn-send-proposal" class = "principal">Send Proposal</button>
         <button name="btn-save-draft" class ="principal">Save Draft</button>
@@ -42,6 +55,7 @@
   </div>
 
   <script src="../scripts/create-proposal.js"></script>
+  <script src="../scripts/user-search.js"></script>
 </body>
-  <jsp:include page="autologout.jsp"></jsp:include>
+  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>
