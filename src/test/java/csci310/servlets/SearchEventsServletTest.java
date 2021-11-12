@@ -29,6 +29,7 @@ public class SearchEventsServletTest {
         Mockito.when(request.getParameter("city")).thenReturn("");
         Mockito.when(request.getParameter("startDate")).thenReturn("");
         Mockito.when(request.getParameter("endDate")).thenReturn("");
+        Mockito.when(request.getParameter("genre")).thenReturn("");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -48,6 +49,7 @@ public class SearchEventsServletTest {
         Mockito.when(request.getParameter("city")).thenReturn("");
         Mockito.when(request.getParameter("startDate")).thenReturn("");
         Mockito.when(request.getParameter("endDate")).thenReturn("");
+        Mockito.when(request.getParameter("genre")).thenReturn("");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
