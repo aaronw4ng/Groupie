@@ -5,10 +5,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.locks.ReentrantLock;
+
 import com.google.gson.*;
 import java.lang.Thread;
 
 public class Ticketmaster {
+    private static ReentrantLock lock = new ReentrantLock();
     public String buildHostString(String keyword, String postalCode, String city, String startDate, String endDate) {
         String host = "https://app.ticketmaster.com/discovery/v2/events.json?";
         String api_key = "NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";
@@ -51,6 +54,8 @@ public class Ticketmaster {
         String result = "";
         URL url = new URL(hostString);
 
+        // to force 250ms delay even when multiple threads are accessing the same url
+        lock.lock();
         // temporary hotfix for limiting api calls
         Thread.sleep(250);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -65,6 +70,8 @@ public class Ticketmaster {
         }
         //Close the scanner
         scanner.close();
+        // release lock
+        lock.unlock();
         return result;
     }
 
