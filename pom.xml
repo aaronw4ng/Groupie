@@ -185,7 +185,7 @@
 				<version>9.4.31.v20200723</version>
 				<configuration>
 					<scanIntervalSeconds>5</scanIntervalSeconds>
-					<jettyXml>src/main/resources/jetty.xml</jettyXml>
+					<jettyXml>src/main/resources/jetty.xml,src/main/resources/jetty-ssl.xml,src/main/resources/jetty-https.xml</jettyXml>
 					<stopKey>STOP</stopKey>
 					<stopPort>8081</stopPort>
 					<daemon>true</daemon>
