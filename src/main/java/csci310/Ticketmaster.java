@@ -5,10 +5,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.locks.ReentrantLock;
+
 import com.google.gson.*;
 import java.lang.Thread;
 
 public class Ticketmaster {
+    private static ReentrantLock lock = new ReentrantLock();
     public String buildHostString(String keyword, String postalCode, String city, String startDate, String endDate, String genre) {
         System.out.println("Genre: " + genre);
         System.out.println("city: " + city);
@@ -184,11 +187,16 @@ public class Ticketmaster {
     // and add TicketmasterWrapper class static member variable to Ticketmaster class
     // can then mock this class member
     public String getSearchResult(String hostString) throws Exception {
+        // for local testing purpose
+        System.out.println("Warning: Ticketmaster API Triggered");
+
         // refactor url and httpurlrequest and can do separate file for mock json
         // want to only test it once; ifile stream?
         String result = "";
         URL url = new URL(hostString);
 
+        // to force 250ms delay even when multiple threads are accessing the same url
+        lock.lock();
         // temporary hotfix for limiting api calls
         Thread.sleep(250);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -203,12 +211,14 @@ public class Ticketmaster {
         }
         //Close the scanner
         scanner.close();
+        // release lock
+        lock.unlock();
         return result;
     }
 
     public ArrayList<Event> parseEventsArray(String result) {
         // turn into json object in order to extract embedded items
-        System.out.println(result);
+        // System.out.println(result);
         JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
         JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
         ArrayList<Event> refinedListOfEvents = new ArrayList<>();
@@ -274,7 +284,7 @@ public class Ticketmaster {
         }
         // Results were empty aka no events found or something went wrong when trying to connect
         catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             throw new Exception("No results found!");
         }
     }
