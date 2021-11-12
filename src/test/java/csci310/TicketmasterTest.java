@@ -388,7 +388,7 @@ public class TicketmasterTest {
         String result = ticketmaster.searchEvents("BTS", "", "", "", "", "");
         assertTrue(result.contains("BTS"));
 
-        String host = ticketmaster.buildHostString("BTS", "", "", "", "");
+        String host = ticketmaster.buildHostString("BTS", "", "", "", "", "");
         saveMockData("testSearchEventsOnlyKeyword", ticketmaster.getSearchResult(host), host);
     }
 
@@ -397,7 +397,7 @@ public class TicketmasterTest {
         String result = ticketmaster.searchEvents("", "90301", "Inglewood", "", "", "");
         assertFalse(result.isEmpty());
 
-        String host = ticketmaster.buildHostString("", "90301", "Inglewood", "", "");
+        String host = ticketmaster.buildHostString("", "90301", "Inglewood", "", "", "");
         saveMockData("testSearchEventsMissingKeyword", ticketmaster.getSearchResult(host), host);
     }
 
@@ -406,7 +406,7 @@ public class TicketmasterTest {
         String result = ticketmaster.searchEvents("BTS", "", "Inglewood", "", "", "");
         assertTrue(result.contains("BTS"));
 
-        String host = ticketmaster.buildHostString("BTS", "", "Inglewood", "", "");
+        String host = ticketmaster.buildHostString("BTS", "", "Inglewood", "", "", "");
         saveMockData("testSearchEventsMissingZipCode", ticketmaster.getSearchResult(host), host);
     }
 
@@ -415,7 +415,7 @@ public class TicketmasterTest {
         String result = ticketmaster.searchEvents("BTS", "90301", "", "", "", "");
         assertTrue(result.contains("BTS"));
 
-        String host = ticketmaster.buildHostString("BTS", "90301", "", "", "");
+        String host = ticketmaster.buildHostString("BTS", "90301", "", "", "", "");
         saveMockData("testSearchEventsMissingCity", ticketmaster.getSearchResult(host), host);
     }
 
@@ -437,13 +437,17 @@ public class TicketmasterTest {
     public void testSearchEventsPopGenre() throws Exception {
         String result = ticketmaster.searchEvents("", "", "", "", "", "Pop");
         assertTrue(result.contains("BTS"));
-        //  System.out.println(result);
+
+        String host = ticketmaster.buildHostString("", "", "", "", "", "Pop");
+        saveMockData("testSearchEventsPopGenre", ticketmaster.getSearchResult(host), host);
     }
 
     @Test
     public void testSearchEventsBasketballGenre() throws Exception {
         String result = ticketmaster.searchEvents("", "", "", "", "", "Basketball");
         assertTrue(result.contains("Phoenix Suns"));
-        //  System.out.println(result);
+
+        String host = ticketmaster.buildHostString("", "", "", "", "", "Basketball");
+        saveMockData("testSearchEventsBasketballGenre", ticketmaster.getSearchResult(host), host);
     }
 }
