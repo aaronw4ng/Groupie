@@ -450,4 +450,10 @@ public class TicketmasterTest {
         String host = ticketmaster.buildHostString("", "", "", "", "", "Basketball");
         saveMockData("testSearchEventsBasketballGenre", ticketmaster.getSearchResult(host), host);
     }
+
+    @Test
+    public void testSearchEventsNoSavingData() throws Exception {
+        String result = ticketmaster.searchEvents("Eric", "", "", "", "", "");
+        assertTrue(result.contains("Eric"));
+    }
 }
