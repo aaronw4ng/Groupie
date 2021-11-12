@@ -8,6 +8,7 @@ public class AppServletContextListener implements ServletContextListener{
     public static String db_name = "project27.db";
     public static String db_config = "db_config.ini";
     public static String db_pass = "ThisProjectIsSoMuchFun";
+    public Ticketmaster ticketmaster = null;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -16,6 +17,10 @@ public class AppServletContextListener implements ServletContextListener{
             database = new Database(db_name, db_config, db_pass);
             // set it on the application level
             sce.getServletContext().setAttribute("database", database);
+            // create a new shared instance of ticketmaster
+            ticketmaster = new Ticketmaster();
+            // set it on the application level
+            sce.getServletContext().setAttribute("ticketmaster", ticketmaster);
         }
         catch (Exception e){
             System.out.println("failed to establish database connection");
