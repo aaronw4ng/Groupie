@@ -366,8 +366,8 @@ public class DatabaseTest {
 		// Create a proposal first
 		// add user to database first
 		testDB.register("Test User", "Test Password");
-		String title = "My Proposal";
-		String descript = "This is a test description for a proposal!";
+		String title = "My Sent Proposal";
+		String descript = "This is a test description for sending proposal test!";
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
@@ -388,6 +388,16 @@ public class DatabaseTest {
 		Boolean sentStatus = testDB.sendProposal(1);
 		assertEquals(true, sentStatus);
 
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testSendProposalFail() throws Exception {
+		Database testDB = new Database("test.db");
+		// Try to send a non existing proposal
+		Boolean sentStatus = testDB.sendProposal(1);
+		assertEquals(false, sentStatus);
 		testDB.dropAllTables();
 		testDB.close();
 	}

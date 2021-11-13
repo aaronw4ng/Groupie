@@ -287,7 +287,34 @@ public class Database {
 	}
 
 	// Sends proposal out to the invitees by marking it as not a draft and initializing responses for each invitee for each event
-	public Boolean sendProposal(int proposalId) {
+	// Assumes that the proposal already exists in the database
+	public Boolean sendProposal(int proposalId) throws Exception {
+		// update is draft attribute to false
+		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = FALSE where proposal_id = ?");
+		stmt1.setString(1, String.valueOf(proposalId));
+		int rowsAffected = stmt1.executeUpdate();
+		stmt1.close();
+		// should only affect one row; otherwise, did not successfully send proposal
+		if (rowsAffected != 1) {
+			return false;
+		}
+		// Initialize the responses
+		// get all the invited people and events associated with this proposal
+		// Note: invitees table already associates each invited person with an event
+		PreparedStatement stmt2 = connection.prepareStatement("SELECT invitee_id, event_id FROM invitees WHERE proposal_id = ?");
+		stmt2.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt2.executeQuery();
+		// initialize a response for each event, invitee combination in the responses table
+		// Note: availability and excitement will be NULL
+		while (rs.next()) {
+			PreparedStatement stmt3 = connection.prepareStatement("INSERT INTO responses (event_id, user_id) VALUES(?,?)");
+			stmt3.setString(1, rs.getString("event_id"));
+			stmt3.setString(2, rs.getString("invitee_id"));
+			stmt3.executeUpdate();
+			stmt3.close();
+		}
+		rs.close();
+		stmt2.close();
 		return true;
 	}
 
