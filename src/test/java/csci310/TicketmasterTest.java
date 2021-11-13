@@ -65,6 +65,12 @@ public class TicketmasterTest {
     }
 
     @Test
+    public void testBuildVarString(){
+        String testString = ticketmaster.buildVarString("test", "test");
+        assertEquals("&test=test", testString);
+    }
+
+    @Test
     public void testBuildHostString() {
         String host = ticketmaster.buildHostString("BTS", "90301", "Inglewood", "2021-11-01T00:00:00Z", "2021-11-30T00:00:00Z", "");
         assertTrue(host.contains("https://app.ticketmaster.com/discovery/v2/events.json?"));

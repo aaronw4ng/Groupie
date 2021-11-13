@@ -12,6 +12,11 @@ import java.lang.Thread;
 
 public class Ticketmaster {
     private static ReentrantLock lock = new ReentrantLock();
+    
+    public String buildVarString(String var, String value) {
+        return "";
+    }
+
     public String buildHostString(String keyword, String postalCode, String city, String startDate, String endDate, String genre) {
         System.out.println("Genre: " + genre);
         System.out.println("city: " + city);
