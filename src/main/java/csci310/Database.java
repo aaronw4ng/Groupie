@@ -285,4 +285,10 @@ public class Database {
 
 		return true;
 	}
+
+	// Sends proposal out to the invitees by marking it as not a draft and initializing responses for each invitee for each event
+	public Boolean sendProposal(int proposalId) {
+		return true;
+	}
+
 }
