@@ -185,7 +185,7 @@ public class Database {
 
 	// create a proposal (note: draft proposal will have default values)
 	// returns true if proposal was successfully added; otherwise, returns false
-	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<Event> events, Boolean is_Draft) throws Exception {
+	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<Event> events) throws Exception {
 		int userID;
 		// if the owner exists, then try to create a proposal by using owner's user_id
 		try{
@@ -202,7 +202,7 @@ public class Database {
 		PreparedStatement pst;
 		pst = connection.prepareStatement(query);
 		pst.setString(1, String.valueOf(userID));
-		pst.setString(2, String.valueOf(is_Draft));
+		pst.setString(2, "TRUE"); // default value for is_draft is true
 		pst.setString(3, title);
 		pst.setString(4, descript);
 		pst.executeUpdate();
