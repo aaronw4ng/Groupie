@@ -128,10 +128,13 @@ public class Ticketmaster {
         }
     }
 
-    public ArrayList<Event> parseEventsArray(String result) {
+    public ArrayList<Event> parseEventsArray(String result) throws Exception {
         // turn into json object in order to extract embedded items
         // System.out.println(result);
         JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
+        if (jobj.getAsJsonObject("_embedded") == null) {
+            throw new Exception("No events found");
+        }
         JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
         ArrayList<Event> refinedListOfEvents = new ArrayList<>();
 
