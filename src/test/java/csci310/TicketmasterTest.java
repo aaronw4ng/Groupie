@@ -68,6 +68,15 @@ public class TicketmasterTest {
     public void testBuildVarString(){
         String testString = ticketmaster.buildVarString("test", "test");
         assertEquals("&test=test", testString);
+        testString = ticketmaster.buildVarString("genreId", "Classical");
+        assertEquals("&genreId=KnvZfZ7vAeJ", testString);
+        System.out.print(testString);
+        testString = ticketmaster.buildVarString("genreId", "NonExistingGenre");
+        assertEquals("", testString);
+        testString = ticketmaster.buildVarString("test", "");
+        assertEquals("", testString);
+        testString = ticketmaster.buildVarString("test", "OK OK");
+        assertEquals("&test=OK+OK", testString);
     }
 
     @Test
@@ -345,6 +354,7 @@ public class TicketmasterTest {
         assertTrue(host.contains("KnvZfZ7v7lv")); // Magic & Illusion genre id
         assertTrue(host.contains("apikey"));
     }
+
     @Test
     public void testBuildHostStringMagicAndIllusionGenre() {
         String host = ticketmaster.buildHostString("", "", "Irvine", "", "", "Magic & Illusion");
@@ -358,6 +368,7 @@ public class TicketmasterTest {
         assertTrue(host.contains("KnvZfZ7v7lv")); // Magic & Illusion genre id
         assertTrue(host.contains("apikey"));
     }
+
 
     @Test
     public void testGetSearchResult() throws Exception{
