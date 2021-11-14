@@ -19,7 +19,7 @@ public class CreateProposalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Database database = (Database) getServletContext().getAttribute("database");
-
+        // TODO should save draft and then send proposal
         try {
             PrintWriter out = response.getWriter();
             String owner = request.getParameter("owner");
@@ -38,7 +38,7 @@ public class CreateProposalServlet extends HttpServlet {
             Boolean isDraft = Boolean.valueOf(request.getParameter("isDraft"));
 
             // successful proposal creation
-            if (database.createAProposal(owner, title, descript, invitedList, eventsList)) {
+            if (database.savesDraftProposal(owner, title, descript, invitedList, eventsList)) {
                 request.setAttribute("status", true);
                 out.print(true);
             }

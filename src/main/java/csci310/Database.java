@@ -183,9 +183,9 @@ public class Database {
 		}
 	}
 
-	// create a proposal (note: draft proposal will have default values)
-	// returns true if proposal was successfully added; otherwise, returns false
-	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<Event> events) throws Exception {
+	// Adds a draft proposal to database without sending
+	// Will delete the old version of proposal if isNew is false
+	public Boolean savesDraftProposal(String owner, String title, String descript, List<String> invited, List<Event> events) throws Exception {
 		int userID;
 		// if the owner exists, then try to create a proposal by using owner's user_id
 		try{
