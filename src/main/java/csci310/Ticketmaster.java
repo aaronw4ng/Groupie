@@ -116,6 +116,10 @@ public class Ticketmaster {
         lock.unlock();
         return result;
     }
+    
+    public String getAsStringDefaultNA(JsonObject jsonObject, String key) {
+        return "";
+    }
 
     public ArrayList<Event> parseEventsArray(String result) {
         // turn into json object in order to extract embedded items
