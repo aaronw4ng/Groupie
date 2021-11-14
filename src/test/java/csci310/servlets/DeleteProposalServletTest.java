@@ -13,9 +13,11 @@ import org.mockito.Mockito;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -95,5 +97,44 @@ public class DeleteProposalServletTest {
         deleteProposalServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         assertEquals("true", result);
+    }
+
+    @Test
+    public void testDoPostProposalDoesNotExist() throws Exception {
+        // clear the database
+        Database testDB = listener.database;
+        testDB.dropAllTables();
+        testDB.createRequiredTables();
+
+        // Now delete that draft proposal using its id
+        Mockito.when(request.getParameter("proposalId")).thenReturn("1");
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        Mockito.when(response.getWriter()).thenReturn(pw);
+
+        DeleteProposalServlet deleteProposalServlet = new DeleteProposalServlet();
+        deleteProposalServlet.init(config);
+        deleteProposalServlet.doPost(request, response);
+        String result = sw.getBuffer().toString();
+        assertEquals("false", result);
+    }
+
+    @Test
+    public void testDoPostException() throws Exception {
+        HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
+        DeleteProposalServlet deleteProposalServlet = new DeleteProposalServlet();
+        deleteProposalServlet.init(config);
+
+        Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
+
+        try {
+            deleteProposalServlet.doPost(failingRequest, failingResponse);
+            fail("Expected a Servlet Exception to be thrown");
+        } catch (ServletException servletException) {
+            assertEquals("Delete Proposal Servlet failed", servletException.getMessage());
+        }
     }
 }
