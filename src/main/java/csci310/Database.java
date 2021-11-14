@@ -202,7 +202,7 @@ public class Database {
 		PreparedStatement pst;
 		pst = connection.prepareStatement(query);
 		pst.setString(1, String.valueOf(userID));
-		pst.setString(2, "TRUE"); // default value for is_draft is true
+		pst.setString(2, "1"); // default value for is_draft is true
 		pst.setString(3, title);
 		pst.setString(4, descript);
 		pst.executeUpdate();
@@ -215,7 +215,6 @@ public class Database {
 		addEventsToProposal(proposalID, events);
 		// Add invitees to proposal
 		addInviteesToProposal(proposalID, invited, events);
-
 		pst.close();
 		return true;
 	}
@@ -290,7 +289,7 @@ public class Database {
 	// Assumes that the proposal already exists in the database
 	public Boolean sendProposal(int proposalId) throws Exception {
 		// update is draft attribute to false
-		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = FALSE where proposal_id = ?");
+		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = 0 where proposal_id = ?");
 		stmt1.setString(1, String.valueOf(proposalId));
 		int rowsAffected = stmt1.executeUpdate();
 		stmt1.close();
@@ -307,15 +306,66 @@ public class Database {
 		// initialize a response for each event, invitee combination in the responses table
 		// Note: availability and excitement will be NULL
 		while (rs.next()) {
-			PreparedStatement stmt3 = connection.prepareStatement("INSERT INTO responses (event_id, user_id) VALUES(?,?)");
-			stmt3.setString(1, rs.getString("event_id"));
-			stmt3.setString(2, rs.getString("invitee_id"));
+			PreparedStatement stmt3 = connection.prepareStatement("INSERT INTO responses (proposal_id, event_id, user_id) VALUES(?, ?,?)");
+			stmt3.setString(1, String.valueOf(proposalId));
+			stmt3.setString(2, rs.getString("event_id"));
+			stmt3.setString(3, rs.getString("invitee_id"));
 			stmt3.executeUpdate();
 			stmt3.close();
 		}
 		rs.close();
 		stmt2.close();
+		System.out.println("Sent proposal: " + proposalId);
 		return true;
 	}
 
+	// Returns the status of proposal being a draft or not
+	public Boolean isDraft(int proposalId) throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("SELECT is_draft FROM proposals where proposal_id = ?");
+		stmt.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt.executeQuery();
+		if (rs.next()){
+			Boolean isDraft = rs.getBoolean("is_draft");
+			rs.close();
+			stmt.close();
+			return isDraft;
+		}
+		else {
+			rs.close();
+			stmt.close();
+			System.out.println("isDraft failed");
+			throw new Exception("Proposal not found!");
+		}
+	}
+
+	// Should delete anything related to the proposal in the database
+	// If draft, should delete items in following tables: proposals, events, invitees
+	// If sent, should delete the items in above tables and responses
+	public Boolean deleteProposal(int proposalId) throws Exception {
+		// Delete invitees
+		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ?");
+		inviteesStmt.setString(1, String.valueOf(proposalId));
+		inviteesStmt.executeUpdate();
+
+		// Delete events
+		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ?");
+		eventsStmt.setString(1, String.valueOf(proposalId));
+		eventsStmt.executeUpdate();
+
+		// Delete responses if not draft; note that this is ok to do even if no responses for proposal exists
+		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ?");
+		responsesStmt.setString(1, String.valueOf(proposalId));
+		responsesStmt.executeUpdate();
+
+		// Delete proposals
+		PreparedStatement proposalsStmt = connection.prepareStatement("DELETE FROM proposals WHERE proposal_id = ?");
+		proposalsStmt.setString(1, String.valueOf(proposalId));
+		int rowsAffected = proposalsStmt.executeUpdate();
+		// Check that one proposal was deleted from the database
+		if (rowsAffected == 1) {
+			return true;
+		}
+		// Otherwise, something went wrong (e.g. none were deleted, more than one proposal deleted)
+		return false;
+	}
 }
