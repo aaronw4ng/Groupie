@@ -65,6 +65,21 @@ public class TicketmasterTest {
     }
 
     @Test
+    public void testBuildVarString(){
+        String testString = ticketmaster.buildVarString("test", "test");
+        assertEquals("&test=test", testString);
+        testString = ticketmaster.buildVarString("genreId", "Classical");
+        assertEquals("&genreId=KnvZfZ7vAeJ", testString);
+        System.out.print(testString);
+        testString = ticketmaster.buildVarString("genreId", "NonExistingGenre");
+        assertEquals("", testString);
+        testString = ticketmaster.buildVarString("test", "");
+        assertEquals("", testString);
+        testString = ticketmaster.buildVarString("test", "OK OK");
+        assertEquals("&test=OK+OK", testString);
+    }
+
+    @Test
     public void testBuildHostString() {
         String host = ticketmaster.buildHostString("BTS", "90301", "Inglewood", "2021-11-01T00:00:00Z", "2021-11-30T00:00:00Z", "");
         assertTrue(host.contains("https://app.ticketmaster.com/discovery/v2/events.json?"));
@@ -339,6 +354,7 @@ public class TicketmasterTest {
         assertTrue(host.contains("KnvZfZ7v7lv")); // Magic & Illusion genre id
         assertTrue(host.contains("apikey"));
     }
+
     @Test
     public void testBuildHostStringMagicAndIllusionGenre() {
         String host = ticketmaster.buildHostString("", "", "Irvine", "", "", "Magic & Illusion");
@@ -352,6 +368,7 @@ public class TicketmasterTest {
         assertTrue(host.contains("KnvZfZ7v7lv")); // Magic & Illusion genre id
         assertTrue(host.contains("apikey"));
     }
+
 
     @Test
     public void testGetSearchResult() throws Exception{
