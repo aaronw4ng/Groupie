@@ -306,9 +306,10 @@ public class Database {
 		// initialize a response for each event, invitee combination in the responses table
 		// Note: availability and excitement will be NULL
 		while (rs.next()) {
-			PreparedStatement stmt3 = connection.prepareStatement("INSERT INTO responses (event_id, user_id) VALUES(?,?)");
-			stmt3.setString(1, rs.getString("event_id"));
-			stmt3.setString(2, rs.getString("invitee_id"));
+			PreparedStatement stmt3 = connection.prepareStatement("INSERT INTO responses (proposal_id, event_id, user_id) VALUES(?, ?,?)");
+			stmt3.setString(1, String.valueOf(proposalId));
+			stmt3.setString(2, rs.getString("event_id"));
+			stmt3.setString(3, rs.getString("invitee_id"));
 			stmt3.executeUpdate();
 			stmt3.close();
 		}
@@ -341,8 +342,30 @@ public class Database {
 	// If draft, should delete items in following tables: proposals, events, invitees
 	// If sent, should delete the items in above tables and responses
 	public Boolean deleteProposal(int proposalId) throws Exception {
-		return true;
+		// Delete invitees
+		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ?");
+		inviteesStmt.setString(1, String.valueOf(proposalId));
+		inviteesStmt.executeUpdate();
+
+		// Delete events
+		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ?");
+		eventsStmt.setString(1, String.valueOf(proposalId));
+		eventsStmt.executeUpdate();
+
+		// Delete responses if not draft; note that this is ok to do even if no responses for proposal exists
+		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ?");
+		responsesStmt.setString(1, String.valueOf(proposalId));
+		responsesStmt.executeUpdate();
+
+		// Delete proposals
+		PreparedStatement proposalsStmt = connection.prepareStatement("DELETE FROM proposals WHERE proposal_id = ?");
+		proposalsStmt.setString(1, String.valueOf(proposalId));
+		int rowsAffected = proposalsStmt.executeUpdate();
+		// Check that one proposal was deleted from the database
+		if (rowsAffected == 1) {
+			return true;
+		}
+		// Otherwise, something went wrong (e.g. none were deleted, more than one proposal deleted)
+		return false;
 	}
-
-
 }
