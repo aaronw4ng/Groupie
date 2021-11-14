@@ -425,6 +425,7 @@ public class DatabaseTest {
 		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
 		Boolean createStatus = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
+		assertEquals(true, createStatus);
 		// Send the proposal
 		Boolean sentStatus = testDB.sendProposal(1);
 		assertEquals(true, sentStatus);
@@ -432,6 +433,39 @@ public class DatabaseTest {
 		// Remove everything associated with this proposal
 		Boolean deleteStatus = testDB.deleteProposal(1);
 		assertEquals(true, deleteStatus);
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	// Returns true because we do not send the proposal
+	@Test
+	public void testIsDraft() throws Exception {
+		Database testDB = new Database("test.db");
+		// Create a proposal first
+		// add user to database first
+		testDB.register("Test User", "Test Password");
+		String title = "My Sent Proposal";
+		String descript = "This is a test description for sending proposal test!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1");
+		testDB.register("Invitee 2", "PS2");
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		Boolean createStatus = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
+		assertEquals(true, createStatus);
+
+		// Confirm that this proposal is a draft
+		Boolean draftStatus = testDB.isDraft(1);
+		assertEquals(true, draftStatus);
 
 		testDB.dropAllTables();
 		testDB.close();

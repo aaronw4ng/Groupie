@@ -318,6 +318,11 @@ public class Database {
 		return true;
 	}
 
+	// Returns the status of proposal being a draft or not
+	public Boolean isDraft(int proposalId) throws Exception {
+		return true;
+	}
+
 	// Should delete anything related to the proposal in the database
 	// If draft, should delete items in following tables: proposals, events, invitees
 	// If sent, should delete the items in above tables and responses
