@@ -231,7 +231,7 @@ public class DatabaseTest {
 		List<Venue> venues = new ArrayList<>();
 		venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
 		events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
-		testDB.savesDraftProposal("Test User", "My Proposal", "This is a description", invited, events);
+		testDB.savesDraftProposal("Test User", "My Proposal", "This is a description", invited, events, true, -1);
 		proposal_id = testDB.queryProposalID("Test User", "My Proposal");
 		assertEquals(1, proposal_id);
 		testDB.dropAllTables();
@@ -259,8 +259,8 @@ public class DatabaseTest {
 		List<Event> events = new ArrayList<>();
 		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
-		Boolean status = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
-		assertEquals(true, status);
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
 		testDB.dropAllTables();
 		testDB.close();
 	}
@@ -278,8 +278,38 @@ public class DatabaseTest {
 		List<Venue> venues = new ArrayList<>();
 		venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
 		events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
-		Boolean status = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
-		assertEquals(false, status);
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(-1, newProposalId);
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	// Updates an existing proposal
+	@Test
+	public void testSavesDraftExistingProposal() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.register("Test User", "Test Password");
+		testDB.register("Invitee 1", "PS 1");
+		testDB.register("Invitee 2", "PS 2");
+		String oldTitle = "My Old Proposal";
+		String oldDescript = "This is a test description for an old version of proposal!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		List<Event> events = new ArrayList<>();
+		List<Venue> venues = new ArrayList<>();
+		venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
+		// Add a draft proposal
+		int oldProposalId = testDB.savesDraftProposal("Test User", oldTitle, oldDescript, invitees, events, true, -1);
+		assertEquals(1, oldProposalId);
+
+		// Now update that proposal with new info
+		String newTitle = "My New Proposal";
+		String newDescript = "This is a test description for an new version of proposal!";
+		// Save the draft proposal
+		int newProposalId = testDB.savesDraftProposal("Test User", newTitle, newDescript, invitees, events, false, oldProposalId);
+		assertEquals(2, newProposalId);
 		testDB.dropAllTables();
 		testDB.close();
 	}
@@ -385,11 +415,11 @@ public class DatabaseTest {
 		List<Event> events = new ArrayList<>();
 		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
-		Boolean createStatus = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
-		assertEquals(true, createStatus);
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
 
 		// Send the proposal
-		Boolean sentStatus = testDB.sendProposal(1);
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
 		assertEquals(true, sentStatus);
 
 		testDB.dropAllTables();
@@ -432,14 +462,14 @@ public class DatabaseTest {
 		List<Event> events = new ArrayList<>();
 		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
-		Boolean createStatus = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
-		assertEquals(true, createStatus);
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1,newProposalId);
 		// Send the proposal
-		Boolean sentStatus = testDB.sendProposal(1);
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
 		assertEquals(true, sentStatus);
 
 		// Remove everything associated with this proposal
-		Boolean deleteStatus = testDB.deleteProposal(1);
+		Boolean deleteStatus = testDB.deleteProposal(newProposalId);
 		assertEquals(true, deleteStatus);
 
 		testDB.dropAllTables();
@@ -470,11 +500,11 @@ public class DatabaseTest {
 		List<Event> events = new ArrayList<>();
 		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
-		Boolean createStatus = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
-		assertEquals(true, createStatus);
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
 
 		// Remove everything associated with this proposal
-		Boolean deleteStatus = testDB.deleteProposal(1);
+		Boolean deleteStatus = testDB.deleteProposal(newProposalId);
 		assertEquals(true, deleteStatus);
 
 		testDB.dropAllTables();
@@ -520,11 +550,11 @@ public class DatabaseTest {
 		List<Event> events = new ArrayList<>();
 		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
-		Boolean createStatus = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
-		assertEquals(true, createStatus);
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
 
 		// Confirm that this proposal is a draft
-		Boolean draftStatus = testDB.isDraft(1);
+		Boolean draftStatus = testDB.isDraft(newProposalId);
 		assertEquals(true, draftStatus);
 
 		testDB.dropAllTables();
@@ -555,13 +585,13 @@ public class DatabaseTest {
 		List<Event> events = new ArrayList<>();
 		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
-		Boolean createStatus = testDB.savesDraftProposal("Test User", title, descript, invitees, events);
-		assertEquals(true, createStatus);
-		Boolean sentStatus = testDB.sendProposal(1);
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
 		assertEquals(true, sentStatus);
 
 		// Confirm that this proposal is a not draft
-		Boolean draftStatus = testDB.isDraft(1);
+		Boolean draftStatus = testDB.isDraft(newProposalId);
 		assertEquals(false, draftStatus);
 
 		testDB.dropAllTables();
