@@ -318,4 +318,12 @@ public class Database {
 		return true;
 	}
 
+	// Should delete anything related to the proposal in the database
+	// If draft, should delete items in following tables: proposals, events, invitees
+	// If sent, should delete the items in above tables and responses
+	public Boolean deleteProposal(int proposalId) throws Exception {
+		return true;
+	}
+
+
 }
