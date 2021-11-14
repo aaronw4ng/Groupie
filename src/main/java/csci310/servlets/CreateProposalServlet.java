@@ -38,7 +38,7 @@ public class CreateProposalServlet extends HttpServlet {
             Boolean isDraft = Boolean.valueOf(request.getParameter("isDraft"));
 
             // successful proposal creation
-            if (database.createAProposal(owner, title, descript, invitedList, eventsList, isDraft)) {
+            if (database.createAProposal(owner, title, descript, invitedList, eventsList)) {
                 request.setAttribute("status", true);
                 out.print(true);
             }
