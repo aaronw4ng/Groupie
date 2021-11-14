@@ -202,7 +202,7 @@ public class Database {
 		PreparedStatement pst;
 		pst = connection.prepareStatement(query);
 		pst.setString(1, String.valueOf(userID));
-		pst.setString(2, "TRUE"); // default value for is_draft is true
+		pst.setString(2, "1"); // default value for is_draft is true
 		pst.setString(3, title);
 		pst.setString(4, descript);
 		pst.executeUpdate();
@@ -215,7 +215,6 @@ public class Database {
 		addEventsToProposal(proposalID, events);
 		// Add invitees to proposal
 		addInviteesToProposal(proposalID, invited, events);
-
 		pst.close();
 		return true;
 	}
@@ -290,7 +289,7 @@ public class Database {
 	// Assumes that the proposal already exists in the database
 	public Boolean sendProposal(int proposalId) throws Exception {
 		// update is draft attribute to false
-		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = FALSE where proposal_id = ?");
+		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = 0 where proposal_id = ?");
 		stmt1.setString(1, String.valueOf(proposalId));
 		int rowsAffected = stmt1.executeUpdate();
 		stmt1.close();
@@ -315,12 +314,27 @@ public class Database {
 		}
 		rs.close();
 		stmt2.close();
+		System.out.println("Sent proposal: " + proposalId);
 		return true;
 	}
 
 	// Returns the status of proposal being a draft or not
 	public Boolean isDraft(int proposalId) throws Exception {
-		return true;
+		PreparedStatement stmt = connection.prepareStatement("SELECT is_draft FROM proposals where proposal_id = ?");
+		stmt.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt.executeQuery();
+		if (rs.next()){
+			Boolean isDraft = rs.getBoolean("is_draft");
+			rs.close();
+			stmt.close();
+			return isDraft;
+		}
+		else {
+			rs.close();
+			stmt.close();
+			System.out.println("isDraft failed");
+			throw new Exception("Proposal not found!");
+		}
 	}
 
 	// Should delete anything related to the proposal in the database
