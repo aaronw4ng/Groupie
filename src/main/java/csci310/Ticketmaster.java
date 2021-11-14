@@ -3,7 +3,9 @@ package csci310;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -12,6 +14,52 @@ import java.lang.Thread;
 
 public class Ticketmaster {
     private static ReentrantLock lock = new ReentrantLock();
+
+    public String buildVarString(String var, String value) {
+        String ans = "";
+        if (var.equals("genreId")) {
+            Map<String, String> genreMap = new HashMap<String, String>();
+            //"id":"KnvZfZ7vAev","name":"Pop"
+            //"id":"KnvZfZ7vAvE","name":"Jazz"
+            //"id":"KnvZfZ7vAeJ","name":"Classical"
+            //"id":"KnvZfZ7vAeA","name":"Rock"
+            //"id":"KnvZfZ7vA7E","name":"Soccer"
+            //"id":"KnvZfZ7vAdE","name":"Football"
+            //"id":"KnvZfZ7vAde","name":"Basketball"
+            //"id":"KnvZfZ7v7l1","name":"Theatre"
+            //"id":"KnvZfZ7vAe1","name":"Comedy"
+            //"id":"KnvZfZ7v7lv","name":"Magic & Illusion"
+            genreMap.put("Pop".toLowerCase(), "KnvZfZ7vAev");
+            genreMap.put("Jazz".toLowerCase(), "KnvZfZ7vAvE");
+            genreMap.put("Classical".toLowerCase(), "KnvZfZ7vAeJ");
+            genreMap.put("Rock".toLowerCase(), "KnvZfZ7vAeA");
+            genreMap.put("Soccer".toLowerCase(), "KnvZfZ7vA7E");
+            genreMap.put("Football".toLowerCase(), "KnvZfZ7vAdE");
+            genreMap.put("Basketball".toLowerCase(), "KnvZfZ7vAde");
+            genreMap.put("Theatre".toLowerCase(), "KnvZfZ7v7l1");
+            genreMap.put("Comedy".toLowerCase(), "KnvZfZ7vAe1");
+            genreMap.put("Magic & Illusion".toLowerCase(), "KnvZfZ7v7lv");
+            if (genreMap.containsKey(value.toLowerCase())) {
+                ans = "&" + var + "=" + genreMap.get(value.toLowerCase());
+            }
+        } else {
+            // all other var
+            if (value.equals("")) {
+                ans = "";
+            } else {
+                ans = "&" + var + "=";
+                for (int i = 0; i < value.length(); i++) {
+                    if (value.charAt(i) == ' ') {
+                        ans += "+";
+                    } else {
+                        ans += value.charAt(i);
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+
     public String buildHostString(String keyword, String postalCode, String city, String startDate, String endDate, String genre) {
         System.out.println("Genre: " + genre);
         System.out.println("city: " + city);
@@ -19,165 +67,18 @@ public class Ticketmaster {
         String api_key = "NpmZT6NVdqwadA0ZDTadaPApGwAknwH4";
         // refactor below to form the host as a separate function to make it easier to test
         // if keyword is not empty string, then add it to the query
-        boolean first_flag = true;
-        if (keyword != "") {
-            first_flag = false;
-            host = host + "keyword=" + keyword;
-        }
-        // if the zipCode is not empty string, then add it to the query
-        if (postalCode != "") {
-            // if first
-            if (first_flag) {
-                host = host + "postalCode=" + postalCode;
-                first_flag = false;
-            }
-            else {
-                host = host + "&postalCode=" + postalCode;
-            }
-        }
-        // TODO: consider city with more than 1 word
-        // if the city is not empty string, then add it to the query
-        if (city != "") {
-            // if first
-            if (first_flag) {
-                host = host + "city=" + city;
-                first_flag = false;
-            }
-            else {
-                host = host + "&city=" + city;
-            }
-        }
-        // if the start date is not empty, then add it to the query
-        if (startDate != "") {
-            // if first
-            if (first_flag) {
-                host = host + "startDateTime=" + startDate;
-                first_flag = false;
-            }
-            else {
-                host = host + "&startDateTime=" + startDate;
-            }
-        }
-        // if the end date is not empty, then add it to the query
-        if (endDate != "") {
-            // if first
-            if (first_flag) {
-                host = host + "endDateTime=" + endDate;
-                first_flag = false;
-            }
-            else {
-                host = host + "&endDateTime=" + endDate;
-            }
-        }
-        // if genre is not empty, then use the appropriate genre id
-        // "id":"KnvZfZ7vAev","name":"Pop"
-        if (genre.equalsIgnoreCase("Pop")) {
-            // if first
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vAev";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vAev";
-            }
-        }
-        //"id":"KnvZfZ7vAvE","name":"Jazz"
-        if (genre.equalsIgnoreCase("Jazz")) {
-            // if first
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vAvE";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vAvE";
-            }
-        }
-        //"id":"KnvZfZ7vAeJ","name":"Classical"
-        if (genre.equalsIgnoreCase("Classical")) {
-            // if first
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vAeJ";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vAeJ";
-            }
-        }
-        //"id":"KnvZfZ7vAeA","name":"Rock"
-        if (genre.equalsIgnoreCase("Rock")) {
-            // if first
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vAeA";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vAeA";
-            }
-        }
-        //"id":"KnvZfZ7vA7E","name":"Soccer"
-        if (genre.equalsIgnoreCase("Soccer")) {
-            // if first
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vA7E";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vA7E";
-            }
-        }
-        //"id":"KnvZfZ7vAdE","name":"Football"
-        if (genre.equalsIgnoreCase("Football")) {
-            // if first
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vAdE";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vAdE";
-            }
-        }
-        //"id":"KnvZfZ7vAde","name":"Basketball"
-        if (genre.equalsIgnoreCase("Basketball")) {
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vAde";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vAde";
-            }
-        }
-        //"id":"KnvZfZ7v7l1","name":"Theatre"
-        if (genre.equalsIgnoreCase("Theatre")) {
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7v7l1";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7v7l1";
-            }
-        }
-        //"id":"KnvZfZ7vAe1","name":"Comedy"
-        if (genre.equalsIgnoreCase("Comedy")) {
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7vAe1";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7vAe1";
-            }
-        }
-        //"id":"KnvZfZ7v7lv","name":"Magic & Illusion"
-        if (genre.equalsIgnoreCase("Magic & Illusion")) {
-            if (first_flag) {
-                host = host + "genreId=KnvZfZ7v7lv";
-                first_flag = false;
-            }
-            else {
-                host = host + "&genreId=KnvZfZ7v7lv";
-            }
+        String query_modifier = "";
+        query_modifier += buildVarString("keyword", keyword);
+        query_modifier += buildVarString("postalCode", postalCode);
+        query_modifier += buildVarString("city", city);
+        query_modifier += buildVarString("startDateTime", startDate);
+        query_modifier += buildVarString("endDateTime", endDate);
+        query_modifier += buildVarString("genreId", genre);
+        if (!query_modifier.equals("")){
+            query_modifier = query_modifier.substring(1);
         }
         // add api key to query at the very end after all parameters
-        host = host + "&apikey=" + api_key;
+        host = host + query_modifier + "&apikey=" + api_key;
         System.out.println("Host: " + host);
         return host;
     }
