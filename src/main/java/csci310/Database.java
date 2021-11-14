@@ -185,7 +185,12 @@ public class Database {
 
 	// Adds a draft proposal to database without sending
 	// Will delete the old version of proposal if isNew is false
-	public Boolean savesDraftProposal(String owner, String title, String descript, List<String> invited, List<Event> events) throws Exception {
+	// Returns the proposalId of the newly added proposal
+	public int savesDraftProposal(String owner, String title, String descript, List<String> invited, List<Event> events, Boolean isNew, int proposalId) throws Exception {
+		// if this proposal is not new aka there's an older version of it, then delete that proposal
+		if (!isNew) {
+			deleteProposal(proposalId);
+		}
 		int userID;
 		// if the owner exists, then try to create a proposal by using owner's user_id
 		try{
@@ -194,7 +199,7 @@ public class Database {
 		catch (Exception e){
 			// else owner does not exist, then cannot create a proposal
 			System.out.println("Unable to add following proposal: " + owner + " " + title + " " + descript);
-			return false;
+			return -1;
 		}
 
 		// insert proposal into proposals table
@@ -216,7 +221,7 @@ public class Database {
 		// Add invitees to proposal
 		addInviteesToProposal(proposalID, invited, events);
 		pst.close();
-		return true;
+		return proposalID;
 	}
 
 	// Add Event(s) to an existing proposal
@@ -342,6 +347,7 @@ public class Database {
 	// If draft, should delete items in following tables: proposals, events, invitees
 	// If sent, should delete the items in above tables and responses
 	public Boolean deleteProposal(int proposalId) throws Exception {
+		System.out.println("Deleting proposal: " + proposalId);
 		// Delete invitees
 		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ?");
 		inviteesStmt.setString(1, String.valueOf(proposalId));

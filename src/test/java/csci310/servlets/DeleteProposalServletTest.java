@@ -81,11 +81,11 @@ public class DeleteProposalServletTest {
         List<Venue> venues = new ArrayList<>();
         venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
         events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
-        Boolean status = testDB.savesDraftProposal("TestUser", title, descript, invitees, events);
-        assertEquals(true, status);
+        int newProposalId = testDB.savesDraftProposal("TestUser", title, descript, invitees, events, true, -1);
+        assertEquals(1, newProposalId);
 
         // Now delete that draft proposal using its id
-        Mockito.when(request.getParameter("proposalId")).thenReturn("1");
+        Mockito.when(request.getParameter("proposalId")).thenReturn(String.valueOf(newProposalId));
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);

@@ -2,6 +2,8 @@ package csci310.servlets;
 
 import csci310.AppServletContextListener;
 import csci310.Database;
+import csci310.Event;
+import csci310.Venue;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -86,6 +88,67 @@ public class CreateProposalServletTest {
                 "}]" +
                 "}]");
         Mockito.when(request.getParameter("isDraft")).thenReturn("false");
+        Mockito.when(request.getParameter("isNew")).thenReturn("true");
+        Mockito.when(request.getParameter("proposalId")).thenReturn("1");
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        Mockito.when(response.getWriter()).thenReturn(pw);
+
+        CreateProposalServlet createProposalServlet = new CreateProposalServlet();
+        createProposalServlet.init(config);
+        createProposalServlet.doPost(request, response);
+        String result = sw.getBuffer().toString();
+        assertEquals("true", result);
+    }
+
+    // Updating an older version of proposal
+    @Test
+    public void testDoPostProposalAlreadyExists() throws Exception {
+        // clear the database
+        Database testDB = listener.database;
+        testDB.dropAllTables();
+        testDB.createRequiredTables();
+
+        // register the user and invitees
+        testDB.register("TestUser", "TestPassword");
+        testDB.register("Invitee1", "ps1");
+        testDB.register("Invitee2", "ps2");
+
+        // Adding the old proposal draft
+        String title = "My Old Test Proposal for Create Proposal Servlet";
+        String descript = "This is an old test description for delete proposal servlet!";
+        List<String> invitees = new ArrayList<>();
+        invitees.add("Invitee1");
+        invitees.add("Invitee2");
+        List<Event> events = new ArrayList<>();
+        List<Venue> venues = new ArrayList<>();
+        venues.add(new Venue("VenueName", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+        events.add(new Event("TestEvent", "TestURL", "TestStartDate", venues));
+        int newProposalId = testDB.savesDraftProposal("TestUser", title, descript, invitees, events, true, -1);
+        assertEquals(1, newProposalId);
+
+        // Updated version of the proposal
+        Mockito.when(request.getParameter("owner")).thenReturn("TestUser");
+        Mockito.when(request.getParameter("title")).thenReturn("Updated Test Title");
+        Mockito.when(request.getParameter("descript")).thenReturn("This is an updated test description!");
+        Mockito.when(request.getParameter("invited")).thenReturn("[\"Invitee1\", \"Invitee2\"]");
+        Mockito.when(request.getParameter("events")).thenReturn("[{" +
+                "\"eventName\": \"BTS PERMISSION TO DANCE ON STAGE - LA\"," +
+                "\"url\": \"https://www.ticketmaster.com/bts-permission-to-dance-on-stage-inglewood-california-11-27-2021/event/0A005B36DF5C3326\"," +
+                "\"startDateTime\": \"2021-11-28T03:30:00Z\"," +
+                "\"venues\": [{" +
+                "\"name\": \"SoFi Stadium\"," +
+                "\"address\": \"1001 S. Stadium Dr\"," +
+                "\"city\": \"Inglewood\"," +
+                "\"state\": \"CA\"," +
+                "\"country\": \"US\"" +
+                "}]" +
+                "}]");
+        Mockito.when(request.getParameter("isDraft")).thenReturn("false");
+        Mockito.when(request.getParameter("isNew")).thenReturn("false");
+        Mockito.when(request.getParameter("proposalId")).thenReturn("1");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -127,6 +190,8 @@ public class CreateProposalServletTest {
                 "}]" +
                 "}]");
         Mockito.when(request.getParameter("isDraft")).thenReturn("false");
+        Mockito.when(request.getParameter("isNew")).thenReturn("true");
+        Mockito.when(request.getParameter("proposalId")).thenReturn("1");
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
