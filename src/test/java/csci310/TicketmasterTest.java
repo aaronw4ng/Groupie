@@ -77,8 +77,11 @@ public class TicketmasterTest {
         assertEquals("", testString);
         testString = ticketmaster.buildVarString("test", "");
         assertEquals("", testString);
+        testString = ticketmaster.buildVarString("test", null);
+        assertEquals("", testString);
         testString = ticketmaster.buildVarString("test", "OK OK");
         assertEquals("&test=OK+OK", testString);
+
     }
 
     @Test
@@ -390,7 +393,10 @@ public class TicketmasterTest {
         String event = eventsArray.get(0).toString();
         JsonObject eventDetails = new Gson().fromJson(event, JsonObject.class);
         System.out.println(ticketmaster.getAsStringDefaultNA(eventDetails, "name"));
-        assertTrue(ticketmaster.getAsStringDefaultNA(eventDetails, "name").equals("BTS"));
+        assertTrue(ticketmaster.getAsStringDefaultNA(eventDetails, "name").contains("BTS"));
+        assertTrue(ticketmaster.getAsStringDefaultNA(eventDetails, "NonExistingCategory") == "N/A");
+        assertTrue(ticketmaster.getAsStringDefaultNA(eventDetails, null) == "N/A");
+        assertTrue(ticketmaster.getAsStringDefaultNA(null, "NonExistingCategory") == "N/A");
     }
 
     @Test
