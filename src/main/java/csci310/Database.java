@@ -220,6 +220,10 @@ public class Database {
 		return true;
 	}
 
+	public Boolean savesDraftProposal(String owner, String title, String descript, List<String> invited, List<Event> events) throws Exception {
+		return true;
+	}
+
 	// Add Event(s) to an existing proposal
 	public Boolean addEventsToProposal(int proposalId, List<Event> events) throws Exception {
 		// empty list, then return false
