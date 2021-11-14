@@ -17,7 +17,10 @@ public class Ticketmaster {
 
     public String buildVarString(String var, String value) {
         String ans = "";
-        if (var.equals("genreId")) {
+        if (value == null){
+            // pass
+        }
+        else if (var.equals("genreId")) {
             Map<String, String> genreMap = new HashMap<String, String>();
             //"id":"KnvZfZ7vAev","name":"Pop"
             //"id":"KnvZfZ7vAvE","name":"Jazz"
@@ -116,11 +119,22 @@ public class Ticketmaster {
         lock.unlock();
         return result;
     }
+    
+    public String getAsStringDefaultNA(JsonObject jsonObject, String key) {
+        if (jsonObject == null || !jsonObject.has(key)) {
+            return "N/A";
+        } else {
+            return jsonObject.get(key).getAsString();
+        }
+    }
 
-    public ArrayList<Event> parseEventsArray(String result) {
+    public ArrayList<Event> parseEventsArray(String result) throws Exception {
         // turn into json object in order to extract embedded items
         // System.out.println(result);
         JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
+        if (jobj.getAsJsonObject("_embedded") == null) {
+            throw new Exception("No events found");
+        }
         JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
         ArrayList<Event> refinedListOfEvents = new ArrayList<>();
 
@@ -130,42 +144,30 @@ public class Ticketmaster {
             String event = eventsArray.get(i).toString();
             // turn each individual event into json object
             JsonObject eventDetails = new Gson().fromJson(event, JsonObject.class);
-            try {
-                // create a new event w/ name
-                // first check if there's event name
-                Event newEvent = new Event(eventDetails.get("name").getAsString());
-                // get url of event
-                newEvent.setURLEvent(eventDetails.get("url").getAsString());
-                // get start date and time of event
-                newEvent.setStartDateTime(eventDetails.getAsJsonObject("dates").getAsJsonObject("start").get("dateTime").getAsString());
-                // get venues of event
-                JsonArray venuesArray = eventDetails.getAsJsonObject("_embedded").getAsJsonArray("venues");
-                List<Venue> venues = new ArrayList<>();
-                for (int j = 0; j < venuesArray.size(); j++) {
-                    // try parsing the current event's venues; if it is missing any fields, then ignore event
-                    try {
-                        String venueName = venuesArray.get(j).getAsJsonObject().get("name").getAsString();
-                        String address = venuesArray.get(j).getAsJsonObject().getAsJsonObject("address").get("line1").getAsString();
-                        String venueCity = venuesArray.get(j).getAsJsonObject().getAsJsonObject("city").get("name").getAsString();
-                        String state = venuesArray.get(j).getAsJsonObject().getAsJsonObject("state").get("stateCode").getAsString();
-                        String country = venuesArray.get(j).getAsJsonObject().getAsJsonObject("country").get("countryCode").getAsString();
-                        Venue venue = new Venue(venueName, address, venueCity, state, country);
-                        venues.add(venue);
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-                // if event does have at least one venue, then add the event
-                if (!venues.isEmpty()) {
-                    newEvent.setVenues(venues);
-                    refinedListOfEvents.add(newEvent);
-                }
+            // create a new event w/ name
+            // first check if there's event name
+            Event newEvent = new Event(getAsStringDefaultNA(eventDetails, "name"));
+            // get url of event
+            newEvent.setURLEvent(getAsStringDefaultNA(eventDetails, "url"));
+            // get start date and time of event
+            newEvent.setStartDateTime(getAsStringDefaultNA(eventDetails.getAsJsonObject("dates").getAsJsonObject("start"), "dateTime"));
+            // get venues of event
+            JsonArray venuesArray = eventDetails.getAsJsonObject("_embedded").getAsJsonArray("venues");
+            List<Venue> venues = new ArrayList<>();
+            for (int j = 0; j < venuesArray.size(); j++) {
+                // try parsing the current event's venues; if it is missing any fields, then ignore event
+                JsonObject venueObject = venuesArray.get(j).getAsJsonObject();
+                String venueName = getAsStringDefaultNA(venueObject, "name");
+                String address = getAsStringDefaultNA(venueObject.getAsJsonObject("address"), "line1");
+                String venueCity = getAsStringDefaultNA(venueObject.getAsJsonObject("city"), "name");
+                String state = getAsStringDefaultNA(venueObject.getAsJsonObject("state"), "stateCode");
+                String country = getAsStringDefaultNA(venueObject.getAsJsonObject("country"), "countryCode");
+                Venue venue = new Venue(venueName, address, venueCity, state, country);
+                venues.add(venue);
             }
-            // current event is missing necessary details, so just skip it
-            catch (Exception e) {
-                System.out.println("Was unable to parse current event");
-                System.out.println(e.getMessage());
-            }
+            // add venues to event
+            newEvent.setVenues(venues);
+            refinedListOfEvents.add(newEvent);
         }
         return refinedListOfEvents;
     }
@@ -185,7 +187,7 @@ public class Ticketmaster {
         }
         // Results were empty aka no events found or something went wrong when trying to connect
         catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             throw new Exception("No results found!");
         }
     }

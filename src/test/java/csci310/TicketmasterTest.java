@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import java.util.ArrayList;
+
+import com.google.gson.*;
 public class TicketmasterTest {
     Ticketmaster ticketmaster;
     String hostBegin = "https://app.ticketmaster.com/discovery/v2/events.json?";
@@ -75,8 +77,11 @@ public class TicketmasterTest {
         assertEquals("", testString);
         testString = ticketmaster.buildVarString("test", "");
         assertEquals("", testString);
+        testString = ticketmaster.buildVarString("test", null);
+        assertEquals("", testString);
         testString = ticketmaster.buildVarString("test", "OK OK");
         assertEquals("&test=OK+OK", testString);
+
     }
 
     @Test
@@ -377,6 +382,21 @@ public class TicketmasterTest {
         assertFalse(result == "");
         assertTrue(result.contains("_embedded"));
         saveMockData("testGetSearchResult", result, host);
+    }
+
+    @Test
+    public void testGetAsStringDefaultNA() throws Exception{
+        String host = ticketmaster.buildHostString("BTS", "90301", "Inglewood", "2021-11-01T00:00:00Z", "2021-11-30T00:00:00Z", "");
+        String result = ticketmaster.getSearchResult(host);
+        JsonObject jobj = new Gson().fromJson(result, JsonObject.class);
+        JsonArray eventsArray = jobj.getAsJsonObject("_embedded").getAsJsonArray("events");
+        String event = eventsArray.get(0).toString();
+        JsonObject eventDetails = new Gson().fromJson(event, JsonObject.class);
+        System.out.println(ticketmaster.getAsStringDefaultNA(eventDetails, "name"));
+        assertTrue(ticketmaster.getAsStringDefaultNA(eventDetails, "name").contains("BTS"));
+        assertTrue(ticketmaster.getAsStringDefaultNA(eventDetails, "NonExistingCategory") == "N/A");
+        assertTrue(ticketmaster.getAsStringDefaultNA(eventDetails, null) == "N/A");
+        assertTrue(ticketmaster.getAsStringDefaultNA(null, "NonExistingCategory") == "N/A");
     }
 
     @Test
