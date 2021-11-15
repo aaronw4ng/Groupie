@@ -183,9 +183,14 @@ public class Database {
 		}
 	}
 
-	// create a proposal (note: draft proposal will have default values)
-	// returns true if proposal was successfully added; otherwise, returns false
-	public Boolean createAProposal(String owner, String title, String descript, List<String> invited, List<Event> events, Boolean is_Draft) throws Exception {
+	// Adds a draft proposal to database without sending
+	// Will delete the old version of proposal if isNew is false
+	// Returns the proposalId of the newly added proposal
+	public int savesDraftProposal(String owner, String title, String descript, List<String> invited, List<Event> events, Boolean isNew, int proposalId) throws Exception {
+		// if this proposal is not new aka there's an older version of it, then delete that proposal
+		if (!isNew) {
+			deleteProposal(proposalId);
+		}
 		int userID;
 		// if the owner exists, then try to create a proposal by using owner's user_id
 		try{
@@ -194,7 +199,7 @@ public class Database {
 		catch (Exception e){
 			// else owner does not exist, then cannot create a proposal
 			System.out.println("Unable to add following proposal: " + owner + " " + title + " " + descript);
-			return false;
+			return -1;
 		}
 
 		// insert proposal into proposals table
@@ -202,7 +207,7 @@ public class Database {
 		PreparedStatement pst;
 		pst = connection.prepareStatement(query);
 		pst.setString(1, String.valueOf(userID));
-		pst.setString(2, String.valueOf(is_Draft));
+		pst.setString(2, "1"); // default value for is_draft is true
 		pst.setString(3, title);
 		pst.setString(4, descript);
 		pst.executeUpdate();
@@ -215,9 +220,8 @@ public class Database {
 		addEventsToProposal(proposalID, events);
 		// Add invitees to proposal
 		addInviteesToProposal(proposalID, invited, events);
-
 		pst.close();
-		return true;
+		return proposalID;
 	}
 
 	// Add Event(s) to an existing proposal
@@ -284,5 +288,90 @@ public class Database {
 		}
 
 		return true;
+	}
+
+	// Sends proposal out to the invitees by marking it as not a draft and initializing responses for each invitee for each event
+	// Assumes that the proposal already exists in the database
+	public Boolean sendProposal(int proposalId) throws Exception {
+		// update is draft attribute to false
+		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = 0 where proposal_id = ?");
+		stmt1.setString(1, String.valueOf(proposalId));
+		int rowsAffected = stmt1.executeUpdate();
+		stmt1.close();
+		// should only affect one row; otherwise, did not successfully send proposal
+		if (rowsAffected != 1) {
+			return false;
+		}
+		// Initialize the responses
+		// get all the invited people and events associated with this proposal
+		// Note: invitees table already associates each invited person with an event
+		PreparedStatement stmt2 = connection.prepareStatement("SELECT invitee_id, event_id FROM invitees WHERE proposal_id = ?");
+		stmt2.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt2.executeQuery();
+		// initialize a response for each event, invitee combination in the responses table
+		// Note: availability and excitement will be NULL
+		while (rs.next()) {
+			PreparedStatement stmt3 = connection.prepareStatement("INSERT INTO responses (proposal_id, event_id, user_id) VALUES(?, ?,?)");
+			stmt3.setString(1, String.valueOf(proposalId));
+			stmt3.setString(2, rs.getString("event_id"));
+			stmt3.setString(3, rs.getString("invitee_id"));
+			stmt3.executeUpdate();
+			stmt3.close();
+		}
+		rs.close();
+		stmt2.close();
+		System.out.println("Sent proposal: " + proposalId);
+		return true;
+	}
+
+	// Returns the status of proposal being a draft or not
+	public Boolean isDraft(int proposalId) throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("SELECT is_draft FROM proposals where proposal_id = ?");
+		stmt.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt.executeQuery();
+		if (rs.next()){
+			Boolean isDraft = rs.getBoolean("is_draft");
+			rs.close();
+			stmt.close();
+			return isDraft;
+		}
+		else {
+			rs.close();
+			stmt.close();
+			System.out.println("isDraft failed");
+			throw new Exception("Proposal not found!");
+		}
+	}
+
+	// Should delete anything related to the proposal in the database
+	// If draft, should delete items in following tables: proposals, events, invitees
+	// If sent, should delete the items in above tables and responses
+	public Boolean deleteProposal(int proposalId) throws Exception {
+		System.out.println("Deleting proposal: " + proposalId);
+		// Delete invitees
+		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ?");
+		inviteesStmt.setString(1, String.valueOf(proposalId));
+		inviteesStmt.executeUpdate();
+
+		// Delete events
+		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ?");
+		eventsStmt.setString(1, String.valueOf(proposalId));
+		eventsStmt.executeUpdate();
+
+		// Delete responses if not draft; note that this is ok to do even if no responses for proposal exists
+		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ?");
+		responsesStmt.setString(1, String.valueOf(proposalId));
+		responsesStmt.executeUpdate();
+
+		// Delete proposals
+		PreparedStatement proposalsStmt = connection.prepareStatement("DELETE FROM proposals WHERE proposal_id = ?");
+		proposalsStmt.setString(1, String.valueOf(proposalId));
+		int rowsAffected = proposalsStmt.executeUpdate();
+		// Check that one proposal was deleted from the database
+		if (rowsAffected == 1) {
+			return true;
+		}
+		// Otherwise, something went wrong (e.g. none were deleted, more than one proposal deleted)
+		return false;
 	}
 }
