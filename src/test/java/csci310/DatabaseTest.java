@@ -625,9 +625,12 @@ public class DatabaseTest {
 		testDB.register("user2", "ps2");
 		testDB.register("user3", "ps3");
 
-		testDB.setUserAvailability(1, false, "9:00");
-		testDB.setUserAvailability(2, true, "");
+		// check if updates are successful
+		assertEquals(true, testDB.setUserAvailability(1, false, "9:00"));
+		assertEquals(true, testDB.setUserAvailability(2, true, ""));
+		assertEquals(false, testDB.setUserAvailability(4, false, ""));
 
+		// check availabilities changed
 		List<UserAvailibility> availabilities = testDB.getAllUsers(3);
 		assertEquals(2, availabilities.size());
 		assertEquals(1, availabilities.get(0).userId);
