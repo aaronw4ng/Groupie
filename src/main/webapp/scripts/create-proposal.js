@@ -60,12 +60,13 @@ function handleCreateProposalClick(event) {
         method: "POST",
         url: "../createProposal",
         data: {
-            owner: 1,
+            owner: "1",
             title: titleInput,
-            description: "",
+            descript: "",
             invited: users,
             events: selectedEvents,
-            is_Draft: false
+            isNew: false,
+            proposalID: "-1"
         },
         success: function(result) {
             if (result) {
