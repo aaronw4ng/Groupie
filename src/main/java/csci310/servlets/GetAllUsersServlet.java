@@ -9,5 +9,10 @@ import java.io.PrintWriter;
 
 public class GetAllUsersServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Database database = (Database) getServletContext().getAttribute("database");
+        PrintWriter out = response.getWriter();
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        String userList = database.getAllUsers(userId);
+        out.print(userList);
     }
 }

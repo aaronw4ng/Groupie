@@ -1,6 +1,7 @@
 package csci310.servlets;
 
 import csci310.AppServletContextListener;
+import csci310.Database;
 import csci310.Ticketmaster;
 
 import javax.servlet.ServletConfig;
@@ -9,7 +10,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -21,9 +24,22 @@ public class GetAllUsersServletTest {
 
     // for mocking server initialization
     private static ServletContext context;
+    private static AppServletContextListener listener;
     private static ServletContextEvent event;
     private static ServletConfig config;
-    private static Ticketmaster ticketmaster;
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        // database initialization
+        AppServletContextListener.db_name = "test.db";
+        context = Mockito.mock(ServletContext.class);
+        listener = new AppServletContextListener();
+        event = new ServletContextEvent(context);
+        config = Mockito.mock(ServletConfig.class);
+        listener.contextInitialized(event);
+        Mockito.doReturn(listener.database).when(context).getAttribute("database");
+        Mockito.doReturn(context).when(config).getServletContext();
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -31,9 +47,21 @@ public class GetAllUsersServletTest {
         response = Mockito.mock(HttpServletResponse.class);
     }
 
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        listener.contextDestroyed(event);
+    }
+
     @Test
     public void testDoPost() throws Exception {
-        GetAllUsersServlet servlet = new GetAllUsersServlet();
-        assertTrue(servlet != null);
+        // clear the database
+        Database testDB = listener.database;
+        testDB.dropAllTables();
+        testDB.createRequiredTables();
+        
+        // register users
+        testDB.register("user1", "ps1");
+        testDB.register("user2", "ps2");
+        testDB.register("user3", "ps3");
     }
 }
