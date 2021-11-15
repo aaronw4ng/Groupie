@@ -63,5 +63,7 @@ public class GetAllUsersServletTest {
         testDB.register("user1", "ps1");
         testDB.register("user2", "ps2");
         testDB.register("user3", "ps3");
+
+        // TODO: test that the response is correct
     }
 }
