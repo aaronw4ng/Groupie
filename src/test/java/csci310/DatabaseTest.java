@@ -1,5 +1,7 @@
 package csci310;
 
+import csci310.UserAvailibility;
+
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.io.FileReader;
@@ -614,6 +616,27 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testSetUserAvailability() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		testDB.setUserAvailability(1, false, "9:00");
+		testDB.setUserAvailability(2, true, "");
+
+		List<UserAvailibility> availabilities = testDB.getAllUsers(3);
+		assertEquals(2, availabilities.size());
+		assertEquals(1, availabilities.get(0).userId);
+		assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(2, availabilities.get(1).userId);
+		assertEquals(true, availabilities.get(1).isAvailable);
+	}
+
+	@Test
 	public void testGetAllUsers() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
@@ -625,7 +648,7 @@ public class DatabaseTest {
 		testDB.register("user4", "ps4");
 		testDB.register("user5", "ps5");
 
-		List<UserAvailibility> userList = testDB.getAllUsers();
+		List<UserAvailibility> userList = testDB.getAllUsers(1);
 		assertEquals(5, userList.size());
 		for (UserAvailibility user : userList) {
 			assertTrue(user.isAvailable);

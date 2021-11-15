@@ -378,20 +378,29 @@ public class Database {
 	}
 
 	// all user/availibility related functions
+	public Boolean setUserAvailability(int userId, Boolean availability, String until) throws Exception {
+		return true;
+	}
 
 	// returns a list of all the users in the database
-	public List<UserAvailibility> getAllUsers() throws Exception {
+	public List<UserAvailibility> getAllUsers(int myId) throws Exception {
 		// TODO:refreshUsers();
 		List<UserAvailibility> users = new ArrayList<UserAvailibility>();
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
 			int userId = rs.getInt("user_id");
+			// skip your own user
+			if (userId == myId) {
+				continue;
+			}
 			String userName = rs.getString("username");
 			boolean isAvailable = rs.getBoolean("availability");
 			UserAvailibility u = new UserAvailibility(userName, userId, isAvailable);
 			users.add(u);
+			System.out.println(userId + " " + userName + " " + isAvailable + " ");
 		}
+		// TODO: set whoever blocked me as unavailable
 		return users;
 	}
 }
