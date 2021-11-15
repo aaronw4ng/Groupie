@@ -112,7 +112,8 @@ public class DatabaseTest {
 		Boolean result = testDB.register("user", "password");
 		assertEquals(false, result);
 
-
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -616,6 +617,8 @@ public class DatabaseTest {
 			// expecting an error here
 			assertEquals("Proposal not found!", e.getMessage());
 		}
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -638,13 +641,13 @@ public class DatabaseTest {
 		// set user2 to unavailable until next day
 		testDB.setUserAvailability(2, false, nextDateString);
 
-		List<UserAvailability> availabilities = testDB.getAllUsers(3);
-		assertEquals(false, availabilities.get(0).isAvailable);
 		Thread.sleep(100);
-		testDB.refreshUsersAvailability();
-		availabilities = testDB.getAllUsers(3);
+		List<UserAvailability> availabilities = testDB.getAllUsers(3);
 		assertEquals(true, availabilities.get(0).isAvailable);
 		assertEquals(false, availabilities.get(1).isAvailable);
+
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -658,7 +661,9 @@ public class DatabaseTest {
 		testDB.register("user3", "ps3");
 
 		// check if updates are successful
-		assertEquals(true, testDB.setUserAvailability(1, false, "9:00"));
+		Date nextDate = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+		String nextDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(nextDate);
+		assertEquals(true, testDB.setUserAvailability(1, false, nextDateString));
 		assertEquals(true, testDB.setUserAvailability(2, true, ""));
 		assertEquals(false, testDB.setUserAvailability(4, false, ""));
 
@@ -669,6 +674,9 @@ public class DatabaseTest {
 		assertEquals(false, availabilities.get(0).isAvailable);
 		assertEquals(2, availabilities.get(1).userId);
 		assertEquals(true, availabilities.get(1).isAvailable);
+
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -684,9 +692,12 @@ public class DatabaseTest {
 		testDB.register("user5", "ps5");
 
 		List<UserAvailability> userList = testDB.getAllUsers(1);
-		assertEquals(5, userList.size());
+		assertEquals(4, userList.size());
 		for (UserAvailability user : userList) {
 			assertTrue(user.isAvailable);
 		}
+
+		testDB.dropAllTables();
+		testDB.close();
 	}
 }

@@ -422,7 +422,9 @@ public class Database {
 
 	// returns a list of all the users in the database
 	public List<UserAvailability> getAllUsers(int myId) throws Exception {
-		// TODO:refreshUsers();
+		// refresh users' availability before getting all users
+		refreshUsersAvailability();
+
 		List<UserAvailability> users = new ArrayList<UserAvailability>();
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
 		ResultSet rs = stmt.executeQuery();
@@ -438,6 +440,8 @@ public class Database {
 			users.add(u);
 			System.out.println(userId + " " + userName + " " + isAvailable + " ");
 		}
+		rs.close();
+		stmt.close();
 		// TODO: set whoever blocked me as unavailable
 		return users;
 	}
