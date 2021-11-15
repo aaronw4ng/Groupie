@@ -25,6 +25,10 @@
     <servlet-name>DeleteProposalServlet</servlet-name>
     <servlet-class>csci310.servlets.DeleteProposalServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GetAllUsersServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetAllUsersServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -45,5 +49,8 @@
     <servlet-name>DeleteProposalServlet</servlet-name>
     <url-pattern>/deleteProposal</url-pattern>
   </servlet-mapping>
-
+  <servlet-mapping>
+    <servlet-name>GetAllUsersServlet</servlet-name>
+    <servlet-class>/GetAllUsersServlet</servlet-class>
+  </servlet-mapping>
 </web-app>

@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class GetAllUsersServlet extends HttpServlet {
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try{
             Database database = (Database) getServletContext().getAttribute("database");
