@@ -5,7 +5,9 @@ import csci310.UserAvailibility;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.ini4j.Ini;
@@ -616,7 +618,28 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testSetUserAvailability() throws Exception {
+	public void testRefreshUsersAvailability() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		Date currentDate = new Date(System.currentTimeMillis());
+		String currentDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(currentDate);
+		testDB.setUserAvailability(1, false, currentDateString);
+		List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(false, availabilities.get(0).isAvailable);
+		Thread.sleep(100);
+		testDB.refreshUsersAvailability();
+		availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+	}
+
+	@Test
+	public void testSetUsersAvailability() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
@@ -631,7 +654,7 @@ public class DatabaseTest {
 		assertEquals(false, testDB.setUserAvailability(4, false, ""));
 
 		// check availabilities changed
-		List<UserAvailibility> availabilities = testDB.getAllUsers(3);
+		List<UserAvailability> availabilities = testDB.getAllUsers(3);
 		assertEquals(2, availabilities.size());
 		assertEquals(1, availabilities.get(0).userId);
 		assertEquals(false, availabilities.get(0).isAvailable);
@@ -651,9 +674,9 @@ public class DatabaseTest {
 		testDB.register("user4", "ps4");
 		testDB.register("user5", "ps5");
 
-		List<UserAvailibility> userList = testDB.getAllUsers(1);
+		List<UserAvailability> userList = testDB.getAllUsers(1);
 		assertEquals(5, userList.size());
-		for (UserAvailibility user : userList) {
+		for (UserAvailability user : userList) {
 			assertTrue(user.isAvailable);
 		}
 	}

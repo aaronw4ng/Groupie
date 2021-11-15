@@ -1,7 +1,7 @@
 package csci310.servlets;
 
 import csci310.Database;
-import csci310.UserAvailibility;
+import csci310.UserAvailability;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -15,7 +15,7 @@ public class GetAllUsersServlet extends HttpServlet {
             Database database = (Database) getServletContext().getAttribute("database");
             PrintWriter out = response.getWriter();
             int userId = Integer.parseInt(request.getParameter("userId"));
-            List<UserAvailibility> userList = database.getAllUsers(userId);
+            List<UserAvailability> userList = database.getAllUsers(userId);
             out.print(userList);
         }
         catch(Exception e){

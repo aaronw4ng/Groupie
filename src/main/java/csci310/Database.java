@@ -396,10 +396,14 @@ public class Database {
 		return true;
 	}
 
+	// refresh all users' availability by checking for until and current timestamp
+	public void refreshUsersAvailability() throws Exception {
+	}
+
 	// returns a list of all the users in the database
-	public List<UserAvailibility> getAllUsers(int myId) throws Exception {
+	public List<UserAvailability> getAllUsers(int myId) throws Exception {
 		// TODO:refreshUsers();
-		List<UserAvailibility> users = new ArrayList<UserAvailibility>();
+		List<UserAvailability> users = new ArrayList<UserAvailability>();
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
@@ -410,7 +414,7 @@ public class Database {
 			}
 			String userName = rs.getString("username");
 			boolean isAvailable = rs.getBoolean("availability");
-			UserAvailibility u = new UserAvailibility(userName, userId, isAvailable);
+			UserAvailability u = new UserAvailability(userName, userId, isAvailable);
 			users.add(u);
 			System.out.println(userId + " " + userName + " " + isAvailable + " ");
 		}
