@@ -50,10 +50,10 @@ function handleDeleteEvent(event) {
 
 function handleCreateProposalClick(event) {
     event.preventDefault()
-    let users = getUsersList()
+    let users = JSON.stringify(getUsersList())
     let selectedEvents = JSON.parse(sessionStorage.getItem("selected"))
     let titleInput = document.querySelector("#input-proposal-name").value
-
+    console.log(users, selectedEvents, titleInput)
     // TODO: get owner user ID and description?
 
     $.ajax({
@@ -66,7 +66,7 @@ function handleCreateProposalClick(event) {
             invited: users,
             events: selectedEvents,
             isNew: false,
-            proposalID: "-1"
+            proposalId: "-1"
         },
         success: function(result) {
             if (result) {

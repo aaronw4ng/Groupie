@@ -1,5 +1,5 @@
 // TEST INPUT
-const testUsers = [{username: "Gary", id: 1, available: false }, {username: "HairyGary", id: 2, available: true }, {username: "urCuteKnees", id: 3, available: true }, {username: "urMom33", id: 4, available: true }, {username: "yewwww", id: 5, available: true }, {username: "bingBONG", id: 6, available: false }, {username: "Matthew1", id: 7, available: false }, {username: "Matt1", id: 8, available: true }]
+const testUsers = [{username: "Gary", id: 1, available: false }, {username: "HairyGary", id: 2, available: true }, {username: "urCuteKnees", id: 3, available: true }, {username: "urMom33", id: 4, available: true }, {username: "yewwww", id: 5, available: true }, {username: "bingBONG", id: 6, available: false }, {username: "Matthew1", id: 7, available: false }, {username: "Matt1", id: 8, available: true }, {username: "username1", id: 9, available: true }]
 let userResultsContainer = document.querySelector("#user-results-container")
 let addedUserContainer = document.querySelector("#added-user-container")
 
