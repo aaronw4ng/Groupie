@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.ini4j.Ini;
 
@@ -629,13 +630,21 @@ public class DatabaseTest {
 
 		Date currentDate = new Date(System.currentTimeMillis());
 		String currentDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(currentDate);
+		// set user1 to unavailable until now
 		testDB.setUserAvailability(1, false, currentDateString);
+
+		Date nextDate = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+		String nextDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(nextDate);
+		// set user2 to unavailable until next day
+		testDB.setUserAvailability(2, false, nextDateString);
+
 		List<UserAvailability> availabilities = testDB.getAllUsers(3);
 		assertEquals(false, availabilities.get(0).isAvailable);
 		Thread.sleep(100);
 		testDB.refreshUsersAvailability();
 		availabilities = testDB.getAllUsers(3);
 		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(false, availabilities.get(1).isAvailable);
 	}
 
 	@Test

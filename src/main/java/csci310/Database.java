@@ -1,11 +1,14 @@
 package csci310;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+
 import org.ini4j.Ini;
 import java.io.FileReader;
 import org.mindrot.jbcrypt.*;
 import org.sqlite.mc.SQLiteMCChacha20Config;
 
 import java.util.*; // for StringBuilder
+import java.util.Date;
 
 public class Database {
 	private static Connection connection;
@@ -398,6 +401,23 @@ public class Database {
 
 	// refresh all users' availability by checking for until and current timestamp
 	public void refreshUsersAvailability() throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE availability = ?");
+		stmt.setBoolean(1, false);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			String until = rs.getString("until");
+			// if until is not null, check if current time is after until
+			if (new Date(System.currentTimeMillis()).after(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").parse(until))) {
+				// if current time is after until, set availability to true
+				PreparedStatement stmt2 = connection.prepareStatement("UPDATE users SET availability = ? WHERE user_id = ?");
+				stmt2.setBoolean(1, true);
+				stmt2.setInt(2, rs.getInt("user_id"));
+				stmt2.executeUpdate();
+				stmt2.close();
+			}
+		}
+		rs.close();
+		stmt.close();
 	}
 
 	// returns a list of all the users in the database
