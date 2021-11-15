@@ -107,9 +107,11 @@ public class Database {
 	// add user and hashed password to the table
 	public Boolean register(String _us, String _pd) throws Exception{
 		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
-		PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password) VALUES(?, ?)");
+		PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, availability, until) VALUES(?, ?, ?, ?)");
 		stmt.setString(1, _us.toLowerCase());
 		stmt.setString(2, hashed);
+		stmt.setBoolean(3, true);
+		stmt.setString(4, "null");
 		try {
 			stmt.executeUpdate();
 			stmt.close();
@@ -376,8 +378,20 @@ public class Database {
 	}
 
 	// all user/availibility related functions
+
 	// returns a list of all the users in the database
 	public List<UserAvailibility> getAllUsers() throws Exception {
-		return null;
+		// TODO:refreshUsers();
+		List<UserAvailibility> users = new ArrayList<UserAvailibility>();
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			int userId = rs.getInt("user_id");
+			String userName = rs.getString("username");
+			boolean isAvailable = rs.getBoolean("availability");
+			UserAvailibility u = new UserAvailibility(userName, userId, isAvailable);
+			users.add(u);
+		}
+		return users;
 	}
 }
