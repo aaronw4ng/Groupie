@@ -612,4 +612,23 @@ public class DatabaseTest {
 			assertEquals("Proposal not found!", e.getMessage());
 		}
 	}
+
+	@Test
+	public void testGetAllUsers() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+		
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+		testDB.register("user4", "ps4");
+		testDB.register("user5", "ps5");
+
+		List<UserAvailibility> userList = testDB.getAllUsers();
+		assertEquals(5, userList.size());
+		for (UserAvailibility user : userList) {
+			assertTrue(user.isAvailable);
+		}
+	}
 }

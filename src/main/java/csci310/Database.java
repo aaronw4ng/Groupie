@@ -374,4 +374,10 @@ public class Database {
 		// Otherwise, something went wrong (e.g. none were deleted, more than one proposal deleted)
 		return false;
 	}
+
+	// all user/availibility related functions
+	// returns a list of all the users in the database
+	public List<UserAvailibility> getAllUsers() throws Exception {
+		return null;
+	}
 }
