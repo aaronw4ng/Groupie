@@ -1,7 +1,5 @@
 package csci310;
 
-import csci310.UserAvailibility;
-
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.io.FileReader;
