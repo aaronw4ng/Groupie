@@ -5,6 +5,10 @@ import csci310.UserAvailability;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -17,7 +21,8 @@ public class GetAllUsersServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             int userId = Integer.parseInt(request.getParameter("userId"));
             List<UserAvailability> userList = database.getAllUsers(userId);
-            out.print(userList);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            out.print(gson.toJson(userList));
         }
         catch(Exception e){
             System.out.println(e.getMessage());
