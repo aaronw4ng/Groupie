@@ -374,4 +374,9 @@ public class Database {
 		// Otherwise, something went wrong (e.g. none were deleted, more than one proposal deleted)
 		return false;
 	}
+
+	// Removes an invitee from a sent proposal
+	public Boolean removeInviteeFromSentProposal(int proposalId, int userId) {
+		return true;
+	}
 }

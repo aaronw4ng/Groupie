@@ -612,4 +612,42 @@ public class DatabaseTest {
 			assertEquals("Proposal not found!", e.getMessage());
 		}
 	}
+
+	@Test
+	public void testRemoveInviteeFromSentProposal() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+		// Create a proposal first
+		// add user to database first
+		testDB.register("Test User", "Test Password"); // userId = 1
+		String title = "My Sent Proposal";
+		String descript = "This is a test description for sending proposal test!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1"); // userId = 2
+		testDB.register("Invitee 2", "PS2"); // userId = 3
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
+
+		// Send the proposal
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
+		assertEquals(true, sentStatus);
+
+		// Remove the Invitee2 from the sent proposal
+		Boolean status = testDB.removeInviteeFromSentProposal(1, 3);
+		assertEquals(true, status);
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
 }
