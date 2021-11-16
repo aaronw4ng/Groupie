@@ -13,9 +13,11 @@ import org.mockito.Mockito;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -98,7 +100,6 @@ public class SaveDraftProposalServletTest {
                 "\"country\": \"US\"" +
                 "}]" +
                 "}]");
-        Mockito.when(request.getParameter("isDraft")).thenReturn("false");
         Mockito.when(request.getParameter("isNew")).thenReturn("false");
         Mockito.when(request.getParameter("proposalId")).thenReturn("1");
 
@@ -113,4 +114,66 @@ public class SaveDraftProposalServletTest {
         String result = sw.getBuffer().toString();
         assertEquals("true", result);
     }
+
+    @Test
+    public void testDoPostProposalDoesNotExist() throws Exception {
+        // clear the database
+        Database testDB = listener.database;
+        testDB.dropAllTables();
+        testDB.createRequiredTables();
+
+        testDB.register("TestUser", "TestPassword");
+        testDB.register("Invitee1", "ps1");
+        testDB.register("Invitee2", "ps2");
+
+
+        Mockito.when(request.getParameter("owner")).thenReturn("TestUser");
+        Mockito.when(request.getParameter("title")).thenReturn("Updated Test Title");
+        Mockito.when(request.getParameter("descript")).thenReturn("This is an updated test description!");
+        Mockito.when(request.getParameter("invited")).thenReturn("[\"Invitee1\", \"Invitee2\"]");
+        Mockito.when(request.getParameter("events")).thenReturn("[{" +
+                "\"eventName\": \"BTS PERMISSION TO DANCE ON STAGE - LA\"," +
+                "\"url\": \"https://www.ticketmaster.com/bts-permission-to-dance-on-stage-inglewood-california-11-27-2021/event/0A005B36DF5C3326\"," +
+                "\"startDateTime\": \"2021-11-28T03:30:00Z\"," +
+                "\"venues\": [{" +
+                "\"name\": \"SoFi Stadium\"," +
+                "\"address\": \"1001 S. Stadium Dr\"," +
+                "\"city\": \"Inglewood\"," +
+                "\"state\": \"CA\"," +
+                "\"country\": \"US\"" +
+                "}]" +
+                "}]");
+        Mockito.when(request.getParameter("isNew")).thenReturn("false"); // tries saying that this is not new even though it is
+        Mockito.when(request.getParameter("proposalId")).thenReturn("1");
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        Mockito.when(response.getWriter()).thenReturn(pw);
+
+        // Try to save a draft that doesn't exist
+        SaveDraftProposalServlet saveDraftProposalServlet = new SaveDraftProposalServlet();
+        saveDraftProposalServlet.init(config);
+        saveDraftProposalServlet.doPost(request, response);
+        String result = sw.getBuffer().toString();
+        assertEquals("false", result);
+    }
+
+    @Test
+    public void testDoPostException() throws Exception {
+        HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
+        SaveDraftProposalServlet saveDraftProposalServlet = new SaveDraftProposalServlet();
+        saveDraftProposalServlet.init(config);
+
+        Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
+
+        try {
+            saveDraftProposalServlet.doPost(failingRequest, failingResponse);
+            fail("Expected a Servlet Exception to be thrown");
+        } catch (ServletException servletException) {
+            assertEquals("Save Draft Proposal Servlet failed", servletException.getMessage());
+        }
+    }
+
 }
