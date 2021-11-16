@@ -621,8 +621,8 @@ public class DatabaseTest {
 		// Create a proposal first
 		// add user to database first
 		testDB.register("Test User", "Test Password"); // userId = 1
-		String title = "My Sent Proposal";
-		String descript = "This is a test description for sending proposal test!";
+		String title = "Remove Invitee from Sent Proposal";
+		String descript = "This is a test description for removing an invitee after sending proposal test!";
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
@@ -644,6 +644,7 @@ public class DatabaseTest {
 		assertEquals(true, sentStatus);
 
 		// Remove the Invitee2 from the sent proposal
+		assertEquals(3, testDB.queryUserID("Invitee 2"));
 		Boolean status = testDB.removeInviteeFromSentProposal(1, 3);
 		assertEquals(true, status);
 
