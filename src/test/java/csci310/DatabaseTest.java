@@ -3,8 +3,11 @@ package csci310;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.ini4j.Ini;
 
@@ -107,7 +110,8 @@ public class DatabaseTest {
 		Boolean result = testDB.register("user", "password");
 		assertEquals(false, result);
 
-
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test
@@ -611,6 +615,88 @@ public class DatabaseTest {
 			// expecting an error here
 			assertEquals("Proposal not found!", e.getMessage());
 		}
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testRefreshUsersAvailability() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		Date currentDate = new Date(System.currentTimeMillis());
+		String currentDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(currentDate);
+		// set user1 to unavailable until now
+		testDB.setUserAvailability(1, false, currentDateString);
+
+		Date nextDate = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+		String nextDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(nextDate);
+		// set user2 to unavailable until next day
+		testDB.setUserAvailability(2, false, nextDateString);
+
+		Thread.sleep(100);
+		List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(false, availabilities.get(1).isAvailable);
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testSetUsersAvailability() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		// check if updates are successful
+		Date nextDate = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+		String nextDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(nextDate);
+		assertEquals(true, testDB.setUserAvailability(1, false, nextDateString));
+		assertEquals(true, testDB.setUserAvailability(2, true, ""));
+		assertEquals(false, testDB.setUserAvailability(4, false, ""));
+
+		// check availabilities changed
+		List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(2, availabilities.size());
+		assertEquals(1, availabilities.get(0).userId);
+		assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(2, availabilities.get(1).userId);
+		assertEquals(true, availabilities.get(1).isAvailable);
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testGetAllUsers() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+		
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+		testDB.register("user4", "ps4");
+		testDB.register("user5", "ps5");
+
+		List<UserAvailability> userList = testDB.getAllUsers(1);
+		assertEquals(4, userList.size());
+		for (UserAvailability user : userList) {
+			assertTrue(user.isAvailable);
+		}
+
+		testDB.dropAllTables();
+		testDB.close();
 	}
 
 	@Test

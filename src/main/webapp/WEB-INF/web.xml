@@ -26,6 +26,10 @@
     <servlet-class>csci310.servlets.DeleteProposalServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>GetAllUsersServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetAllUsersServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>SaveDraftProposalServlet</servlet-name>
     <servlet-class>csci310.servlets.SaveDraftProposalServlet</servlet-class>
   </servlet>
@@ -48,6 +52,10 @@
   <servlet-mapping>
     <servlet-name>DeleteProposalServlet</servlet-name>
     <url-pattern>/deleteProposal</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetAllUsersServlet</servlet-name>
+    <servlet-class>/GetAllUsersServlet</servlet-class>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>SaveDraftProposalServlet</servlet-name>

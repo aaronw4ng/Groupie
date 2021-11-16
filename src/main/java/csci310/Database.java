@@ -1,11 +1,14 @@
 package csci310;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+
 import org.ini4j.Ini;
 import java.io.FileReader;
 import org.mindrot.jbcrypt.*;
 import org.sqlite.mc.SQLiteMCChacha20Config;
 
 import java.util.*; // for StringBuilder
+import java.util.Date;
 
 public class Database {
 	private static Connection connection;
@@ -107,9 +110,11 @@ public class Database {
 	// add user and hashed password to the table
 	public Boolean register(String _us, String _pd) throws Exception{
 		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
-		PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password) VALUES(?, ?)");
+		PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, availability, until) VALUES(?, ?, ?, ?)");
 		stmt.setString(1, _us.toLowerCase());
 		stmt.setString(2, hashed);
+		stmt.setBoolean(3, true);
+		stmt.setString(4, "null");
 		try {
 			stmt.executeUpdate();
 			stmt.close();
@@ -377,6 +382,72 @@ public class Database {
 		return false;
 	}
 
+	// all user/availibility related functions
+	// returns if the any changes were made to the database
+	// if setting availability to true, the "until" field doesn't matter
+	public Boolean setUserAvailability(int userId, Boolean availability, String until) throws Exception {
+		// update availability
+		PreparedStatement stmt1 = connection.prepareStatement("UPDATE users SET availability = ?, until = ? WHERE user_id = ?");
+		stmt1.setBoolean(1, availability);
+		stmt1.setString(2, until);
+		stmt1.setInt(3, userId);
+		int rowsAffected = stmt1.executeUpdate();
+		stmt1.close();
+		// should only affect one row; otherwise, did not successfully update availability
+		if (rowsAffected != 1) {
+			return false;
+		}
+		System.out.println("Updated availability for user: " + userId + " to " + availability + " until " + until);
+		return true;
+	}
+
+	// refresh all users' availability by checking for until and current timestamp
+	public void refreshUsersAvailability() throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE availability = ?");
+		stmt.setBoolean(1, false);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			String until = rs.getString("until");
+			// if until is not null, check if current time is after until
+			if (new Date(System.currentTimeMillis()).after(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").parse(until))) {
+				// if current time is after until, set availability to true
+				PreparedStatement stmt2 = connection.prepareStatement("UPDATE users SET availability = ? WHERE user_id = ?");
+				stmt2.setBoolean(1, true);
+				stmt2.setInt(2, rs.getInt("user_id"));
+				stmt2.executeUpdate();
+				stmt2.close();
+			}
+		}
+		rs.close();
+		stmt.close();
+	}
+
+	// returns a list of all the users in the database
+	public List<UserAvailability> getAllUsers(int myId) throws Exception {
+		// refresh users' availability before getting all users
+		refreshUsersAvailability();
+
+		List<UserAvailability> users = new ArrayList<UserAvailability>();
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			int userId = rs.getInt("user_id");
+			// skip your own user
+			if (userId == myId) {
+				continue;
+			}
+			String userName = rs.getString("username");
+			boolean isAvailable = rs.getBoolean("availability");
+			UserAvailability u = new UserAvailability(userName, userId, isAvailable);
+			users.add(u);
+			System.out.println(userId + " " + userName + " " + isAvailable + " ");
+		}
+		rs.close();
+		stmt.close();
+		// TODO: set whoever blocked me as unavailable
+		return users;
+  }
+  
 	// Removes an invitee from a sent proposal
 	public Boolean removeInviteeFromSentProposal(int proposalId, int userId) throws Exception {
 		System.out.println("Trying to remove " + userId + " from proposal id " + proposalId);

@@ -13,8 +13,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.common.base.Ticker;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
