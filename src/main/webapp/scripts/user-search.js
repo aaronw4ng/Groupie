@@ -1,5 +1,32 @@
+// GET ALL USERS
+
+// TODO: Implement userID in login/create account
+/* if (sessionStorage.getItem("userID")) {
+    const currentUserID = sessionStorage.getItem("userID")
+}
+*/
+window.onload = function() {
+    // TODO: call GetAllUsers servlet on window load, get user ID
+    // $.ajax({
+    //     method: "POST",
+    //     url: "../GetAllUsersServlet",
+    //     data: {
+    //         userID: currentUserID
+    //     },
+    //     success: function(result) {
+    //         if (result) {
+    //             const usersList = JSON.parse(result)
+    //         }
+    //         else {
+    //             console.log("Error fetching users list")
+    //         }
+    //     }
+
+    // })
+}
+
 // TEST INPUT
-const testUsers = [{username: "Gary", id: 1, available: false }, {username: "HairyGary", id: 2, available: true }, {username: "urCuteKnees", id: 3, available: true }, {username: "urMom33", id: 4, available: true }, {username: "yewwww", id: 5, available: true }, {username: "bingBONG", id: 6, available: false }, {username: "Matthew1", id: 7, available: false }, {username: "Matt1", id: 8, available: true }, {username: "username1", id: 9, available: true }]
+const testUsers = [{username: "Gary", id: 1, isAvailable: false }, {username: "HairyGary", id: 2, isAvailable: true }, {username: "urCuteKnees", id: 3, isAvailable: true }, {username: "urMom33", id: 4, isAvailable: true }, {username: "yewwww", id: 5, isAvailable: true }, {username: "bingBONG", id: 6, isAvailable: false }, {username: "Matthew1", id: 7, isAvailable: false }, {username: "Matt1", id: 8, isAvailable: true }, {username: "username1", id: 9, isAvailable: true }]
 let userResultsContainer = document.querySelector("#user-results-container")
 let addedUserContainer = document.querySelector("#added-user-container")
 
@@ -23,6 +50,7 @@ function handleInputChange(event) {
 
 function searchUsers(target) {
     // Filter users array for users that contain target string
+    // TODO: change testUsers to usersList when implementation allows for it
     let filteredUsers = testUsers.filter( (user) => {
         return user.username.toLowerCase().includes(target.toLowerCase())
     })
@@ -31,7 +59,7 @@ function searchUsers(target) {
     // Display Filtered Users Cards
     filteredUsers.forEach(user => {
         let cardString = ``
-        if (user.available) {
+        if (user.isAvailable) {
             cardString = `
             <div class="user-card" data-user="${user.username}" data-id="${user.id}" onclick="handleSelectUser(event)">
                 <p><i class="fas fa-users"></i> ${user.username}</p>
@@ -71,16 +99,22 @@ function userInSelected(username) {
 
 // User Selection 
 function handleSelectUser(event) {
-    event.stopPropagation()
     let userInputField = document.querySelector("#user-search-input")
     // Tear Down previous searches 
     userInputField.value = ""
     userResultsContainer.innerHTML = ""
 
+    let user
     // TODO: Check to see if the user is already added
-    let user = event.srcElement.dataset.user
+    if (event.target.className == "user-card") {
+        user = event.srcElement.dataset.user
+    }
+    else {
+        user = event.srcElement.parentElement.dataset.user
+    }
     // console.log("IN USERS? : " + userInSelected(event.srcElement.dataset.user))
-    if (event.target.className == "user-card" && !userInSelected(user)) {
+    //  
+    if (!userInSelected(user)) {
         // let id = event.srcElement.dataset.id
         let currUserList = getUsersList()
         currUserList.push(user)

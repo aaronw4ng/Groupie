@@ -1,31 +1,24 @@
+// TODO: Implement userID in login/create account
+/* if (sessionStorage.getItem("userID")) {
+    const currentUserID = sessionStorage.getItem("userID")
+}
+*/
 let eventsContainer = document.querySelector(".events-container")
 
-// GET ALL USERS
-window.onload = function() {
-    // TODO: call GetAllUsers servlet on window load, get user ID
-    // $.ajax({
-    //     method: "GET",
-    //     url: "",
-    //     data: {
-    //         userID: 1
-    //     }
-    // })
-}
+let searchInput = document.querySelector("#user-search-input")
 
 function handleAddUsersClick(event) {
     event.preventDefault()
-    let searchInput = document.querySelector("#user-search-input")
-    if (searchInput.style.display !== "none") {
-        searchInput.style.display = "none"
+    if (searchInput.style.display === "none") {
+        searchInput.style.display = "block"
     }
     else {
-        searchInput.style.display = "block"
+        searchInput.style.display = "none"
     }
 }
 
 function handleFindEventClick(event) {
     event.preventDefault()
-    console.log("EVENT SEARCH")
     document.location.href = "./event-search.jsp"
 }
 
@@ -41,7 +34,7 @@ function handleDeleteEvent(event) {
         let proposedEvents = JSON.parse(sessionStorage.getItem("selected"))
         // index of current event in proposed event array
         let index = event.srcElement.parentElement.dataset.idx
-        console.log(index)
+
         proposedEvents.splice(index, 1)
         populateEventsContainer(proposedEvents)
         sessionStorage.setItem("selected", JSON.stringify(proposedEvents))
@@ -60,7 +53,7 @@ function handleCreateProposalClick(event) {
         method: "POST",
         url: "../createProposal",
         data: {
-            owner: "1",
+            owner: currentUserID,
             title: titleInput,
             descript: "",
             invited: users,
@@ -101,11 +94,11 @@ function handleSaveDraftClick(event) {
     /*
     $.ajax({
         method: "POST",
-        url: "",
+        url: "../saveDraftProposal",
         data: {
             isNew: isNewProposal,
             proposalID: proposalIDInput,
-            owner: 1,
+            owner: currentUserID,
             title: titleInput,
             description: "",
             invited: users,
