@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateProposalServlet extends HttpServlet {
+public class SaveDraftProposalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Database database = (Database) getServletContext().getAttribute("database");
@@ -37,19 +37,19 @@ public class CreateProposalServlet extends HttpServlet {
             List<Event> eventsList = new Gson().fromJson(events, eventListType);
 
             int newProposalId = database.savesDraftProposal(owner, title, descript, invitedList, eventsList, isNew, proposalId);
-            // successful proposal creation
-            if (database.sendProposal(newProposalId)) {
+            // successful save proposal
+            if (newProposalId != proposalId) {
                 request.setAttribute("status", true);
                 out.print(true);
             }
-            // failed proposal creation
+            // failed to save draft proposal
             else {
                 request.setAttribute("status", false);
                 out.print(false);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            throw new ServletException("Create Proposal Servlet failed");
+            throw new ServletException("Save Draft Proposal Servlet failed");
         }
     }
 }

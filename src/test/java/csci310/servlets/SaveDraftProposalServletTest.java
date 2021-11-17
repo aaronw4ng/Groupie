@@ -25,7 +25,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class CreateProposalServletTest {
+public class SaveDraftProposalServletTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
@@ -66,52 +66,6 @@ public class CreateProposalServletTest {
         testDB.dropAllTables();
         testDB.createRequiredTables();
 
-        // register the user and invitees
-        testDB.register("TestUser", "TestPassword");
-        testDB.register("Invitee1", "ps1");
-        testDB.register("Invitee2", "ps2");
-
-        Mockito.when(request.getParameter("owner")).thenReturn("TestUser");
-        Mockito.when(request.getParameter("title")).thenReturn("TestTitle");
-        Mockito.when(request.getParameter("descript")).thenReturn("This is a test description!");
-        Mockito.when(request.getParameter("invited")).thenReturn("[\"Invitee1\", \"Invitee2\"]");
-        Mockito.when(request.getParameter("events")).thenReturn("[{" +
-                "\"eventName\": \"BTS PERMISSION TO DANCE ON STAGE - LA\"," +
-                "\"url\": \"https://www.ticketmaster.com/bts-permission-to-dance-on-stage-inglewood-california-11-27-2021/event/0A005B36DF5C3326\"," +
-                "\"startDateTime\": \"2021-11-28T03:30:00Z\"," +
-                "\"venues\": [{" +
-                "\"name\": \"SoFi Stadium\"," +
-                "\"address\": \"1001 S. Stadium Dr\"," +
-                "\"city\": \"Inglewood\"," +
-                "\"state\": \"CA\"," +
-                "\"country\": \"US\"" +
-                "}]" +
-                "}]");
-        Mockito.when(request.getParameter("isDraft")).thenReturn("false");
-        Mockito.when(request.getParameter("isNew")).thenReturn("true");
-        Mockito.when(request.getParameter("proposalId")).thenReturn("1");
-
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-
-        Mockito.when(response.getWriter()).thenReturn(pw);
-
-        CreateProposalServlet createProposalServlet = new CreateProposalServlet();
-        createProposalServlet.init(config);
-        createProposalServlet.doPost(request, response);
-        String result = sw.getBuffer().toString();
-        assertEquals("true", result);
-    }
-
-    // Updating an older version of proposal
-    @Test
-    public void testDoPostProposalAlreadyExists() throws Exception {
-        // clear the database
-        Database testDB = listener.database;
-        testDB.dropAllTables();
-        testDB.createRequiredTables();
-
-        // register the user and invitees
         testDB.register("TestUser", "TestPassword");
         testDB.register("Invitee1", "ps1");
         testDB.register("Invitee2", "ps2");
@@ -146,7 +100,6 @@ public class CreateProposalServletTest {
                 "\"country\": \"US\"" +
                 "}]" +
                 "}]");
-        Mockito.when(request.getParameter("isDraft")).thenReturn("false");
         Mockito.when(request.getParameter("isNew")).thenReturn("false");
         Mockito.when(request.getParameter("proposalId")).thenReturn("1");
 
@@ -155,27 +108,28 @@ public class CreateProposalServletTest {
 
         Mockito.when(response.getWriter()).thenReturn(pw);
 
-        CreateProposalServlet createProposalServlet = new CreateProposalServlet();
-        createProposalServlet.init(config);
-        createProposalServlet.doPost(request, response);
+        SaveDraftProposalServlet saveDraftProposalServlet = new SaveDraftProposalServlet();
+        saveDraftProposalServlet.init(config);
+        saveDraftProposalServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         assertEquals("true", result);
     }
 
     @Test
-    public void testDoPostOwnerDoesNotExist() throws Exception {
+    public void testDoPostProposalDoesNotExist() throws Exception {
         // clear the database
         Database testDB = listener.database;
         testDB.dropAllTables();
         testDB.createRequiredTables();
 
-        // register the invitees only
+        testDB.register("TestUser", "TestPassword");
         testDB.register("Invitee1", "ps1");
         testDB.register("Invitee2", "ps2");
 
+
         Mockito.when(request.getParameter("owner")).thenReturn("TestUser");
-        Mockito.when(request.getParameter("title")).thenReturn("TestTitle");
-        Mockito.when(request.getParameter("descript")).thenReturn("This is a test description!");
+        Mockito.when(request.getParameter("title")).thenReturn("Updated Test Title");
+        Mockito.when(request.getParameter("descript")).thenReturn("This is an updated test description!");
         Mockito.when(request.getParameter("invited")).thenReturn("[\"Invitee1\", \"Invitee2\"]");
         Mockito.when(request.getParameter("events")).thenReturn("[{" +
                 "\"eventName\": \"BTS PERMISSION TO DANCE ON STAGE - LA\"," +
@@ -189,8 +143,7 @@ public class CreateProposalServletTest {
                 "\"country\": \"US\"" +
                 "}]" +
                 "}]");
-        Mockito.when(request.getParameter("isDraft")).thenReturn("false");
-        Mockito.when(request.getParameter("isNew")).thenReturn("true");
+        Mockito.when(request.getParameter("isNew")).thenReturn("false"); // tries saying that this is not new even though it is
         Mockito.when(request.getParameter("proposalId")).thenReturn("1");
 
         StringWriter sw = new StringWriter();
@@ -198,9 +151,10 @@ public class CreateProposalServletTest {
 
         Mockito.when(response.getWriter()).thenReturn(pw);
 
-        CreateProposalServlet createProposalServlet = new CreateProposalServlet();
-        createProposalServlet.init(config);
-        createProposalServlet.doPost(request, response);
+        // Try to save a draft that doesn't exist
+        SaveDraftProposalServlet saveDraftProposalServlet = new SaveDraftProposalServlet();
+        saveDraftProposalServlet.init(config);
+        saveDraftProposalServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         assertEquals("false", result);
     }
@@ -209,16 +163,17 @@ public class CreateProposalServletTest {
     public void testDoPostException() throws Exception {
         HttpServletResponse failingResponse = Mockito.mock(HttpServletResponse.class);
         HttpServletRequest failingRequest = Mockito.mock(HttpServletRequest.class);
-        CreateProposalServlet createProposalServlet = new CreateProposalServlet();
-        createProposalServlet.init(config);
+        SaveDraftProposalServlet saveDraftProposalServlet = new SaveDraftProposalServlet();
+        saveDraftProposalServlet.init(config);
 
         Mockito.when(failingResponse.getWriter()).thenThrow(IOException.class);
 
         try {
-            createProposalServlet.doPost(failingRequest, failingResponse);
+            saveDraftProposalServlet.doPost(failingRequest, failingResponse);
             fail("Expected a Servlet Exception to be thrown");
         } catch (ServletException servletException) {
-            assertEquals("Create Proposal Servlet failed", servletException.getMessage());
+            assertEquals("Save Draft Proposal Servlet failed", servletException.getMessage());
         }
     }
+
 }

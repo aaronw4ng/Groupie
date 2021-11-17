@@ -17,8 +17,9 @@ public class SearchEventsServlet extends HttpServlet {
             String city = request.getParameter("city");
             String startDate = request.getParameter("startDate");
             String endDate = request.getParameter("endDate");
-            Ticketmaster ticketmaster = new Ticketmaster();
-            String events = ticketmaster.searchEvents(keyword, zipCode, city, startDate, endDate);
+            String genre = request.getParameter("genre");
+            Ticketmaster ticketmaster = (Ticketmaster) getServletContext().getAttribute("ticketmaster");
+            String events = ticketmaster.searchEvents(keyword, zipCode, city, startDate, endDate, genre);
             // if reached here, then did get some results
             out.print(events);
          //   System.out.println(events);

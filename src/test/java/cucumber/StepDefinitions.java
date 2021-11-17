@@ -1,6 +1,7 @@
 package cucumber;
 
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -11,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -23,16 +25,24 @@ import org.apache.commons.lang.RandomStringUtils;
  * Step definitions for Cucumber tests.
  */
 public class StepDefinitions {
-	private static final String ROOT_URL = "http://localhost:8080/";
+	// !Remember to use https for all url
+	private static final String ROOT_URL = "https://localhost:8080/";
 
 	private int USERNAME_LENGTH = 10;
 	private String USERNAME_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-	private final WebDriver driver = new ChromeDriver();
+	private ChromeOptions handlingSSL = new ChromeOptions();
+	private WebDriver driver;
 
 	private String random_username(int usernameLength, String chars) {
 		return RandomStringUtils.random(usernameLength, chars);
 
+	}
+
+	@Before
+	public void before() {
+		handlingSSL.setAcceptInsecureCerts(true);
+		driver = new ChromeDriver(handlingSSL);
 	}
 
 	@Given ("user is on the Login page")
@@ -71,7 +81,7 @@ public class StepDefinitions {
 
 	@Given("user is on the Create User page")
 	public void user_is_on_the_Create_User_page() {
-		driver.get("http://localhost:8080/pages/create-account.jsp");
+		driver.get("https://localhost:8080/pages/create-account.jsp");
 	}
 
 	@When("user inputs random username in username") 
@@ -96,7 +106,7 @@ public class StepDefinitions {
 	@Then("user should be on Login page")
 	public void user_should_be_on_Login_page() {
 		String currURL = driver.getCurrentUrl();
-		assertEquals("http://localhost:8080/index.jsp", currURL);
+		assertEquals("https://localhost:8080/index.jsp", currURL);
 	}
 
 	@Then("user should be logged in")
@@ -110,7 +120,7 @@ public class StepDefinitions {
 	@Then("user should be on Create Account page")
 	public void user_should_be_on_Create_Account_page() {
 		String currURL = driver.getCurrentUrl();
-		assertEquals("http://localhost:8080/pages/create-account.jsp", currURL);
+		assertEquals("https://localhost:8080/pages/create-account.jsp", currURL);
 	}
 
 	@After()
