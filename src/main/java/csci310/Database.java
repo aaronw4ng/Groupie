@@ -406,20 +406,26 @@ public class Database {
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE availability = ?");
 		stmt.setBoolean(1, false);
 		ResultSet rs = stmt.executeQuery();
+		// Get a buffer list of user ids whose unavailability has expired
+		List<Integer> expired = new ArrayList();
 		while (rs.next()) {
 			String until = rs.getString("until");
 			// if until is not null, check if current time is after until
 			if (new Date(System.currentTimeMillis()).after(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").parse(until))) {
-				// if current time is after until, set availability to true
-				PreparedStatement stmt2 = connection.prepareStatement("UPDATE users SET availability = ? WHERE user_id = ?");
-				stmt2.setBoolean(1, true);
-				stmt2.setInt(2, rs.getInt("user_id"));
-				stmt2.executeUpdate();
-				stmt2.close();
+				// if current time is after until, add user to expired availability list
+				expired.add(rs.getInt("user_id"));
 			}
 		}
 		rs.close();
 		stmt.close();
+		// Go through the buffer list and mark the users as available
+		for (int user:expired) {
+			PreparedStatement stmt2 = connection.prepareStatement("UPDATE users SET availability = ? WHERE user_id = ?");
+			stmt2.setBoolean(1, true);
+			stmt2.setInt(2, user);
+			stmt2.executeUpdate();
+			stmt2.close();
+		}
 	}
 
 	// returns a list of all the users in the database
