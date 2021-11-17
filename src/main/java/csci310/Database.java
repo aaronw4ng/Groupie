@@ -264,32 +264,17 @@ public class Database {
 			System.out.println("No one is invited or no events");
 			return false;
 		}
-		for (Event e: events) {
-			// find event id
-			String query = "SELECT event_id FROM events WHERE event_link = ? AND proposal_id = ?";
-			PreparedStatement pst1 = connection.prepareStatement(query);
-			pst1.setString(1, e.getUrl());
-			pst1.setString(2, String.valueOf(proposalId));
-			ResultSet rs = pst1.executeQuery();
-			int eventID = 0;
-			if (rs.next()) {
-				eventID = rs.getInt("event_id");
-			}
-			rs.close();
-			pst1.close();
 
-			// find the invitee's user id and then insert the invitee into table
-			for (String invitee: invited) {
-				int inviteeID = queryUserID(invitee);
-				String insert = "INSERT INTO invitees (proposal_id, invitee_id, event_id) VALUES(?,?,?)";
-				PreparedStatement pst2 = connection.prepareStatement(insert);
-				pst2.setString(1, String.valueOf(proposalId));
-				pst2.setString(2, String.valueOf(inviteeID));
-				pst2.setString(3, String.valueOf(eventID));
-				pst2.executeUpdate();
-				System.out.println("Adding invitee: " + invitee + " for Event: " + e.getEventName() + " for Proposal Id: " + proposalId);
-				pst2.close();
-			}
+		// find the invitee's user id and then insert the invitee into table
+		for (String invitee: invited) {
+			int inviteeID = queryUserID(invitee);
+			String insert = "INSERT INTO invitees (proposal_id, invitee_id) VALUES(?,?)";
+			PreparedStatement pst2 = connection.prepareStatement(insert);
+			pst2.setString(1, String.valueOf(proposalId));
+			pst2.setString(2, String.valueOf(inviteeID));
+			pst2.executeUpdate();
+			System.out.println("Adding invitee: " + invitee + " for Proposal Id: " + proposalId);
+			pst2.close();
 		}
 
 		return true;
@@ -307,24 +292,41 @@ public class Database {
 		if (rowsAffected != 1) {
 			return false;
 		}
-		// Initialize the responses
-		// get all the invited people and events associated with this proposal
-		// Note: invitees table already associates each invited person with an event
-		PreparedStatement stmt2 = connection.prepareStatement("SELECT invitee_id, event_id FROM invitees WHERE proposal_id = ?");
+		// Get all the events associated with this proposal
+		PreparedStatement stmt2 = connection.prepareStatement("SELECT event_id FROM events WHERE proposal_id = ?");
 		stmt2.setString(1, String.valueOf(proposalId));
-		ResultSet rs = stmt2.executeQuery();
+		ResultSet eventsRS = stmt2.executeQuery();
+		List<Integer> eventIDs = new ArrayList<>();
+		// Get list of event ids
+		while (eventsRS.next()) {
+			eventIDs.add(eventsRS.getInt("event_id"));
+		}
+		eventsRS.close();
+		stmt2.close();
+		// Get all invitees associated with this proposal
+		PreparedStatement stmt3 = connection.prepareStatement("SELECT invitee_id FROM invitees WHERE proposal_id = ?");
+		stmt3.setString(1, String.valueOf(proposalId));
+		ResultSet inviteesRS = stmt3.executeQuery();
+		// Get list of invitee ids
+		List<Integer> inviteesIDs = new ArrayList<>();
+		while (inviteesRS.next()) {
+			inviteesIDs.add(inviteesRS.getInt("invitee_id"));
+		}
+		inviteesRS.close();
+		stmt3.close();
 		// initialize a response for each event, invitee combination in the responses table
 		// Note: availability and excitement will be NULL
-		while (rs.next()) {
-			PreparedStatement stmt3 = connection.prepareStatement("INSERT INTO responses (proposal_id, event_id, user_id) VALUES(?, ?,?)");
-			stmt3.setString(1, String.valueOf(proposalId));
-			stmt3.setString(2, rs.getString("event_id"));
-			stmt3.setString(3, rs.getString("invitee_id"));
-			stmt3.executeUpdate();
-			stmt3.close();
+		for (int event: eventIDs) {
+			for (int invitee: inviteesIDs) {
+				PreparedStatement stmt4 = connection.prepareStatement("INSERT INTO responses (proposal_id, event_id, user_id) VALUES(?, ?,?)");
+				stmt4.setString(1, String.valueOf(proposalId));
+				stmt4.setString(2, String.valueOf(event));
+				stmt4.setString(3, String.valueOf(invitee));
+				stmt4.executeUpdate();
+				stmt4.close();
+				System.out.println("Initialize response for event " + event + " for invitee " + invitee);
+			}
 		}
-		rs.close();
-		stmt2.close();
 		System.out.println("Sent proposal: " + proposalId);
 		return true;
 	}
@@ -444,5 +446,27 @@ public class Database {
 		stmt.close();
 		// TODO: set whoever blocked me as unavailable
 		return users;
+  }
+  
+	// Removes an invitee from a sent proposal
+	public Boolean removeInviteeFromSentProposal(int proposalId, int userId) throws Exception {
+		System.out.println("Trying to remove " + userId + " from proposal id " + proposalId);
+		// Remove user ID from invitee list
+		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ? AND invitee_id = ?");
+		inviteesStmt.setString(1, String.valueOf(proposalId));
+		inviteesStmt.setString(2, String.valueOf(userId));
+		int inviteesRowsAffected = inviteesStmt.executeUpdate();
+		System.out.println("Rows affected from removing invitee from invitees: " + inviteesRowsAffected);
+		// Check that only one invitee was deleted from the database
+		if (inviteesRowsAffected != 1) {
+			return false;
+		}
+
+		// Remove user responses that correspond to that proposal ID and user ID
+		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND user_id = ?");
+		inviteesStmt.setString(1, String.valueOf(proposalId));
+		inviteesStmt.setString(2, String.valueOf(userId));
+
+		return true;
 	}
 }
