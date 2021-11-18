@@ -1,9 +1,6 @@
 package csci310;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 public class User {
     public int userId;

@@ -111,7 +111,7 @@ public class GetAllDraftProposalsServletTest {
         servlet.doPost(request, response);
         result = sw.getBuffer().toString();
         System.out.println(result);
-        assertTrue(result.contains("[]"));
+        assertTrue(result.equals("[]"));
 
         // close database for full coverage
         testDB.close();

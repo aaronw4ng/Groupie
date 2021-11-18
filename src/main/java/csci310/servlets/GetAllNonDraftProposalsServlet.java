@@ -16,5 +16,18 @@ import java.util.*;
 public class GetAllNonDraftProposalsServlet extends HttpServlet{
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        try{
+            Database database = (Database) getServletContext().getAttribute("database");
+            PrintWriter out = response.getWriter();
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            Boolean isOwner = Boolean.parseBoolean(request.getParameter("isOwner"));
+            List<Proposal> proposals = database.getAllNonDraftProposals(userId, isOwner);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            out.print(gson.toJson(proposals));
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+            throw new ServletException("Get All Non-Draft Proposals Servlet failed");
+        }
     }
 }

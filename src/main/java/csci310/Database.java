@@ -527,6 +527,13 @@ public class Database {
 			}
 		}
 
+		// add details for each events
+		for (Proposal proposal: proposals) {
+			proposal.events = getEventsFromProposal(proposal.proposalId);
+			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
+		}
+
+		// TODO: check for finalized proposals and return declined & accepted results
 		return proposals;
 	}
 
