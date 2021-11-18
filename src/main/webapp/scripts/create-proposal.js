@@ -74,7 +74,16 @@ function handleCreateProposalClick(event) {
     selectedEvents = formatEvents(selectedEvents)
     let titleInput = document.querySelector("#input-proposal-name").value
     console.log(users, selectedEvents, titleInput)
-
+    // Check for empty users/events
+    if (selectedEvents.length === 0) {
+        alert("Must have one or more event selected.")
+        return
+    }
+    else if (JSON.parse(users).length === 0) {
+        alert("Must have one or more users selected.")
+        return
+    }
+    
     $.ajax({
         method: "POST",
         url: "../createProposal",
