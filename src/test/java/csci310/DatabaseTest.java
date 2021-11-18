@@ -625,10 +625,27 @@ public class DatabaseTest {
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		// Create a proposal first
+		// TODO
 
 		List<Event> events = testDB.getEventsFromProposal(1);
 		assertNotNull(events);
 		assertEquals(0, events.size());
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testGetAllInviteesFromProposal(int proposalId) throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+		// Create a proposal first
+		// TODO
+
+		List<User> invitees = testDB.getAllInviteesFromProposal(1);
+		assertNotNull(invitees);
+		assertEquals(0, invitees.size());
 
 		testDB.dropAllTables();
 		testDB.close();
@@ -643,6 +660,8 @@ public class DatabaseTest {
 		testDB.register("user1", "ps1");
 		testDB.register("user2", "ps2");
 		testDB.register("user3", "ps3");
+
+		// TODO 
 
 		List<Proposal> result = testDB.getAllDraftProposals(1);
 		assertNotNull(result);
@@ -661,6 +680,8 @@ public class DatabaseTest {
 		testDB.register("user1", "ps1");
 		testDB.register("user2", "ps2");
 		testDB.register("user3", "ps3");
+
+		// TODO
 
 		List<Proposal> result = testDB.getAllNonDraftProposals(1);
 		assertNotNull(result);

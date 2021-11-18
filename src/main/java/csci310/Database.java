@@ -412,6 +412,11 @@ public class Database {
 		return events;
 	}
 
+	// Returns a list of invitees associated with the proposalId
+	List<User> getAllInviteesFromProposal(int proposalId) throws Exception {
+		return null;
+	}
+
 	// Returns a list of all draft proposals that belongs to the user
 	public List<Proposal> getAllDraftProposals(int userId) throws Exception {
 		List<Proposal> proposals = new ArrayList<>();
@@ -430,8 +435,8 @@ public class Database {
 		stmt.close();
 		// add details for each events
 		for (Proposal proposal: proposals) {
-			List<Event> events = getAllEvents(proposal.proposalId);
-			proposal.events = events;
+			proposal.events = getEventsFromProposal(proposal.proposalId);
+			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
 		}
 		return proposals;
 	}
@@ -466,7 +471,7 @@ public class Database {
 		stmt.setBoolean(1, false);
 		ResultSet rs = stmt.executeQuery();
 		// Get a buffer list of user ids whose unavailability has expired
-		List<Integer> expired = new ArrayList();
+		List<Integer> expired = new ArrayList<Integer>();
 		while (rs.next()) {
 			String until = rs.getString("until");
 			// if until is not null, check if current time is after until
