@@ -382,6 +382,11 @@ public class Database {
 		return false;
 	}
 
+	// Returns a list of all draft proposals that belongs to the user
+	public List<Proposal> getDraftProposals(int userId) throws Exception {
+		return null;
+	}
+
 	// all user/availibility related functions
 	// returns if the any changes were made to the database
 	// if setting availability to true, the "until" field doesn't matter

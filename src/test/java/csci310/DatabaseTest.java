@@ -620,6 +620,24 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testGetDraftProposals() throws Exception{
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		List<Proposal> result = testDB.getDraftProposals(1);
+		assertNotNull(result);
+		assertEquals(0, result.size());
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
 	public void testRefreshUsersAvailability() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
