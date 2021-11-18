@@ -382,6 +382,161 @@ public class Database {
 		return false;
 	}
 
+	// Returns a list of events associated with the proposalId
+	public List<Event> getEventsFromProposal(int proposalId) throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events WHERE proposal_id = ?");
+		stmt.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt.executeQuery();
+		List<Event> events = new ArrayList<>();
+		while (rs.next()) {
+			Event event = new Event();
+			event.eventId = rs.getInt("event_id");
+			event.eventName = rs.getString("event_name");
+			event.url = rs.getString("event_link");
+			event.startDateTime = rs.getString("start_date_time");
+			// get venue
+			List<Venue> venues = new ArrayList<Venue>();
+			Venue venue = new Venue(
+					rs.getString("venue_name"),
+					rs.getString("venue_address"),
+					rs.getString("venue_city"),
+					rs.getString("venue_state"),
+					rs.getString("venue_country")
+			);
+			venues.add(venue);
+			event.venues = venues;
+			events.add(event);
+
+			// test print 
+			System.out.println("Event: " + event.eventName + " " + event.startDateTime);
+		}
+		rs.close();
+		stmt.close();
+		return events;
+	}
+
+	// Returns a list of invitees associated with the proposalId
+	List<User> getInviteesFromProposal(int proposalId) throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM invitees WHERE proposal_id = ?");
+		stmt.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt.executeQuery();
+		List<User> invitees = new ArrayList<>();
+		while (rs.next()) {
+			User invitee = new User();
+			invitee.userId = rs.getInt("invitee_id");
+			invitees.add(invitee);
+			// test print
+			System.out.println("Invitee ID: " + invitee.userId);
+		}
+		rs.close();
+		stmt.close();
+		for (User invitee: invitees) {
+			PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM users WHERE user_id = ?");
+			stmt2.setString(1, String.valueOf(invitee.userId));
+			ResultSet rs2 = stmt2.executeQuery();
+			invitee.username = rs2.getString("username");
+
+			rs2.close();
+			stmt2.close();
+
+			// test print
+			System.out.println("Invitee Username: " + invitee.username);
+		}
+		return invitees;
+	}
+
+	// Returns a list of all draft proposals that belongs to the user
+	public List<Proposal> getAllDraftProposals(int userId) throws Exception {
+		List<Proposal> proposals = new ArrayList<>();
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM proposals WHERE owner_id = ? AND is_draft = 1");
+		stmt.setString(1, String.valueOf(userId));
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			Proposal proposal = new Proposal();
+			proposal.proposalId = rs.getInt("proposal_id");
+			proposal.title = rs.getString("title");
+			proposal.description = rs.getString("description");
+			proposal.isDraft = rs.getBoolean("is_draft");
+			proposals.add(proposal);
+
+			// test print
+			System.out.println("Proposal ID: " + proposal.proposalId);
+			System.out.println("Proposal Title: " + proposal.title);
+		}
+		rs.close();
+		stmt.close();
+		// add details for each events
+		for (Proposal proposal: proposals) {
+			proposal.events = getEventsFromProposal(proposal.proposalId);
+			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
+		}
+		return proposals;
+	}
+
+	// Returns a list of all non-draft proposals
+	public List<Proposal> getAllNonDraftProposals(int userId, Boolean isOwner) throws Exception {
+		List<Proposal> proposals = new ArrayList<>();
+		if (isOwner){
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM proposals WHERE owner_id = ? AND is_draft = 0");
+			stmt.setString(1, String.valueOf(userId));
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Proposal proposal = new Proposal();
+				proposal.proposalId = rs.getInt("proposal_id");
+				proposal.title = rs.getString("title");
+				proposal.description = rs.getString("description");
+				proposal.isDraft = rs.getBoolean("is_draft");
+				proposals.add(proposal);
+
+				// test print
+				System.out.println("Proposal ID: " + proposal.proposalId);
+				System.out.println("Proposal Title: " + proposal.title);
+			}
+			rs.close();
+			stmt.close();
+		}
+		else{
+			// get all proposals that the user is invited to
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM invitees WHERE invitee_id = ?");
+			stmt.setString(1, String.valueOf(userId));
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Proposal proposal = new Proposal(new User(""));
+				proposal.proposalId = rs.getInt("proposal_id");
+				proposals.add(proposal);
+			}
+			rs.close();
+			stmt.close();
+
+			// get more details for each proposal
+			for (Proposal proposal: proposals) {
+				PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM proposals WHERE proposal_id = ?");
+				stmt2.setString(1, String.valueOf(proposal.proposalId));
+				ResultSet rs2 = stmt2.executeQuery();
+				while (rs2.next()) {
+					proposal.title = rs2.getString("title");
+					proposal.description = rs2.getString("description");
+					proposal.isDraft = rs2.getBoolean("is_draft");
+				}
+				rs2.close();
+				stmt2.close();
+
+				// test print
+				System.out.println("Proposal ID: " + proposal.proposalId);
+				System.out.println("Proposal Title: " + proposal.title);
+			}
+		}
+
+		// add details for each events
+		for (Proposal proposal: proposals) {
+			proposal.events = getEventsFromProposal(proposal.proposalId);
+			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
+		}
+
+		// TODO: check for finalized proposals and return declined & accepted results
+		return proposals;
+	}
+
 	// all user/availibility related functions
 	// returns if the any changes were made to the database
 	// if setting availability to true, the "until" field doesn't matter
@@ -407,7 +562,7 @@ public class Database {
 		stmt.setBoolean(1, false);
 		ResultSet rs = stmt.executeQuery();
 		// Get a buffer list of user ids whose unavailability has expired
-		List<Integer> expired = new ArrayList();
+		List<Integer> expired = new ArrayList<Integer>();
 		while (rs.next()) {
 			String until = rs.getString("until");
 			// if until is not null, check if current time is after until
