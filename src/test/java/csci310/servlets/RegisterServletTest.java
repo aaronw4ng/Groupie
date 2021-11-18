@@ -77,7 +77,7 @@ public class RegisterServletTest {
         registerServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         // should be true since username has not yet been used and also only user in the database
-        assertEquals("true", result);
+        assertEquals("1", result);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class RegisterServletTest {
         registerServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         // should be false because user already exists
-        assertEquals("false", result);
+        assertEquals("-1", result);
     }
 
     @Test
