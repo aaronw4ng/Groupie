@@ -27,7 +27,9 @@ function handleRegisterClick(event) {
       // Check if username taken
       success: function (result) {
         console.log(result)
-        if (result == "true") {
+        // if successful registration, then will return userID
+        // otherwise, it will return -1
+        if (result != "-1") {
           alert("Account successfully created!")
           // User session persistence
           if (!sessionStorage.getItem("username")) {

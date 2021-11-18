@@ -2,6 +2,8 @@ package csci310.servlets;
 
 import csci310.AppServletContextListener;
 import csci310.Database;
+import csci310.Event;
+import csci310.Venue;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -19,11 +21,10 @@ import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GetAllUsersServletTest {
+public class GetAllDraftProposalsServletTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
@@ -63,45 +64,56 @@ public class GetAllUsersServletTest {
         Database testDB = listener.database;
         testDB.dropAllTables();
         testDB.createRequiredTables();
+
+        // Create a proposal first
+		// add user to database first
+		testDB.register("Test User", "Test Password"); // userId = 1
+		String title = "Remove Invitee from Sent Proposal";
+		String descript = "This is a test description for removing an invitee after sending proposal test!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1"); // userId = 2
+		testDB.register("Invitee 2", "PS2"); // userId = 3
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
         
-        // register users
-        testDB.register("user1", "ps1");
-        testDB.register("user2", "ps2");
-        testDB.register("user3", "ps3");
-
-        Date currentDate = new Date(System.currentTimeMillis());
-		String currentDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(currentDate);
-		// set user1 to unavailable until now
-		testDB.setUserAvailability(1, false, currentDateString);
-
-		Date nextDate = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
-		String nextDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(nextDate);
-		// set user2 to unavailable until next day
-		testDB.setUserAvailability(2, false, nextDateString);
-
-        Mockito.when(request.getParameter("userId")).thenReturn("3");
-
+        // check response
+        Mockito.when(request.getParameter("userId")).thenReturn("1");
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-
         Mockito.when(response.getWriter()).thenReturn(pw);
-        GetAllUsersServlet servlet = new GetAllUsersServlet();
+        GetAllDraftProposalsServlet servlet = new GetAllDraftProposalsServlet();
         servlet.init(config);
         servlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         System.out.println(result);
+        assertTrue(result.contains("birthdayVenue"));
+        assertTrue(result.contains("BTSConcertVenue"));
+        assertTrue(result.contains("invitee 1"));
+        assertTrue(result.contains("invitee 2"));
 
-        // test that the response is correct
-        assertTrue(result.contains("user1"));
-        assertTrue(result.contains("user2"));
-        assertFalse(result.contains("user3"));
-        assertTrue(result.contains("1"));
-        assertTrue(result.contains("2"));
-        assertFalse(result.contains("3"));
-        assertTrue(result.contains("true"));
-        assertTrue(result.contains("false"));
+        // check empty response
+        Mockito.when(request.getParameter("userId")).thenReturn("2");
+        sw = new StringWriter();
+        pw = new PrintWriter(sw);
+        Mockito.when(response.getWriter()).thenReturn(pw);
+        servlet = new GetAllDraftProposalsServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        result = sw.getBuffer().toString();
+        System.out.println(result);
+        assertTrue(result.equals("[]"));
 
-        // try closing the database to get full coverage
+        // close database for full coverage
         testDB.close();
         try{
             servlet.doPost(request, response);

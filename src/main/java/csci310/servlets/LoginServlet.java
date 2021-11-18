@@ -16,15 +16,16 @@ public class LoginServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             String us = request.getParameter("username");
             String ps = request.getParameter("password");
-            // successful login
+            // successful login -> return the user id
             if (database.login(us, ps)) {
                 request.setAttribute("status", true);
-                out.print(true);
+                int userID = database.queryUserID(us);
+                out.print(userID);
             }
-            // login failed
+            // login failed -> return -1
             else {
                 request.setAttribute("status", false);
-                out.print(false);
+                out.print(-1);
             }
         } catch (Exception e) {
             throw new ServletException("Login Servlet failed");
