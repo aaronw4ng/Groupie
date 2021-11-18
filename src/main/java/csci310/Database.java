@@ -382,9 +382,33 @@ public class Database {
 		return false;
 	}
 
+	// Returns a list of events associated with the proposalId
+	public List<Event> getEventsFromProposal(int proposalId) throws Exception {
+		return null;
+	}
+
 	// Returns a list of all draft proposals that belongs to the user
 	public List<Proposal> getAllDraftProposals(int userId) throws Exception {
-		return null;
+		List<Proposal> proposals = new ArrayList<>();
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM proposals WHERE user_id = ? AND is_draft = 1");
+		stmt.setString(1, String.valueOf(userId));
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			Proposal proposal = new Proposal(new User(""));
+			proposal.proposalId = rs.getInt("proposal_id");
+			proposal.title = rs.getString("title");
+			proposal.description = rs.getString("description");
+			proposal.isDraft = rs.getBoolean("is_draft");
+			proposals.add(proposal);
+		}
+		rs.close();
+		stmt.close();
+		// add details for each events
+		for (Proposal proposal: proposals) {
+			List<Event> events = getAllEvents(proposal.proposalId);
+			proposal.events = events;
+		}
+		return proposals;
 	}
 
 	// Returns a list of all non-draft proposals

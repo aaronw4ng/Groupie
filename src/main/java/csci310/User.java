@@ -20,6 +20,12 @@ public class User {
         this.sentProposals = new ArrayList<>();
     }
 
+    public User() {
+        this.blockedUsers = new ArrayList<>();
+        this.receivedProposals = new ArrayList<>();
+        this.sentProposals = new ArrayList<>();
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

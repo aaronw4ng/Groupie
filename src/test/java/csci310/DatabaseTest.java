@@ -620,6 +620,21 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testGetEventsFromProposal() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+		// Create a proposal first
+
+		List<Event> events = testDB.getEventsFromProposal(1);
+		assertNotNull(events);
+		assertEquals(0, events.size());
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
 	public void testGetAllDraftProposals() throws Exception{
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
