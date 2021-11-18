@@ -98,7 +98,7 @@ public class RemoveInviteeFromSentProposalServletTest {
         PrintWriter pw = new PrintWriter(sw);
         Mockito.when(response.getWriter()).thenReturn(pw);
         RemoveInviteeFromSentProposalServlet removeInviteeFromSentProposalServlet = new RemoveInviteeFromSentProposalServlet();
-        removeInviteeFromSentProposalServlet.init();
+        removeInviteeFromSentProposalServlet.init(config);
         removeInviteeFromSentProposalServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
         assertEquals("true", result);
