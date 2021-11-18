@@ -100,5 +100,15 @@ public class GetAllUsersServletTest {
         assertFalse(result.contains("3"));
         assertTrue(result.contains("true"));
         assertTrue(result.contains("false"));
+
+        // try closing the database to get full coverage
+        testDB.close();
+        try{
+            servlet.doPost(request, response);
+            fail("Should have thrown an exception");
+        }
+        catch(Exception e){
+            assertTrue(e.getMessage().contains("failed"));
+        }
     }
 }
