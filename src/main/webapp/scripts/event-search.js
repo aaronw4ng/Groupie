@@ -19,19 +19,8 @@ function handleSubmit(event) {
     console.log("KEYWORD:", keywordInput, "ZIPCODE:", zipcodeInput, "CITY:", cityInput, "START:", startDateInput, "END:", endDateInput)
     
     // Date Formatting for Servlet
-    if (startDateInput != "") {
-        let startDateArr = startDateInput.split("-")
-        console.log(startDateArr)
-        let yearString = startDateArr[0]
-        startDateInput = yearString + "-" + startDateArr[1] + "-" + startDateArr[2] + "T00:00:00Z"
-        console.log(startDateInput)
-    }
-
-    if (endDateInput != "") {
-        let endDateArr = endDateInput.split("-")
-        let yearString = endDateArr[0]
-        endDateInput = yearString + "-" + endDateArr[1] + "-" + endDateArr[2] + "T00:00:00Z"
-    }
+    startDateInput = formatInputDate(startDateInput);
+    endDateInput = formatInputDate(endDateInput);
 
     // ********* TESTS **********
     // Test Return object
@@ -108,6 +97,16 @@ function handleSubmit(event) {
             }
         }
     })
+}
+
+// Function to format data for servlet
+function formatInputDate(dateInput) {
+    if (dateInput != "") {
+        let dateArr = dateInput.split("-")
+        let yearString = dateArr[0]
+        dateInput = yearString + "-" + startDateArr[1] + "-" + startDateArr[2] + "T00:00:00Z"
+    }
+    return dateInput;
 }
 
 function clearContainer(container) {
