@@ -21,10 +21,13 @@ import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class GetAllDraftProposalsServletTest {
+public class GetAllNonDraftProposalsServletTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
@@ -85,42 +88,5 @@ public class GetAllDraftProposalsServletTest {
 		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
 		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
 		assertEquals(1, newProposalId);
-        
-        // check response
-        Mockito.when(request.getParameter("userId")).thenReturn("1");
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        Mockito.when(response.getWriter()).thenReturn(pw);
-        GetAllDraftProposalsServlet servlet = new GetAllDraftProposalsServlet();
-        servlet.init(config);
-        servlet.doPost(request, response);
-        String result = sw.getBuffer().toString();
-        System.out.println(result);
-        assertTrue(result.contains("birthdayVenue"));
-        assertTrue(result.contains("BTSConcertVenue"));
-        assertTrue(result.contains("invitee 1"));
-        assertTrue(result.contains("invitee 2"));
-
-        // check empty response
-        Mockito.when(request.getParameter("userId")).thenReturn("2");
-        sw = new StringWriter();
-        pw = new PrintWriter(sw);
-        Mockito.when(response.getWriter()).thenReturn(pw);
-        servlet = new GetAllDraftProposalsServlet();
-        servlet.init(config);
-        servlet.doPost(request, response);
-        result = sw.getBuffer().toString();
-        System.out.println(result);
-        assertTrue(result.contains("[]"));
-
-        // close database for full coverage
-        testDB.close();
-        try{
-            servlet.doPost(request, response);
-            fail("Should have thrown an exception");
-        }
-        catch(Exception e){
-            assertTrue(e.getMessage().contains("failed"));
-        }
     }
 }
