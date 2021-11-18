@@ -452,7 +452,7 @@ public class Database {
 		stmt.setString(1, String.valueOf(userId));
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
-			Proposal proposal = new Proposal(new User(""));
+			Proposal proposal = new Proposal();
 			proposal.proposalId = rs.getInt("proposal_id");
 			proposal.title = rs.getString("title");
 			proposal.description = rs.getString("description");
@@ -474,8 +474,60 @@ public class Database {
 	}
 
 	// Returns a list of all non-draft proposals
-	public List<Proposal> getAllNonDraftProposals(int userId) throws Exception {
-		return null;
+	public List<Proposal> getAllNonDraftProposals(int userId, Boolean isOwner) throws Exception {
+		List<Proposal> proposals = new ArrayList<>();
+		if (isOwner){
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM proposals WHERE owner_id = ? AND is_draft = 0");
+			stmt.setString(1, String.valueOf(userId));
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Proposal proposal = new Proposal();
+				proposal.proposalId = rs.getInt("proposal_id");
+				proposal.title = rs.getString("title");
+				proposal.description = rs.getString("description");
+				proposal.isDraft = rs.getBoolean("is_draft");
+				proposals.add(proposal);
+
+				// test print
+				System.out.println("Proposal ID: " + proposal.proposalId);
+				System.out.println("Proposal Title: " + proposal.title);
+			}
+			rs.close();
+			stmt.close();
+		}
+		else{
+			// get all proposals that the user is invited to
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM invitees WHERE invitee_id = ?");
+			stmt.setString(1, String.valueOf(userId));
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Proposal proposal = new Proposal(new User(""));
+				proposal.proposalId = rs.getInt("proposal_id");
+				proposals.add(proposal);
+			}
+			rs.close();
+			stmt.close();
+
+			// get more details for each proposal
+			for (Proposal proposal: proposals) {
+				PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM proposals WHERE proposal_id = ?");
+				stmt2.setString(1, String.valueOf(proposal.proposalId));
+				ResultSet rs2 = stmt2.executeQuery();
+				while (rs2.next()) {
+					proposal.title = rs2.getString("title");
+					proposal.description = rs2.getString("description");
+					proposal.isDraft = rs2.getBoolean("is_draft");
+				}
+				rs2.close();
+				stmt2.close();
+
+				// test print
+				System.out.println("Proposal ID: " + proposal.proposalId);
+				System.out.println("Proposal Title: " + proposal.title);
+			}
+		}
+
+		return proposals;
 	}
 
 	// all user/availibility related functions
