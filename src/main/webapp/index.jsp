@@ -28,5 +28,4 @@
         </div>
         <script src="./scripts/login.js"></script>
     </body>
-    <jsp:include page="pages/autologout.jsp"></jsp:include>
 </html>
