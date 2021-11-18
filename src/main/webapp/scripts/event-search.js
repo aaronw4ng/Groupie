@@ -1,3 +1,8 @@
+// User access
+if (!sessionStorage.getItem("username")) {
+    document.location.href = "../index.jsp"
+}
+
 if (sessionStorage.getItem("selected") == null) {
     sessionStorage.setItem("selected", "[]")
 }
@@ -7,6 +12,7 @@ function handleSubmit(event) {
     const keywordInput = document.querySelector("#event-search-input").value
     const zipcodeInput = document.querySelector("#event-zip-input").value
     const cityInput = document.querySelector("#event-city-input").value
+    const genreInput = document.querySelector("#event-genre-input").value
     let startDateInput = document.querySelector("#start").value
     let endDateInput = document.querySelector("#end").value
 
@@ -54,13 +60,14 @@ function handleSubmit(event) {
             zipCode: zipcodeInput,
             city: cityInput,
             startDate: startDateInput,
-            endDate: endDateInput
+            endDate: endDateInput,
+            genre: genreInput
         },
 
         success: function(result) {
             console.log(result)
             if (result == "No results found!") {
-                resultsContainer.innerHTML = "No events found."
+                resultsContainer.innerHTML += `<p>No events found.</p>`
             }
             else {
                 // Store response json string in session storage
@@ -74,10 +81,23 @@ function handleSubmit(event) {
                     console.log(json[i].url)
                     let resultCardString = `
                     <div class="event-result-card">
-                        <div class="event-info">
-                            <h1 class="result-title">${json[i].eventName}</h1>
-                            <p class="result-date-range">${json[i].startDateTime}</p>
-                            <a class="result-url" href="${json[i].url}" target="_blank">ticketmaster page</a>
+                        <p class="result-title">${json[i].eventName}</p>
+                        <hr>
+                        <p class="event-info-title"><i class="fas fa-info-circle"></i> event info</p>
+                        <div class="event-info">   
+                            <div>
+                                <p class="result-header">start date</p>
+                                <p class="result-date-range">${json[i].startDateTime}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">event link</p>
+                                <a class="result-url" href="${json[i].url}" target="_blank">ticketmaster page</a>
+                            </div>
+                            <div>
+                                <p class="result-header">venue</p>
+                                <p class="result-venue">${json[i].venues[0].name}</p>
+                            </div>
+                            <hr>
                         </div>
                         <button class="btn-add-result" onclick="handleResultSelection(${i})">add event</button>
                     </div>

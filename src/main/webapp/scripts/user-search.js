@@ -1,28 +1,34 @@
 // GET ALL USERS
 
 // TODO: Implement userID in login/create account
-/* if (sessionStorage.getItem("userID")) {
-    const currentUserID = sessionStorage.getItem("userID")
+if (sessionStorage.getItem("username")) {
+    const currentUsername = sessionStorage.getItem("username")
 }
-*/
+else {
+    document.location.href = "../index.jsp"
+}
+
+let USERS_LIST = []
+
 window.onload = function() {
     // TODO: call GetAllUsers servlet on window load, get user ID
-    // $.ajax({
-    //     method: "POST",
-    //     url: "../GetAllUsersServlet",
-    //     data: {
-    //         userID: currentUserID
-    //     },
-    //     success: function(result) {
-    //         if (result) {
-    //             const usersList = JSON.parse(result)
-    //         }
-    //         else {
-    //             console.log("Error fetching users list")
-    //         }
-    //     }
+    $.ajax({
+        method: "POST",
+        url: "../GetAllUsersServlet",
+        data: {
+            userId: 4
+        },
+        success: function(result) {
+            if (result) {
+                console.log("SUCCESS RETURN", result)
+                USERS_LIST = JSON.parse(result)
+            }
+            else {
+                console.log("Error fetching users list")
+            }
+        }
 
-    // })
+    })
 }
 
 // TEST INPUT
@@ -51,8 +57,8 @@ function handleInputChange(event) {
 function searchUsers(target) {
     // Filter users array for users that contain target string
     // TODO: change testUsers to usersList when implementation allows for it
-    let filteredUsers = testUsers.filter( (user) => {
-        return user.username.toLowerCase().includes(target.toLowerCase())
+    let filteredUsers = USERS_LIST.filter( (user) => {
+        return user.userName.toLowerCase().includes(target.toLowerCase())
     })
     console.log(filteredUsers)
 
@@ -61,15 +67,15 @@ function searchUsers(target) {
         let cardString = ``
         if (user.isAvailable) {
             cardString = `
-            <div class="user-card" data-user="${user.username}" data-id="${user.id}" onclick="handleSelectUser(event)">
-                <p><i class="fas fa-users"></i> ${user.username}</p>
+            <div class="user-card" data-user="${user.userName}" data-id="${user.userId}" onclick="handleSelectUser(event)">
+                <p><i class="fas fa-users"></i> ${user.userName}</p>
             </div>
             `;
         }
         else {
             cardString = `
             <div class="user-card unavailable">
-                <p><i class="fas fa-users-slash"></i> ${user.username}</p>
+                <p><i class="fas fa-users-slash"></i> ${user.userName}</p>
             </div>
             `;
         }

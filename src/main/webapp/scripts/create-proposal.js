@@ -1,11 +1,27 @@
-// TODO: Implement userID in login/create account
-/* if (sessionStorage.getItem("userID")) {
-    const currentUserID = sessionStorage.getItem("userID")
+// *** GLOBALS ***
+// Get current user in session
+let currentUsername = ""
+if (sessionStorage.getItem("username")) {
+    currentUsername = sessionStorage.getItem("username")
 }
-*/
+else {
+    document.location.href = "../index.jsp"
+}
+
+// if proposal doesn't have proposalID then it is new
+let isNewProposal = true
+// pass -1 as proposal id if new proposal
+let proposalIDInput = -1
+if (sessionStorage.getItem("proposalId")) {
+    proposalIDInput = parseInt(sessionStorage.getItem("proposalId"))
+    isNewProposal = false
+}
+
 let eventsContainer = document.querySelector(".events-container")
 
 let searchInput = document.querySelector("#user-search-input")
+
+// *** END GLOBALS ***
 
 function handleAddUsersClick(event) {
     event.preventDefault()
@@ -41,25 +57,35 @@ function handleDeleteEvent(event) {
     }
 }
 
+// Format Events - formats events list to be sent to the servlets
+function formatEvents(eventsList) {
+    for (item in eventsList) {
+        eventsList[item] = JSON.parse(eventsList[item])
+    }
+    return JSON.stringify(eventsList)
+
+}
+
 function handleCreateProposalClick(event) {
     event.preventDefault()
+    // Get all necessary input
     let users = JSON.stringify(getUsersList())
     let selectedEvents = JSON.parse(sessionStorage.getItem("selected"))
+    selectedEvents = formatEvents(selectedEvents)
     let titleInput = document.querySelector("#input-proposal-name").value
     console.log(users, selectedEvents, titleInput)
-    // TODO: get owner user ID and description?
 
     $.ajax({
         method: "POST",
         url: "../createProposal",
         data: {
-            owner: currentUserID,
+            owner: currentUsername,
             title: titleInput,
             descript: "",
             invited: users,
             events: selectedEvents,
-            isNew: false,
-            proposalId: "-1"
+            isNew: isNewProposal,
+            proposalId: proposalIDInput
         },
         success: function(result) {
             if (result) {
@@ -75,40 +101,37 @@ function handleCreateProposalClick(event) {
 
 function handleSaveDraftClick(event) {
     event.preventDefault()
-
-    // if proposal doesn't have proposalID then it is new
-    let isNewProposal = true
-    // pass -1 as proposal id if new proposal
-    let proposalIDInput = -1
-    if (sessionStorage.getItem("proposalID")) {
-        proposalIDInput = parseInt(sessionStorage.getItem("proposalID"))
-        isNewProposal = false
-    }
-    let users = getUsersList()
+    let users = JSON.stringify(getUsersList())
     let selectedEvents = JSON.parse(sessionStorage.getItem("selected"))
+    selectedEvents = formatEvents(selectedEvents)
     let titleInput = document.querySelector("#input-proposal-name").value
     console.log("Saving Draft...")
-    console.log(users, selectedEvents, titleInput)
+    console.log(users, selectedEvents, titleInput, proposalIDInput)
 
     // TODO: owner user ID, description
-    /*
+    
     $.ajax({
         method: "POST",
         url: "../saveDraftProposal",
         data: {
             isNew: isNewProposal,
-            proposalID: proposalIDInput,
-            owner: currentUserID,
+            proposalId: proposalIDInput,
+            owner: currentUsername,
             title: titleInput,
-            description: "",
+            descript: "",
             invited: users,
             events: selectedEvents
         },
         success: function(result) {
-
+            console.log(result)
+            if (result === "true") {
+                alert("Draft successfully saved!")
+            }
+            else {
+                alert("Unable to save draft.")
+            }
         }
     })
-    */
 
 }
 

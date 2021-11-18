@@ -29,6 +29,10 @@ function handleRegisterClick(event) {
         console.log(result)
         if (result == "true") {
           alert("Account successfully created!")
+          // User session persistence
+          if (!sessionStorage.getItem("username")) {
+            sessionStorage.setItem("username", usernameInput)
+          }
         } else {
           setWarnings(usernameInputField, "Username has already been taken", "username-taken")
         }

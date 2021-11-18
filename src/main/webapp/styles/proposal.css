@@ -25,6 +25,7 @@ body {
   #input-proposal-name {
     font-size: 2rem;
     border: none;
+    width : 95%;
   }
   #input-proposal-name:focus {
     outline : none;
@@ -139,6 +140,9 @@ body {
 
 
   @media (max-width : 776px) {
+    #input-proposal-name {
+      width: 88%;
+    }
     .btn-row {
       flex-direction: column;
     }
