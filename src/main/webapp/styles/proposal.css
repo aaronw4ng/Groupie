@@ -7,6 +7,7 @@ body {
     margin-bottom: 1rem;
     font-weight: 300;
   }
+
   #create-proposal-page {
     display: flex;
     flex-direction: column;
@@ -14,9 +15,11 @@ body {
     padding-bottom: 2.5rem;
 
   }
+
   textarea {
   width: 700px;
   }
+
   button:hover {
     background-color: goldenrod;
     color: rgba(91, 2, 116, 0.975);
@@ -25,6 +28,38 @@ body {
   .title {
     font-weight: 500;
   }
+
+  .border {
+    border: 5px solid #9762a5;
+    border-radius: 30px;
+    padding: 20px;
+    width:45%;
+    display: inline-block;
+  }
+
+  .strong-result {
+    font-weight: bold;
+  }
+
+  .btn-view button {
+    background-color: gray;
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    float: left;
+    width: 15%;
+  }
+
+  .selected {
+    background-color: #9762a5 !important;
+  }
+
+  .btn-view:after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
 
   .principal {
       font-weight: 800;
@@ -83,7 +118,7 @@ body {
     background: none;
     color : indianred;
     border : 2px solid indianred;
-  } 
+  }
   .remove-btn:hover {
     background: indianred;
     color : white
