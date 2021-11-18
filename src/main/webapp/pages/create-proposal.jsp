@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/proposal.css" />
+    <script src="https://kit.fontawesome.com/d4a13a138b.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>groupie | proposal</title>
 </head>
@@ -17,22 +18,43 @@
   </div>
 
   <div id="create-proposal-page">
-    <h1>Propose an Event</h1>
-    <h2>Fill out the following fields to propose group dates to your friends.</h2>
+    <h1>create proposal</h1>
+
     <form id="proposal-form">
-      <p class="input-header title">proposal name</p>
-      <input class="field-input" type="text" id="input-proposal-name" placeholder="Name"><br/>
+      <!-- Proposal Name -->
+      <p class="input-header">proposal name</p>
+      <input class="field-input" type="text" id="input-proposal-name" value="new proposal">
+      <i class="fas fa-pen"></i>
+      <hr>
+
       <p class="input-header">proposed events</p>
       <!-- Container for selected events display -->
       <div class="events-container">
 
       </div>
       <button id="btn-event-find" onclick="handleFindEventClick(event)">+ add event</button>
-      <p class="input-header">invite users</p>
-      <input class="field-input" id="input-invitees" placeholder="Search">
+
+      <hr>
+
+      <!-- USER INVITE -->
+      <p class="input-header">invited users</p>
+      <div id="added-user-container">
+
+      </div>
+      <div class="form-col">
+        <button id="btn-add-users" onclick="handleAddUsersClick(event)">+ add users</button>
+        <input class="field-input" id="user-search-input" placeholder="search username" onkeyup="handleInputChange(event)">
+      </div>
+      <div id="user-results-container">
+        
+      </div>
+
+      <hr>
+
+      <!-- PROPOSAL BUTTONS -->
       <div class="btn-row">
-        <button onclick="handleCreateProposalClick(event)" name="btn-send-proposal" class = "principal">Send Proposal</button>
-        <button name="btn-save-draft" class ="principal">Save Draft</button>
+        <button onclick="handleCreateProposalClick(event)" name="btn-send-proposal" class = "principal">send proposal</button>
+        <button onclick="handleSaveDraftClick(event)" name="btn-save-draft" class ="principal">save draft</button>
       </div>
     </form>
   </div>
@@ -42,6 +64,7 @@
   </div>
 
   <script src="../scripts/create-proposal.js"></script>
+  <script src="../scripts/user-search.js"></script>
 </body>
-  <jsp:include page="autologout.jsp"></jsp:include>
+  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>

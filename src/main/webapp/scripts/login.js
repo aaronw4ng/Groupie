@@ -22,6 +22,10 @@ function handleLoginClick(event) {
                 console.log(result)
                 if (result != "-1") {
                     alert("Login successful!")
+                    // User session persistence
+                    if (!sessionStorage.getItem("username")) {
+                        sessionStorage.setItem("username", usernameInput)
+                    }
                     document.location.href = "./pages/create-proposal.jsp"
                 }
                 else {

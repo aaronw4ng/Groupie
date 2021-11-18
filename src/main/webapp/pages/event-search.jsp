@@ -56,10 +56,17 @@
           <div class="search-item">
             <p class="search-input-label">genre</p>
             <select class="search-input" id="event-genre-input">
-              <option value="">Genres</option>
-              <option value="">Blah</option>
-              <option value="">Blah</option>
-              <option value="">Blah</option>
+              <option selected disabled value="">Genres</option>
+              <option value="Pop">Pop</option>
+              <option value="Jazz">Jazz</option>
+              <option value="Classical">Classical</option>
+              <option value="Rock">Rock</option>
+              <option value="Soccer">Soccer</option>
+              <option value="Football">Football</option>
+              <option value="Basketball">Basketball</option>
+              <option value="Theatre">Theatre</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Magic & Illusion">Magic & Illusion</option>
             </select>
           </div>
         </div>
