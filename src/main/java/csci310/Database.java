@@ -384,7 +384,32 @@ public class Database {
 
 	// Returns a list of events associated with the proposalId
 	public List<Event> getEventsFromProposal(int proposalId) throws Exception {
-		return null;
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events WHERE proposal_id = ?");
+		stmt.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt.executeQuery();
+		List<Event> events = new ArrayList<>();
+		while (rs.next()) {
+			Event event = new Event();
+			event.eventId = rs.getInt("event_id");
+			event.eventName = rs.getString("event_name");
+			event.url = rs.getString("event_link");
+			event.startDateTime = rs.getString("start_date_time");
+			// get venue
+			List<Venue> venues = new ArrayList<Venue>();
+			Venue venue = new Venue(
+					rs.getString("venue_name"),
+					rs.getString("venue_address"),
+					rs.getString("venue_city"),
+					rs.getString("venue_state"),
+					rs.getString("venue_country")
+			);
+			venues.add(venue);
+			event.venues = venues;
+			events.add(event);
+		}
+		rs.close();
+		stmt.close();
+		return events;
 	}
 
 	// Returns a list of all draft proposals that belongs to the user

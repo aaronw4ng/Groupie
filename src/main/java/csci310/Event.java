@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
-    private String eventName;
-    private String url;
-    private String startDateTime;
-    private List<Venue> venues = new ArrayList<>();
+    public String eventName;
+    public int eventId;
+    public String url;
+    public String startDateTime;
+    public List<Venue> venues = new ArrayList<>();
 
     public Event() {
         this.eventName = "";
