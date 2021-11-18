@@ -383,7 +383,12 @@ public class Database {
 	}
 
 	// Returns a list of all draft proposals that belongs to the user
-	public List<Proposal> getDraftProposals(int userId) throws Exception {
+	public List<Proposal> getAllDraftProposals(int userId) throws Exception {
+		return null;
+	}
+
+	// Returns a list of all non-draft proposals
+	public List<Proposal> getAllNonDraftProposals(int userId) throws Exception {
 		return null;
 	}
 

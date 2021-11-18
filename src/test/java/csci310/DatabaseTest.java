@@ -620,7 +620,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testGetDraftProposals() throws Exception{
+	public void testGetAllDraftProposals() throws Exception{
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
@@ -629,7 +629,25 @@ public class DatabaseTest {
 		testDB.register("user2", "ps2");
 		testDB.register("user3", "ps3");
 
-		List<Proposal> result = testDB.getDraftProposals(1);
+		List<Proposal> result = testDB.getAllDraftProposals(1);
+		assertNotNull(result);
+		assertEquals(0, result.size());
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testGetAllNonDraftProposals() throws Exception{
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		List<Proposal> result = testDB.getAllNonDraftProposals(1);
 		assertNotNull(result);
 		assertEquals(0, result.size());
 
