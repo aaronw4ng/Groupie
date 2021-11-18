@@ -627,6 +627,8 @@ public class Database {
 		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND user_id = ?");
 		responsesStmt.setInt(1, proposalId);
 		responsesStmt.setInt(2, userId);
+		int rows = responsesStmt.executeUpdate();
+		System.out.println("Rows affected from removing responses: " + rows);
 
 		return true;
 	}
