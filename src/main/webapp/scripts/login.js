@@ -1,3 +1,4 @@
+let attempt = 0;
 function handleLoginClick(event) {
     event.preventDefault()
     const usernameInput = document.querySelector("#input-username").value
@@ -26,32 +27,29 @@ function handleLoginClick(event) {
                     document.location.href = "./pages/create-proposal.jsp"
                 }
                 else {
+                    attempt++;
                     let message = `
                     <p>Invalid username or password.</p>
                     `;
-                    warningMessageContainer.innerHTML = message
+                    warningMessageContainer.innerHTML = "Attempt: " + attempt + message
                     warningMessageContainer.style.display = "block"
+
+                    if (attempt == 3) {
+                        manageLoginAttempts()
+                        attempt = 0;
+                    }
                 }
-                
             }
         })
     }
+}
 
-
-    //  const servletURL = "login"
-    //  const postBody = {
-    //    username: usernameInput,
-    //    password: passwordInput
-    //  }
-    //  const requestMetadata = {
-    //    method: "GET",
-    //    headers: {
-    //      "Content-Type": "application/json"
-    //    },
-    //  }
-    //  fetch(servletURL, requestMetadata)
-    //     .then(data => console.log(data))
-    
+// Block user for sixty seconds after three failed login attempts
+function manageLoginAttempts() {
+    document.querySelector("#btn-login").disabled = true;
+    setTimeout(function() {
+        document.querySelector("#btn-login").disabled = false;
+    }, 60000);
 }
 
 function validateFields(username, password) {
