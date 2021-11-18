@@ -3,14 +3,14 @@ package csci310;
 import java.util.*;
 
 public class Proposal {
-    private User user;
-    private Map<String, Event> events;
-    private Map<String, User> invitedUsers;
+    public User user;
+    public Map<String, Event> events;
+    public Map<String, User> invitedUsers;
    // private Map<User, Response> mapOfResponses;
-    private Event bestEvent;
-    private boolean finalized = false;
-    private Map<String, User> accepted;
-    private Map<String, User> declined;
+    public Event bestEvent;
+    public boolean finalized = false;
+    public Map<String, User> accepted;
+    public Map<String, User> declined;
 
     public Proposal(User user) {
         this.user = user;
