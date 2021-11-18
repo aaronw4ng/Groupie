@@ -81,7 +81,7 @@ public class StepDefinitions {
 
 	@When("user inputs random username in username") 
 	public void user_inputs_random_username_in_username() {
-		String username = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS)
+		String username = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
 		driver.findElement(By.id("input-username")).sendKeys(username);
 	}
 
