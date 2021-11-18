@@ -636,14 +636,14 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testGetAllInviteesFromProposal(int proposalId) throws Exception {
+	public void testGetInviteesFromProposal(int proposalId) throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		// Create a proposal first
 		// TODO
 
-		List<User> invitees = testDB.getAllInviteesFromProposal(1);
+		List<User> invitees = testDB.getInviteesFromProposal(1);
 		assertNotNull(invitees);
 		assertEquals(0, invitees.size());
 

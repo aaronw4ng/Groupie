@@ -413,7 +413,7 @@ public class Database {
 	}
 
 	// Returns a list of invitees associated with the proposalId
-	List<User> getAllInviteesFromProposal(int proposalId) throws Exception {
+	List<User> getInviteesFromProposal(int proposalId) throws Exception {
 		return null;
 	}
 

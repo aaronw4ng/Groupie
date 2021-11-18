@@ -6,11 +6,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 public class User {
-    private String password;
-    private String username;
-    private ArrayList<User> blockedUsers;
-    private ArrayList<Proposal> receivedProposals;
-    private ArrayList<Proposal> sentProposals;
+    public int userId;
+    public String username;
+    public String password;
+    public ArrayList<User> blockedUsers;
+    public ArrayList<Proposal> receivedProposals;
+    public ArrayList<Proposal> sentProposals;
 
 
     public User(String username) throws Exception {
