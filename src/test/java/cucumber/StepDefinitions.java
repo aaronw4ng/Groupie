@@ -34,11 +34,6 @@ public class StepDefinitions {
 	private ChromeOptions handlingSSL = new ChromeOptions();
 	private WebDriver driver;
 
-	private String random_username(int usernameLength, String chars) {
-		return RandomStringUtils.random(usernameLength, chars);
-
-	}
-
 	@Before
 	public void before() {
 		handlingSSL.setAcceptInsecureCerts(true);
@@ -86,7 +81,7 @@ public class StepDefinitions {
 
 	@When("user inputs random username in username") 
 	public void user_inputs_random_username_in_username() {
-		String username = random_username(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		String username = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
 		driver.findElement(By.id("input-username")).sendKeys(username);
 	}
 
