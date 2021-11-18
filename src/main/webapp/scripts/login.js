@@ -17,8 +17,10 @@ function handleLoginClick(event) {
             },
             
             success : function (result) {
+                // if result is -1, then login failed
+                // otherwise, result is the userID
                 console.log(result)
-                if (result == "true") {
+                if (result != "-1") {
                     alert("Login successful!")
                     document.location.href = "./pages/create-proposal.jsp"
                 }
