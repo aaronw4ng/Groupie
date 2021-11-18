@@ -9,7 +9,7 @@ public class Proposal {
     public String description;
     public Boolean isDraft;
     public List<Event> events;
-    public List<User> invitedUsers;
+    public List<User> invitees;
    // private Map<User, Response> mapOfResponses;
     public Event bestEvent;
     public List<User> accepted;
@@ -18,7 +18,7 @@ public class Proposal {
     public Proposal(User user) {
         this.user = user;
         events = new ArrayList<>();
-        invitedUsers = new ArrayList<>();
+        invitees = new ArrayList<>();
         //mapOfResponses = new TreeMap<>();
         accepted = new ArrayList<>();
         declined = new ArrayList<>();
@@ -26,7 +26,7 @@ public class Proposal {
 
     public Proposal() {
         events = new ArrayList<>();
-        invitedUsers = new ArrayList<>();
+        invitees = new ArrayList<>();
         //mapOfResponses = new TreeMap<>();
         accepted = new ArrayList<>();
         declined = new ArrayList<>();

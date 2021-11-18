@@ -406,6 +406,9 @@ public class Database {
 			venues.add(venue);
 			event.venues = venues;
 			events.add(event);
+
+			// test print 
+			System.out.println("Event: " + event.eventName + " " + event.startDateTime);
 		}
 		rs.close();
 		stmt.close();
@@ -414,13 +417,38 @@ public class Database {
 
 	// Returns a list of invitees associated with the proposalId
 	List<User> getInviteesFromProposal(int proposalId) throws Exception {
-		return null;
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM invitees WHERE proposal_id = ?");
+		stmt.setString(1, String.valueOf(proposalId));
+		ResultSet rs = stmt.executeQuery();
+		List<User> invitees = new ArrayList<>();
+		while (rs.next()) {
+			User invitee = new User();
+			invitee.userId = rs.getInt("invitee_id");
+			invitees.add(invitee);
+			// test print
+			System.out.println("Invitee ID: " + invitee.userId);
+		}
+		rs.close();
+		stmt.close();
+		for (User invitee: invitees) {
+			PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM users WHERE user_id = ?");
+			stmt2.setString(1, String.valueOf(invitee.userId));
+			ResultSet rs2 = stmt2.executeQuery();
+			invitee.username = rs2.getString("username");
+
+			rs2.close();
+			stmt2.close();
+
+			// test print
+			System.out.println("Invitee Username: " + invitee.username);
+		}
+		return invitees;
 	}
 
 	// Returns a list of all draft proposals that belongs to the user
 	public List<Proposal> getAllDraftProposals(int userId) throws Exception {
 		List<Proposal> proposals = new ArrayList<>();
-		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM proposals WHERE user_id = ? AND is_draft = 1");
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM proposals WHERE owner_id = ? AND is_draft = 1");
 		stmt.setString(1, String.valueOf(userId));
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
@@ -430,6 +458,10 @@ public class Database {
 			proposal.description = rs.getString("description");
 			proposal.isDraft = rs.getBoolean("is_draft");
 			proposals.add(proposal);
+
+			// test print
+			System.out.println("Proposal ID: " + proposal.proposalId);
+			System.out.println("Proposal Title: " + proposal.title);
 		}
 		rs.close();
 		stmt.close();

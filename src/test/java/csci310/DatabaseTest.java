@@ -624,28 +624,84 @@ public class DatabaseTest {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
-		// Create a proposal first
-		// TODO
 
-		List<Event> events = testDB.getEventsFromProposal(1);
-		assertNotNull(events);
-		assertEquals(0, events.size());
+		// Create a proposal first
+		// add user to database first
+		testDB.register("Test User", "Test Password"); // userId = 1
+		String title = "Remove Invitee from Sent Proposal";
+		String descript = "This is a test description for removing an invitee after sending proposal test!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1"); // userId = 2
+		testDB.register("Invitee 2", "PS2"); // userId = 3
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
+
+		// Send the proposal
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
+		assertEquals(true, sentStatus);
+
+		List<Event> result = testDB.getEventsFromProposal(1);
+		assertNotNull(result);
+		assertEquals(2, result.size());
+
+		assertEquals(result.get(0).eventName, "Birthday");
+		assertEquals(result.get(0).url, "TestURL");
+		assertEquals(result.get(0).startDateTime, "TestStartDate");
+
+		assertEquals(result.get(1).eventName, "BTS Concert");
+		assertEquals(result.get(1).url, "TestURL");
+		assertEquals(result.get(1).startDateTime, "TestStartDate");
 
 		testDB.dropAllTables();
 		testDB.close();
 	}
 
 	@Test
-	public void testGetInviteesFromProposal(int proposalId) throws Exception {
+	public void testGetInviteesFromProposal() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 		// Create a proposal first
-		// TODO
+		// add user to database first
+		testDB.register("Test User", "Test Password"); // userId = 1
+		String title = "Remove Invitee from Sent Proposal";
+		String descript = "This is a test description for removing an invitee after sending proposal test!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1"); // userId = 2
+		testDB.register("Invitee 2", "PS2"); // userId = 3
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
 
-		List<User> invitees = testDB.getInviteesFromProposal(1);
-		assertNotNull(invitees);
-		assertEquals(0, invitees.size());
+		// Send the proposal
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
+		assertEquals(true, sentStatus);
+
+		List<User> result = testDB.getInviteesFromProposal(1);
+		assertNotNull(result);
+		assertEquals(2, result.size());
+
+		assertEquals(result.get(0).username, "invitee 1");
+		assertEquals(result.get(1).username, "invitee 2");
 
 		testDB.dropAllTables();
 		testDB.close();
@@ -657,15 +713,30 @@ public class DatabaseTest {
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 
-		testDB.register("user1", "ps1");
-		testDB.register("user2", "ps2");
-		testDB.register("user3", "ps3");
-
-		// TODO 
+		// Create a proposal first
+		// add user to database first
+		testDB.register("Test User", "Test Password"); // userId = 1
+		String title = "Remove Invitee from Sent Proposal";
+		String descript = "This is a test description for removing an invitee after sending proposal test!";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1"); // userId = 2
+		testDB.register("Invitee 2", "PS2"); // userId = 3
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
 
 		List<Proposal> result = testDB.getAllDraftProposals(1);
 		assertNotNull(result);
-		assertEquals(0, result.size());
+		assertEquals(1, result.size());
 
 		testDB.dropAllTables();
 		testDB.close();
