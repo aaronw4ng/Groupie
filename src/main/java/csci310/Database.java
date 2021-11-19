@@ -172,7 +172,7 @@ public class Database {
 	public int queryProposalID(String owner, String title) throws Exception {
 		int userID = queryUserID(owner);
 		PreparedStatement stmt = connection.prepareStatement("SELECT proposal_id FROM proposals WHERE owner_id = ? AND title = ?");
-		stmt.setString(1, String.valueOf(userID));
+		stmt.setInt(1, userID);
 		stmt.setString(2, title);
 		ResultSet rs = stmt.executeQuery();
 		if (rs.next()){
@@ -211,7 +211,7 @@ public class Database {
 		String query = "INSERT INTO proposals (owner_id, is_draft, title, description) VALUES(?,?,?,?)";
 		PreparedStatement pst;
 		pst = connection.prepareStatement(query);
-		pst.setString(1, String.valueOf(userID));
+		pst.setInt(1, userID);
 		pst.setString(2, "1"); // default value for is_draft is true
 		pst.setString(3, title);
 		pst.setString(4, descript);
@@ -239,7 +239,7 @@ public class Database {
 		for (Event e: events) {
 			String query = "INSERT INTO events (proposal_id, event_name, event_link, start_date_time, venue_name, venue_address, venue_city, venue_state, venue_country) VALUES (?,?,?,?,?,?,?,?,?)";
 			PreparedStatement pst = connection.prepareStatement(query);
-			pst.setString(1, String.valueOf(proposalId));
+			pst.setInt(1, proposalId);
 			pst.setString(2, e.getEventName());
 			pst.setString(3, e.getUrl());
 			pst.setString(4, e.getStartDateTime());
@@ -270,8 +270,8 @@ public class Database {
 			int inviteeID = queryUserID(invitee);
 			String insert = "INSERT INTO invitees (proposal_id, invitee_id) VALUES(?,?)";
 			PreparedStatement pst2 = connection.prepareStatement(insert);
-			pst2.setString(1, String.valueOf(proposalId));
-			pst2.setString(2, String.valueOf(inviteeID));
+			pst2.setInt(1, proposalId);
+			pst2.setInt(2, inviteeID);
 			pst2.executeUpdate();
 			System.out.println("Adding invitee: " + invitee + " for Proposal Id: " + proposalId);
 			pst2.close();
@@ -285,7 +285,7 @@ public class Database {
 	public Boolean sendProposal(int proposalId) throws Exception {
 		// update is draft attribute to false
 		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = 0 where proposal_id = ?");
-		stmt1.setString(1, String.valueOf(proposalId));
+		stmt1.setInt(1, proposalId);;
 		int rowsAffected = stmt1.executeUpdate();
 		stmt1.close();
 		// should only affect one row; otherwise, did not successfully send proposal
@@ -294,7 +294,7 @@ public class Database {
 		}
 		// Get all the events associated with this proposal
 		PreparedStatement stmt2 = connection.prepareStatement("SELECT event_id FROM events WHERE proposal_id = ?");
-		stmt2.setString(1, String.valueOf(proposalId));
+		stmt2.setInt(1, proposalId);;
 		ResultSet eventsRS = stmt2.executeQuery();
 		List<Integer> eventIDs = new ArrayList<>();
 		// Get list of event ids
@@ -305,7 +305,7 @@ public class Database {
 		stmt2.close();
 		// Get all invitees associated with this proposal
 		PreparedStatement stmt3 = connection.prepareStatement("SELECT invitee_id FROM invitees WHERE proposal_id = ?");
-		stmt3.setString(1, String.valueOf(proposalId));
+		stmt3.setInt(1, proposalId);
 		ResultSet inviteesRS = stmt3.executeQuery();
 		// Get list of invitee ids
 		List<Integer> inviteesIDs = new ArrayList<>();
@@ -319,9 +319,9 @@ public class Database {
 		for (int event: eventIDs) {
 			for (int invitee: inviteesIDs) {
 				PreparedStatement stmt4 = connection.prepareStatement("INSERT INTO responses (proposal_id, event_id, user_id) VALUES(?, ?,?)");
-				stmt4.setString(1, String.valueOf(proposalId));
-				stmt4.setString(2, String.valueOf(event));
-				stmt4.setString(3, String.valueOf(invitee));
+				stmt4.setInt(1, proposalId);
+				stmt4.setInt(2, event);
+				stmt4.setInt(3, invitee);
 				stmt4.executeUpdate();
 				stmt4.close();
 				System.out.println("Initialize response for event " + event + " for invitee " + invitee);
@@ -334,7 +334,7 @@ public class Database {
 	// Returns the status of proposal being a draft or not
 	public Boolean isDraft(int proposalId) throws Exception {
 		PreparedStatement stmt = connection.prepareStatement("SELECT is_draft FROM proposals where proposal_id = ?");
-		stmt.setString(1, String.valueOf(proposalId));
+		stmt.setInt(1, proposalId);
 		ResultSet rs = stmt.executeQuery();
 		if (rs.next()){
 			Boolean isDraft = rs.getBoolean("is_draft");
@@ -357,22 +357,22 @@ public class Database {
 		System.out.println("Deleting proposal: " + proposalId);
 		// Delete invitees
 		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ?");
-		inviteesStmt.setString(1, String.valueOf(proposalId));
+		inviteesStmt.setInt(1, proposalId);
 		inviteesStmt.executeUpdate();
 
 		// Delete events
 		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ?");
-		eventsStmt.setString(1, String.valueOf(proposalId));
+		eventsStmt.setInt(1, proposalId);
 		eventsStmt.executeUpdate();
 
 		// Delete responses if not draft; note that this is ok to do even if no responses for proposal exists
 		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ?");
-		responsesStmt.setString(1, String.valueOf(proposalId));
+		responsesStmt.setInt(1, proposalId);
 		responsesStmt.executeUpdate();
 
 		// Delete proposals
 		PreparedStatement proposalsStmt = connection.prepareStatement("DELETE FROM proposals WHERE proposal_id = ?");
-		proposalsStmt.setString(1, String.valueOf(proposalId));
+		proposalsStmt.setInt(1, proposalId);
 		int rowsAffected = proposalsStmt.executeUpdate();
 		// Check that one proposal was deleted from the database
 		if (rowsAffected == 1) {
@@ -614,8 +614,8 @@ public class Database {
 		System.out.println("Trying to remove " + userId + " from proposal id " + proposalId);
 		// Remove user ID from invitee list
 		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ? AND invitee_id = ?");
-		inviteesStmt.setString(1, String.valueOf(proposalId));
-		inviteesStmt.setString(2, String.valueOf(userId));
+		inviteesStmt.setInt(1, proposalId);
+		inviteesStmt.setInt(2, userId);
 		int inviteesRowsAffected = inviteesStmt.executeUpdate();
 		System.out.println("Rows affected from removing invitee from invitees: " + inviteesRowsAffected);
 		// Check that only one invitee was deleted from the database
@@ -625,8 +625,10 @@ public class Database {
 
 		// Remove user responses that correspond to that proposal ID and user ID
 		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND user_id = ?");
-		inviteesStmt.setString(1, String.valueOf(proposalId));
-		inviteesStmt.setString(2, String.valueOf(userId));
+		responsesStmt.setInt(1, proposalId);
+		responsesStmt.setInt(2, userId);
+		int rows = responsesStmt.executeUpdate();
+		System.out.println("Rows affected from removing responses: " + rows);
 
 		return true;
 	}

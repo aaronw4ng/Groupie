@@ -33,6 +33,10 @@
     <servlet-name>SaveDraftProposalServlet</servlet-name>
     <servlet-class>csci310.servlets.SaveDraftProposalServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.RemoveInviteeFromSentProposalServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -60,6 +64,10 @@
   <servlet-mapping>
     <servlet-name>SaveDraftProposalServlet</servlet-name>
     <url-pattern>/saveDraftProposal</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
+    <url-pattern>/removeInviteeFromSentProposal</url-pattern>
   </servlet-mapping>
 
 </web-app>
