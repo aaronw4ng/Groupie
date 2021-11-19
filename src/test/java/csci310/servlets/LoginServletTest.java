@@ -81,7 +81,7 @@ public class LoginServletTest {
         loginServlet.init(config);
         loginServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals("true", result);
+        assertEquals("1", result);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class LoginServletTest {
         loginServlet.init(config);
         loginServlet.doPost(request, response);
         String result = sw.getBuffer().toString();
-        assertEquals("false", result);
+        assertEquals("-1", result);
     }
 
     @Test

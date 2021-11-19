@@ -2,6 +2,9 @@
 
 <web-app>
   <display-name>Project2</display-name>
+  <listener>
+    <listener-class>csci310.AppServletContextListener</listener-class>
+  </listener>
   <servlet>
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>csci310.servlets.LoginServlet</servlet-class>
@@ -13,6 +16,26 @@
   <servlet>
     <servlet-name>SearchEventsServlet</servlet-name>
     <servlet-class>csci310.servlets.SearchEventsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>CreateProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.CreateProposalServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DeleteProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.DeleteProposalServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetAllUsersServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetAllUsersServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SaveDraftProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.SaveDraftProposalServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.RemoveInviteeFromSentProposalServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
@@ -26,7 +49,25 @@
     <servlet-name>SearchEventsServlet</servlet-name>
     <url-pattern>/searchEvents</url-pattern>
   </servlet-mapping>
-  <listener>
-    <listener-class>csci310.AppServletContextListener</listener-class>
-  </listener>
+  <servlet-mapping>
+    <servlet-name>CreateProposalServlet</servlet-name>
+    <url-pattern>/createProposal</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DeleteProposalServlet</servlet-name>
+    <url-pattern>/deleteProposal</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetAllUsersServlet</servlet-name>
+    <url-pattern>/GetAllUsersServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SaveDraftProposalServlet</servlet-name>
+    <url-pattern>/saveDraftProposal</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
+    <url-pattern>/removeInviteeFromSentProposal</url-pattern>
+  </servlet-mapping>
+
 </web-app>

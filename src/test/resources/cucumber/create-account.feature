@@ -1,7 +1,7 @@
 Feature: Create Account page
 Scenario: Create new user
     Given user is on the Create User page
-    When user inputs random username in username
+    When user inputs in username
     And user inputs "password1" in password
     And user re-types "password1"
     And user clicks "btn-create-account" button
@@ -19,7 +19,7 @@ Scenario: Attempted account creation with empty fields
 
 Scenario: Attempted account creation with taken username
     Given user is on the Create User page
-    When user inputs "username1" in username
+    When user inputs in username
     And user inputs "password1" in password
     And user re-types "password1"
     And user clicks "btn-create-account" button
@@ -27,14 +27,14 @@ Scenario: Attempted account creation with taken username
 
 Scenario: Attempted account creation with empty password confirmation field
     Given user is on the Create User page
-    When user inputs "username1" in username
+    When user inputs in username
     And user inputs "password1" in password
     And user clicks "btn-create-account" button
     Then user should be shown "empty-confirm-password" error message
 
 Scenario: Attempted account creation with mismatched password fields
     Given user is on the Create User page
-    When user inputs "username1" in username
+    When user inputs in username
     And user inputs "password1" in password
     And user re-types "password2"
     And user clicks "btn-create-account" button
@@ -42,7 +42,7 @@ Scenario: Attempted account creation with mismatched password fields
 
 Scenario: Attempted account creation with invalid password
     Given user is on the Create User page
-    When user inputs "username1" in username
+    When user inputs in username
     And user inputs "a" in password
     And user re-types "a"
     And user clicks "btn-create-account" button

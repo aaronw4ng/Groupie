@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Group Date Planner</title>
+  <title>groupie | search</title>
   <link rel="stylesheet" href="../styles/index.css" />
   <link rel="stylesheet" href="../styles/events.css" />
   <script src="https://kit.fontawesome.com/d4a13a138b.js" crossorigin="anonymous"></script>
@@ -33,13 +33,13 @@
 
             <div id="start-date">
               <label for="start" id="datelabel">start date</label>
-              <input type="date" id="start" name="date-start" value="2021-11-03" min="2021-11-03" max="2100-11-03" />
+              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03" />
             </div>
           </div>
           <div class="search-item">
             <div id="end-date">
               <label for="end" id="datelabel">end date</label>
-              <input type="date" id="end" name="date-end" value="2021-11-03" min="2021-11-03" max="2100-11-03" />
+              <input type="date" id="end" name="date-end" value="" min="2021-11-03" max="2100-11-03" />
             </div>
           </div>
 
@@ -56,10 +56,17 @@
           <div class="search-item">
             <p class="search-input-label">genre</p>
             <select class="search-input" id="event-genre-input">
-              <option value="">Genres</option>
-              <option value="">Blah</option>
-              <option value="">Blah</option>
-              <option value="">Blah</option>
+              <option selected disabled value="">Genres</option>
+              <option value="Pop">Pop</option>
+              <option value="Jazz">Jazz</option>
+              <option value="Classical">Classical</option>
+              <option value="Rock">Rock</option>
+              <option value="Soccer">Soccer</option>
+              <option value="Football">Football</option>
+              <option value="Basketball">Basketball</option>
+              <option value="Theatre">Theatre</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Magic & Illusion">Magic & Illusion</option>
             </select>
           </div>
         </div>
@@ -82,5 +89,5 @@
   </div>
   <script src="../scripts/event-search.js"></script>
 </body>
-
+  <jsp:include page="autologout.jsp"></jsp:include>
 </html>
