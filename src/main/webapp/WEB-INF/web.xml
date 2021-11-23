@@ -37,6 +37,14 @@
     <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
     <servlet-class>csci310.servlets.RemoveInviteeFromSentProposalServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GetAllDraftProposalsServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetAllDraftProposalsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetAllNonDraftProposalsServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetAllNonDraftProposalsServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -69,5 +77,12 @@
     <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
     <url-pattern>/removeInviteeFromSentProposal</url-pattern>
   </servlet-mapping>
-
+  <servlet-mapping>
+    <servlet-name>GetAllDraftProposalsServlet</servlet-name>
+    <url-pattern>/getAllDraftProposals</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetAllNonDraftProposalsServlet</servlet-name>
+    <url-pattern>/getAllNonDraftProposals</url-pattern>
+  </servlet-mapping>
 </web-app>
