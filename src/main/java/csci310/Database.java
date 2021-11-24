@@ -588,8 +588,11 @@ public class Database {
 		List<Integer> expired = new ArrayList<Integer>();
 		while (rs.next()) {
 			String until = rs.getString("until");
-			// if until is not null, check if current time is after until
-			if (new Date(System.currentTimeMillis()).after(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").parse(until))) {
+			// check if until is INDEFINITE
+			if (until.equals("INDEFINITE")) {
+				continue;
+			} // then check if until has been reached
+			else if (new Date(System.currentTimeMillis()).after(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").parse(until))) {
 				// if current time is after until, add user to expired availability list
 				expired.add(rs.getInt("user_id"));
 			}

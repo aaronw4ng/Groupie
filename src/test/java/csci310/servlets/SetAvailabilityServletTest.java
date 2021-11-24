@@ -2,6 +2,7 @@ package csci310.servlets;
 
 import csci310.AppServletContextListener;
 import csci310.Database;
+import csci310.UserAvailability;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -21,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SetAvailabilityServletTest {
@@ -69,6 +71,84 @@ public class SetAvailabilityServletTest {
         testDB.register("user2", "ps2");
         testDB.register("user3", "ps3");
 
-        fail();
+        List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
+
+        // user1 sets unavailable for 1 hour
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.doReturn("1").when(request).getParameter("userId");
+        Mockito.doReturn("false").when(request).getParameter("availability");
+        Mockito.doReturn("1").when(request).getParameter("hours");
+        SetAvailabilityServlet servlet = new SetAvailabilityServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
+        String result = sw.getBuffer().toString();
+        assertTrue(result.contains("true"));
+        
+        // user1 sets available again
+        request = Mockito.mock(HttpServletRequest.class);
+        response = Mockito.mock(HttpServletResponse.class);
+        sw = new StringWriter();
+        pw = new PrintWriter(sw);
+        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.doReturn("1").when(request).getParameter("userId");
+        Mockito.doReturn("true").when(request).getParameter("availability");
+        Mockito.doReturn("").when(request).getParameter("hours");
+        servlet = new SetAvailabilityServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(true, availabilities.get(0).isAvailable);
+        assertEquals(true, availabilities.get(1).isAvailable);
+        result = sw.getBuffer().toString();
+        assertTrue(result.contains("true"));
+
+        // user2 sets unavailable indefinitely
+        request = Mockito.mock(HttpServletRequest.class);
+        response = Mockito.mock(HttpServletResponse.class);
+        sw = new StringWriter();
+        pw = new PrintWriter(sw);
+        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.doReturn("2").when(request).getParameter("userId");
+        Mockito.doReturn("false").when(request).getParameter("availability");
+        Mockito.doReturn("-1").when(request).getParameter("hours");
+        servlet = new SetAvailabilityServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(true, availabilities.get(0).isAvailable);
+        assertEquals(false, availabilities.get(1).isAvailable);
+        result = sw.getBuffer().toString();
+        assertTrue(result.contains("true"));
+
+        // try to set availability for non-existing user
+        request = Mockito.mock(HttpServletRequest.class);
+        response = Mockito.mock(HttpServletResponse.class);
+        sw = new StringWriter();
+        pw = new PrintWriter(sw);
+        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.doReturn("999").when(request).getParameter("userId");
+        Mockito.doReturn("true").when(request).getParameter("availability");
+        Mockito.doReturn("").when(request).getParameter("hours");
+        servlet = new SetAvailabilityServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        result = sw.getBuffer().toString();
+        assertTrue(result.contains("false"));
+
+        // close database for coverage
+        testDB.close();
+        try{
+            servlet.doPost(request, response);
+            fail("Should have thown an exception");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Failed"));
+        }
     }
 }
