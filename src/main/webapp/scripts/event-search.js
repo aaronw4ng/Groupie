@@ -88,7 +88,7 @@ function handleSubmit(event) {
                             </div>
                             <hr>
                         </div>
-                        <button class="btn-add-result-${i}" id="btn-add-result-id-${i}" onclick="handleResultSelection(${i})">add event</button>
+                        <button class="btn-add-result" id="btn-add-result-id-${i}" onclick="handleResultSelection(${i})">add event</button>
                     </div>
                     `;
                     resultsContainer.innerHTML += resultCardString
