@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import io.cucumber.java.eo.Se;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -17,6 +18,7 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
@@ -200,7 +202,8 @@ public class StepDefinitions {
 	@When("user selects {string} in genre")
 	public void user_selects_in_genre(String string) {
 		// Write code here that turns the phrase above into concrete actions
-
+		Select genre = new Select(driver.findElement(By.id("event-genre-input")));
+		genre.selectByValue(string);
 	}
 
 	@Then("user should see {string}")
