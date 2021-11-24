@@ -539,13 +539,25 @@ public class Database {
 
 	// block or unblock blocked_user_id by user_id
 	public Boolean setBlockUser(boolean block, int userId, int blockedUserId) throws Exception {
-		PreparedStatement stmt = block ? connection.prepareStatement("INSERT INTO blocklist (user_id, blocked_user_id) VALUES (?, ?)") :
-				connection.prepareStatement("DELETE FROM blocklist WHERE user_id = ? AND blocked_user_id = ?");
-		stmt.setInt(1, userId);
-		stmt.setInt(2, blockedUserId);
-		int rowsAffected = stmt.executeUpdate();
-		stmt.close();
-		return rowsAffected == 1;
+		try{
+			PreparedStatement stmt = block ? connection.prepareStatement("INSERT INTO blocklist (user_id, blocked_user_id) VALUES (?, ?)") :
+					connection.prepareStatement("DELETE FROM blocklist WHERE user_id = ? AND blocked_user_id = ?");
+			stmt.setInt(1, userId);
+			stmt.setInt(2, blockedUserId);
+			int rowsAffected = stmt.executeUpdate();
+			stmt.close();
+			System.out.println("Set Block Status: " + userId + " - " + blockedUserId + " block:" + block);
+			return rowsAffected == 1;
+		}
+		catch (Exception e){
+			// update failed, potentially due to duplicate entry
+			if (e.getMessage().contains("constraint")){
+				return false;
+			}
+			else{
+				throw e;
+			}
+		}
 	}
 
 	// all user/availibility related functions
@@ -612,11 +624,12 @@ public class Database {
 			boolean isAvailable = rs.getBoolean("availability");
 			UserAvailability u = new UserAvailability(userName, userId, isAvailable);
 			users.add(u);
-			System.out.println(userId + " " + userName + " " + isAvailable + " ");
+			// System.out.println(userId + " " + userName + " " + isAvailable + " ");
 		}
 		rs.close();
 		stmt.close();
 		// set whoever blocked me as unavailable
+		System.out.println("Showing UserList based on UserID " + myId);
 		for (UserAvailability u:users) {
 			PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM blocklist WHERE user_id = ? AND blocked_user_id = ?");
 			stmt2.setInt(1, u.userId);
@@ -627,6 +640,9 @@ public class Database {
 			}
 			rs2.close();
 			stmt2.close();
+
+			// test print
+			System.out.println("Availability: " + u.userId + " - " + u.isAvailable);
 		}
 		return users;
   }

@@ -2,10 +2,12 @@ package csci310.servlets;
 
 import csci310.AppServletContextListener;
 import csci310.Database;
+import csci310.UserAvailability;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,6 +23,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BlockUserServletTest {
@@ -69,6 +72,48 @@ public class BlockUserServletTest {
         testDB.register("user2", "ps2");
         testDB.register("user3", "ps3");
 
-        fail();
+        List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
+
+        // user1 block user3
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        Mockito.doReturn("1").when(request).getParameter("userId");
+        Mockito.doReturn("3").when(request).getParameter("blockedUserId");
+        Mockito.doReturn(pw).when(response).getWriter();
+        BlockUserServlet servlet = new BlockUserServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
+        String result = sw.getBuffer().toString();
+        assertTrue(result.contains("true"));
+
+        // try the same block again, which shouldn't change anything
+        sw = new StringWriter();
+        pw = new PrintWriter(sw);
+        Mockito.doReturn("1").when(request).getParameter("userId");
+        Mockito.doReturn("3").when(request).getParameter("blockedUserId");
+        Mockito.doReturn(pw).when(response).getWriter();
+        servlet = new BlockUserServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(false, availabilities.get(0).isAvailable);
+        assertEquals(true, availabilities.get(1).isAvailable);
+        result = sw.getBuffer().toString();
+        assertTrue(result.contains("false"));
+
+        // close database for coverage
+        testDB.close();
+        try{
+            servlet.doPost(request, response);
+            fail("Should have thown an exception");
+        }
+        catch(Exception e){
+            assertTrue(e.getMessage().contains("Failed"));
+        }
     }
 }

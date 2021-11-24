@@ -817,28 +817,38 @@ public class DatabaseTest {
 		assertEquals(true, availabilities.get(0).isAvailable);
 		assertEquals(true, availabilities.get(1).isAvailable);
 
-		testDB.setBlockUser(true, 1, 3);
+		assertTrue(testDB.setBlockUser(true, 1, 3));
 		availabilities = testDB.getAllUsers(3);
 		assertEquals(false, availabilities.get(0).isAvailable);
 		assertEquals(true, availabilities.get(1).isAvailable);
 
-		testDB.setBlockUser(true, 2, 3);
+		assertTrue(testDB.setBlockUser(true, 2, 3));
 		availabilities = testDB.getAllUsers(3);
 		assertEquals(false, availabilities.get(0).isAvailable);
 		assertEquals(false, availabilities.get(1).isAvailable);
 
-		testDB.setBlockUser(false, 1, 3);
+		assertFalse(testDB.setBlockUser(true, 2, 3));
+
+		assertTrue(testDB.setBlockUser(false, 1, 3));
 		availabilities = testDB.getAllUsers(3);
 		assertEquals(true, availabilities.get(0).isAvailable);
 		assertEquals(false, availabilities.get(1).isAvailable);
 
-		testDB.setBlockUser(false, 2, 3);
+		assertTrue(testDB.setBlockUser(false, 2, 3));
 		availabilities = testDB.getAllUsers(3);
 		assertEquals(true, availabilities.get(0).isAvailable);
 		assertEquals(true, availabilities.get(1).isAvailable);
 
 		testDB.dropAllTables();
 		testDB.close();
+
+		try{
+			testDB.setBlockUser(true, 1, 3);
+			fail();
+		} catch (Exception e) {
+			// System.out.println(e.getMessage());
+			assertTrue(e.getMessage().contains("connection closed"));
+		}
 	}
 
 	@Test
