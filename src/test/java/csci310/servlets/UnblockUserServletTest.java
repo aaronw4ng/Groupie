@@ -2,6 +2,7 @@ package csci310.servlets;
 
 import csci310.AppServletContextListener;
 import csci310.Database;
+import csci310.UserAvailability;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -21,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class UnblockUserServletTest {
@@ -69,6 +71,54 @@ public class UnblockUserServletTest {
         testDB.register("user2", "ps2");
         testDB.register("user3", "ps3");
 
-        fail();
+        List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
+
+        assertTrue(testDB.setBlockUser(true, 1, 3));
+        assertTrue(testDB.setBlockUser(true, 2, 3));
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(false, availabilities.get(1).isAvailable);
+
+        // user1 unblocks user3
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.doReturn("1").when(request).getParameter("userId");
+        Mockito.doReturn("3").when(request).getParameter("blockedUserId");
+        UnblockUserServlet servlet = new UnblockUserServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(true, availabilities.get(0).isAvailable);
+        assertEquals(false, availabilities.get(1).isAvailable);
+        String result = sw.getBuffer().toString();
+        assertTrue(result.contains("true"));
+
+        // try the same unblock again, which shouldn't change anything
+        sw = new StringWriter();
+        pw = new PrintWriter(sw);
+        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.doReturn("1").when(request).getParameter("userId");
+        Mockito.doReturn("3").when(request).getParameter("blockedUserId");
+        servlet = new UnblockUserServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        availabilities = testDB.getAllUsers(3);
+        assertEquals(true, availabilities.get(0).isAvailable);
+        assertEquals(false, availabilities.get(1).isAvailable);
+        result = sw.getBuffer().toString();
+        assertTrue(result.contains("false"));
+        
+        // close database for coverage
+        testDB.close();
+        try{
+            servlet.doPost(request, response);
+            fail("Should have thrown an exception");
+        }
+        catch(Exception e){
+            assertTrue(e.getMessage().contains("Failed"));
+        }
     }
 }
