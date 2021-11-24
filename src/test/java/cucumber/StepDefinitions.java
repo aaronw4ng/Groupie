@@ -169,32 +169,32 @@ public class StepDefinitions {
 	// *** SEARCH EVENTS ***
 	@When("user inputs {string} in event search")
 	public void user_inputs_in_event_search(String string) {
-		// Write code here that turns the phrase above into concrete actions
-
+		WebElement queryBox = driver.findElement(By.id("event-search-input"));
+		queryBox.sendKeys(string);
 	}
 
 	@When("user selects {string} in start date")
 	public void user_selects_in_start_date(String string) {
-		// Write code here that turns the phrase above into concrete actions
-
+		WebElement queryBox = driver.findElement(By.id("start"));
+		queryBox.sendKeys(string);
 	}
 
 	@When("user selects {string} in end date")
 	public void user_selects_in_end_date(String string) {
-		// Write code here that turns the phrase above into concrete actions
-
+		WebElement queryBox = driver.findElement(By.id("end"));
+		queryBox.sendKeys(string);
 	}
 
 	@When("user inputs {string} in city")
 	public void user_inputs_in_city(String string) {
-		// Write code here that turns the phrase above into concrete actions
-
+		WebElement queryBox = driver.findElement(By.id("event-city-input"));
+		queryBox.sendKeys(string);
 	}
 
 	@When("user inputs {string} in zipcode")
 	public void user_inputs_in_zipcode(String string) {
-		// Write code here that turns the phrase above into concrete actions
-
+		WebElement queryBox = driver.findElement(By.id("event-zip-input"));
+		queryBox.sendKeys(string);
 	}
 
 	@When("user selects {string} in genre")
@@ -203,21 +203,32 @@ public class StepDefinitions {
 
 	}
 
-	@Then("user should see {string} event results")
+	@Then("user should see {string}")
 	public void user_should_see_event_results(String string) {
 		// Write code here that turns the phrase above into concrete actions
+		String result = driver.findElement(By.id("event-search-result-count")).getText();
+		// TODO: finish up assertion
+		//assertTrue(result.getText().equalsIgnoreCase(string));
 
 	}
 
 	@Then("user should see {string} event name")
 	public void user_should_see_event_name(String string) {
-		// Write code here that turns the phrase above into concrete actions
+		// buffer time for event search to give back results
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		String result = driver.findElement(By.id("result-title-id-0")).getText();
+		assertTrue(result.equalsIgnoreCase(string));
 
 	}
 
 	@Then("user should see events after {string}")
 	public void user_should_see_events_after(String string) {
 		// Write code here that turns the phrase above into concrete actions
+
 
 	}
 
