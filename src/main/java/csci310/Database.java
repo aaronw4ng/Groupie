@@ -673,4 +673,28 @@ public class Database {
 
 		return true;
 	}
+
+	// Removes an event from a sent proposal
+	public Boolean removeEventFromSentProposal(int proposalId, int eventId) throws Exception {
+		System.out.println("Trying to remove event " + eventId + " from proposal id " + proposalId);
+		// Remove all responses related to event ID
+		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND event_id = ?");
+		responsesStmt.setInt(1, proposalId);
+		responsesStmt.setInt(2, eventId);
+		int rows = responsesStmt.executeUpdate();
+		System.out.println("Rows affected from removing responses: " + rows);
+
+		// Remove event ID from events list
+		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ? AND event_id = ?");
+		eventsStmt.setInt(1, proposalId);
+		eventsStmt.setInt(2, eventId);
+		int eventsRowsAffected = eventsStmt.executeUpdate();
+		System.out.println("Rows affected from removing event from events: " + eventsRowsAffected);
+		// Check that only one event was deleted from the database
+		if (eventsRowsAffected != 1) {
+			return false;
+		}
+
+		return true;
+	}
 }
