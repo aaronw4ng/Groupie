@@ -819,8 +819,8 @@ public class DatabaseTest {
 
 		testDB.setBlockUser(true, 1, 3);
 		availabilities = testDB.getAllUsers(3);
-		assertEquals(true, availabilities.get(0).isAvailable);
-		assertEquals(false, availabilities.get(1).isAvailable);
+		assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
 
 		testDB.setBlockUser(true, 2, 3);
 		availabilities = testDB.getAllUsers(3);
@@ -831,6 +831,11 @@ public class DatabaseTest {
 		availabilities = testDB.getAllUsers(3);
 		assertEquals(true, availabilities.get(0).isAvailable);
 		assertEquals(false, availabilities.get(1).isAvailable);
+
+		testDB.setBlockUser(false, 2, 3);
+		availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
 
 		testDB.dropAllTables();
 		testDB.close();

@@ -539,7 +539,13 @@ public class Database {
 
 	// block or unblock blocked_user_id by user_id
 	public Boolean setBlockUser(boolean block, int userId, int blockedUserId) throws Exception {
-		return false;
+		PreparedStatement stmt = block ? connection.prepareStatement("INSERT INTO blocklist (user_id, blocked_user_id) VALUES (?, ?)") :
+				connection.prepareStatement("DELETE FROM blocklist WHERE user_id = ? AND blocked_user_id = ?");
+		stmt.setInt(1, userId);
+		stmt.setInt(2, blockedUserId);
+		int rowsAffected = stmt.executeUpdate();
+		stmt.close();
+		return rowsAffected == 1;
 	}
 
 	// all user/availibility related functions
@@ -610,7 +616,18 @@ public class Database {
 		}
 		rs.close();
 		stmt.close();
-		// TODO: set whoever blocked me as unavailable
+		// set whoever blocked me as unavailable
+		for (UserAvailability u:users) {
+			PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM blocklist WHERE user_id = ? AND blocked_user_id = ?");
+			stmt2.setInt(1, u.userId);
+			stmt2.setInt(2, myId);
+			ResultSet rs2 = stmt2.executeQuery();
+			if (rs2.next()) {
+				u.isAvailable = false;
+			}
+			rs2.close();
+			stmt2.close();
+		}
 		return users;
   }
   
