@@ -234,7 +234,6 @@ public class StepDefinitions {
 
 	@Then("user should see events after {string}")
 	public void user_should_see_events_after(String string) {
-		// Write code here that turns the phrase above into concrete actions
 		// buffer time for event search to give back results
 		try {
 			Thread.sleep(3000);
@@ -266,7 +265,6 @@ public class StepDefinitions {
 
 	@Then("user should see events before {string}")
 	public void user_should_see_events_before(String string) {
-		// Write code here that turns the phrase above into concrete actions
 		// buffer time for event search to give back results
 		try {
 			Thread.sleep(3000);
@@ -294,7 +292,6 @@ public class StepDefinitions {
 		catch (Exception e) {
 			System.out.println(e);
 		}
-
 	}
 
 	@Then("user should see events located in city {string}")
