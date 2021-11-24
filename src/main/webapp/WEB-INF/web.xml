@@ -45,6 +45,18 @@
     <servlet-name>GetAllNonDraftProposalsServlet</servlet-name>
     <servlet-class>csci310.servlets.GetAllNonDraftProposalsServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>BlockUserServlet</servlet-name>
+    <servlet-class>csci310.servlets.BlockUserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SetAvailabilityServlet</servlet-name>
+    <servlet-class>csci310.servlets.SetAvailabilityServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UnblockUserServlet</servlet-name>
+    <servlet-class>csci310.servlets.UnblockUserServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -85,4 +97,17 @@
     <servlet-name>GetAllNonDraftProposalsServlet</servlet-name>
     <url-pattern>/getAllNonDraftProposals</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BlockUserServlet</servlet-name>
+    <url-pattern>/blockUser</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SetAvailabilityServlet</servlet-name>
+    <url-pattern>/setAvailability</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UnblockUserServlet</servlet-name>
+    <url-pattern>/unblockUser</url-pattern>
+  </servlet-mapping>
+
 </web-app>
