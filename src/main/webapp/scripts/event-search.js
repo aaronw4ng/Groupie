@@ -104,7 +104,7 @@ function formatInputDate(dateInput) {
     if (dateInput != "") {
         let dateArr = dateInput.split("-")
         let yearString = dateArr[0]
-        dateInput = yearString + "-" + startDateArr[1] + "-" + startDateArr[2] + "T00:00:00Z"
+        dateInput = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z"
     }
     return dateInput;
 }

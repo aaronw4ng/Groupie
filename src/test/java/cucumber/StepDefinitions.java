@@ -166,6 +166,85 @@ public class StepDefinitions {
 		assertTrue(alert != null);
 	}
 
+	// *** SEARCH EVENTS ***
+	@When("user inputs {string} in event search")
+	public void user_inputs_in_event_search(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@When("user selects {string} in start date")
+	public void user_selects_in_start_date(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@When("user selects {string} in end date")
+	public void user_selects_in_end_date(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@When("user inputs {string} in city")
+	public void user_inputs_in_city(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@When("user inputs {string} in zipcode")
+	public void user_inputs_in_zipcode(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@When("user selects {string} in genre")
+	public void user_selects_in_genre(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see {string} event results")
+	public void user_should_see_event_results(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see {string} event name")
+	public void user_should_see_event_name(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see events after {string}")
+	public void user_should_see_events_after(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see events before {string}")
+	public void user_should_see_events_before(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see events located in city {string}")
+	public void user_should_see_events_located_in_city(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see events located in zipcode {string}")
+	public void user_should_see_events_located_in_zipcode(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see events related to {string}")
+	public void user_should_see_events_related_to(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
