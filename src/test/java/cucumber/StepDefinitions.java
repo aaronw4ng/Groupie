@@ -26,6 +26,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Step definitions for Cucumber tests.
  */
@@ -231,13 +235,65 @@ public class StepDefinitions {
 	@Then("user should see events after {string}")
 	public void user_should_see_events_after(String string) {
 		// Write code here that turns the phrase above into concrete actions
+		// buffer time for event search to give back results
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
+		// parse the date into correct format
+		String[] dateArr = string.split("-");
+		String yearString = dateArr[0];
+		String dateInputString = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z";
+		// Get the date of first event result
+		String eventDateString = driver.findElement(By.id("start-date-id-0")).getText();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		Date startDate;
+		Date eventDate;
 
+		// convert string into dates
+		try{
+			startDate = df.parse(dateInputString);
+			eventDate = df.parse(eventDateString);
+			// make sure event date is after start date
+			assertTrue(eventDate.after(startDate));
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	@Then("user should see events before {string}")
 	public void user_should_see_events_before(String string) {
 		// Write code here that turns the phrase above into concrete actions
+		// buffer time for event search to give back results
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// parse the date into correct format
+		String[] dateArr = string.split("-");
+		String yearString = dateArr[0];
+		String dateInputString = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z";
+		// Get the date of first event result
+		String eventDateString = driver.findElement(By.id("start-date-id-0")).getText();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		Date endDate;
+		Date eventDate;
+
+		// convert string into dates
+		try{
+			endDate = df.parse(dateInputString);
+			eventDate = df.parse(eventDateString);
+			// make sure event date is before end date
+			assertTrue(eventDate.before(endDate));
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
 
 	}
 

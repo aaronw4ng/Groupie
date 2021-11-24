@@ -30,7 +30,7 @@ Scenario: User searches based on start date
   And user clicks "btn-event-find" button
   And user selects "01-01-2022" in start date
   And user clicks "event-search-button" button
-  Then user should see events after "January 1"
+  Then user should see events after "01-01-2022"
 
 Scenario: User searches based on end date
   Given user is on the Login page
@@ -41,7 +41,7 @@ Scenario: User searches based on end date
   And user clicks "btn-event-find" button
   And user selects "01-01-2022" in end date
   And user clicks "event-search-button" button
-  Then user should see events before "January 1"
+  Then user should see events before "01-01-2022"
 
 Scenario: User searches based on city
   Given user is on the Login page
