@@ -537,6 +537,11 @@ public class Database {
 		return proposals;
 	}
 
+	// block or unblock blocked_user_id by user_id
+	public Boolean setBlockUser(boolean block, int userId, int blockedUserId) throws Exception {
+		return false;
+	}
+
 	// all user/availibility related functions
 	// returns if the any changes were made to the database
 	// if setting availability to true, the "until" field doesn't matter

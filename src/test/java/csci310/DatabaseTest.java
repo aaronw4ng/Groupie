@@ -804,6 +804,39 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testSetBlockUser() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(true, availabilities.get(1).isAvailable);
+
+		testDB.setBlockUser(true, 1, 3);
+		availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(false, availabilities.get(1).isAvailable);
+
+		testDB.setBlockUser(true, 2, 3);
+		availabilities = testDB.getAllUsers(3);
+		assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(false, availabilities.get(1).isAvailable);
+
+		testDB.setBlockUser(false, 1, 3);
+		availabilities = testDB.getAllUsers(3);
+		assertEquals(true, availabilities.get(0).isAvailable);
+		assertEquals(false, availabilities.get(1).isAvailable);
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
 	public void testRefreshUsersAvailability() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
