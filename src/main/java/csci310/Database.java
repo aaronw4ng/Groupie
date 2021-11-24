@@ -673,4 +673,9 @@ public class Database {
 
 		return true;
 	}
+
+	// Removes an event from a sent proposal
+	public Boolean removeEventFromSentProposal(int proposalId, int eventId) throws Exception {
+		return true;
+	}
 }
