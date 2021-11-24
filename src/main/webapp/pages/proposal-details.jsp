@@ -50,6 +50,11 @@
       <div class="page-section">
         <h1 class="section-title">users</h1>
         <p class="section-description">see who's in your groupie</p>
+        <div class="users-container">
+          <div class="user-card">
+            <h1>user one</h1>
+          </div>
+        </div>
 
       </div>
   </div>
