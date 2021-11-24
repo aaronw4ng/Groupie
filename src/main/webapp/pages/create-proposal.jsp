@@ -53,8 +53,8 @@
 
       <!-- PROPOSAL BUTTONS -->
       <div class="btn-row">
-        <button onclick="handleCreateProposalClick(event)" id="btn-send-proposal">send proposal</button>
-        <button onclick="handleSaveDraftClick(event)" id="btn-save-draft">save draft</button>
+        <button onclick="handleCreateProposalClick(event)" id="btn-send-proposal" class="principal">send proposal</button>
+        <button onclick="handleSaveDraftClick(event)" id="btn-save-draft" class="principal">save draft</button>
       </div>
     </form>
   </div>

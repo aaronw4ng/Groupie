@@ -1,0 +1,48 @@
+body {
+    min-height: 100vh;
+    position: relative;
+}
+:root {
+    --details-color : #989898;
+    --primary-color : #9762A5;
+}
+#create-proposal-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2.5rem;
+}
+.details-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.btn-back-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+}
+#page-title {
+    color : var(--details-color);
+}
+.btn-back-container > p {
+    font-size: 1.2rem;
+    color : var(--details-color);
+}
+#btn-back {
+    background: none;
+    margin: 0 1rem;
+    padding: 0;
+    width: 10%;
+    font-size: 1.2rem;
+    color : var(--details-color);
+}
+.section-title {
+    margin: 0;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+.section-description {
+    color: var(--primary-color);
+}
