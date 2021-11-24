@@ -29,11 +29,32 @@
       <h1 id="proposal-name">sample name</h1>
 
       <hr>
+      <!-- EVENTS -->
+      <div class="page-section">
+        <h1 class="section-title">events</h1>
+        <p class="section-description">click to view event details</p>
+        <div class="events-container">
+          <div class="event-card">
+            <h1>event one</h1>
+          </div>
+        </div>
+        <div class="events-container">
+          <div class="event-card">
+            <h1>event two</h1>
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      <!-- USERS -->
+      <div class="page-section">
+        <h1 class="section-title">users</h1>
+        <p class="section-description">see who's in your groupie</p>
 
-      <h1 class="section-title">events</h1>
-      <p class="section-description">click to view event details</p>
-
+      </div>
   </div>
+
+  
 
   <div id="footer">
     <p>team 27</p>
