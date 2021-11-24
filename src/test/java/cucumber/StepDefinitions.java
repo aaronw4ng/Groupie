@@ -2,6 +2,7 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -166,8 +167,43 @@ public class StepDefinitions {
 		assertTrue(alert != null);
 	}
 
+	@Then("user inputs {string} in proposal name")
+	public void userInputsInProposalName(String arg0) {
+	}
+
+	@When("user inputs {string} in event search")
+	public void user_inputs_in_event_search(String string) {
+		// Write code here that turns the phrase above into concrete actions
+	//	throw new io.cucumber.java.PendingException();
+	}
+
+	@When("user adds first event result")
+	public void user_adds_first_event_result() {
+		// Write code here that turns the phrase above into concrete actions
+		//throw new io.cucumber.java.PendingException();
+	}
+
+	@When("user inputs {string} in user search")
+	public void user_inputs_in_user_search(String string) {
+		// Write code here that turns the phrase above into concrete actions
+		//throw new io.cucumber.java.PendingException();
+	}
+
+	@When("user adds first user result")
+	public void user_adds_first_user_result() {
+		// Write code here that turns the phrase above into concrete actions
+		//throw new io.cucumber.java.PendingException();
+	}
+
+	@Then("user should have successfully sent proposal")
+	public void user_should_have_successfully_sent_proposal() {
+		// Write code here that turns the phrase above into concrete actions
+		//throw new io.cucumber.java.PendingException();
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
 	}
+
 }
