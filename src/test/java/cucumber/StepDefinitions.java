@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import io.cucumber.java.eo.Se;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -17,12 +18,17 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang.RandomStringUtils;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Step definitions for Cucumber tests.
@@ -164,6 +170,146 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 		assertTrue(alert != null);
+	}
+
+	// *** SEARCH EVENTS ***
+	@When("user inputs {string} in event search")
+	public void user_inputs_in_event_search(String string) {
+		WebElement queryBox = driver.findElement(By.id("event-search-input"));
+		queryBox.sendKeys(string);
+	}
+
+	@When("user selects {string} in start date")
+	public void user_selects_in_start_date(String string) {
+		WebElement queryBox = driver.findElement(By.id("start"));
+		queryBox.sendKeys(string);
+	}
+
+	@When("user selects {string} in end date")
+	public void user_selects_in_end_date(String string) {
+		WebElement queryBox = driver.findElement(By.id("end"));
+		queryBox.sendKeys(string);
+	}
+
+	@When("user inputs {string} in city")
+	public void user_inputs_in_city(String string) {
+		WebElement queryBox = driver.findElement(By.id("event-city-input"));
+		queryBox.sendKeys(string);
+	}
+
+	@When("user inputs {string} in zipcode")
+	public void user_inputs_in_zipcode(String string) {
+		WebElement queryBox = driver.findElement(By.id("event-zip-input"));
+		queryBox.sendKeys(string);
+	}
+
+	@When("user selects {string} in genre")
+	public void user_selects_in_genre(String string) {
+		// Write code here that turns the phrase above into concrete actions
+		Select genre = new Select(driver.findElement(By.id("event-genre-input")));
+		genre.selectByValue(string);
+	}
+
+	@Then("user should see {string}")
+	public void user_should_see_event_results(String string) {
+		// Write code here that turns the phrase above into concrete actions
+		String result = driver.findElement(By.id("event-search-result-count")).getText();
+		// TODO: finish up assertion
+		//assertTrue(result.getText().equalsIgnoreCase(string));
+
+	}
+
+	@Then("user should see {string} event name")
+	public void user_should_see_event_name(String string) {
+		// buffer time for event search to give back results
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		String result = driver.findElement(By.id("result-title-id-0")).getText();
+		assertTrue(result.equalsIgnoreCase(string));
+
+	}
+
+	@Then("user should see events after {string}")
+	public void user_should_see_events_after(String string) {
+		// buffer time for event search to give back results
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// parse the date into correct format
+		String[] dateArr = string.split("-");
+		String yearString = dateArr[0];
+		String dateInputString = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z";
+		// Get the date of first event result
+		String eventDateString = driver.findElement(By.id("start-date-id-0")).getText();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		Date startDate;
+		Date eventDate;
+
+		// convert string into dates
+		try{
+			startDate = df.parse(dateInputString);
+			eventDate = df.parse(eventDateString);
+			// make sure event date is after start date
+			assertTrue(eventDate.after(startDate));
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	@Then("user should see events before {string}")
+	public void user_should_see_events_before(String string) {
+		// buffer time for event search to give back results
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// parse the date into correct format
+		String[] dateArr = string.split("-");
+		String yearString = dateArr[0];
+		String dateInputString = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z";
+		// Get the date of first event result
+		String eventDateString = driver.findElement(By.id("start-date-id-0")).getText();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		Date endDate;
+		Date eventDate;
+
+		// convert string into dates
+		try{
+			endDate = df.parse(dateInputString);
+			eventDate = df.parse(eventDateString);
+			// make sure event date is before end date
+			assertTrue(eventDate.before(endDate));
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	@Then("user should see events located in city {string}")
+	public void user_should_see_events_located_in_city(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see events located in zipcode {string}")
+	public void user_should_see_events_located_in_zipcode(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
+	}
+
+	@Then("user should see events related to {string}")
+	public void user_should_see_events_related_to(String string) {
+		// Write code here that turns the phrase above into concrete actions
+
 	}
 
 	@After()
