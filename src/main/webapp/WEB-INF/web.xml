@@ -57,6 +57,10 @@
     <servlet-name>UnblockUserServlet</servlet-name>
     <servlet-class>csci310.servlets.UnblockUserServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>RemoveEventFromSentProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.RemoveEventFromSentProposalServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -109,5 +113,8 @@
     <servlet-name>UnblockUserServlet</servlet-name>
     <url-pattern>/unblockUser</url-pattern>
   </servlet-mapping>
-
+  <servlet-mapping>
+    <servlet-name>RemoveEventFromSentProposalServlet</servlet-name>
+    <url-pattern>/removeEventFromSentProposalServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
