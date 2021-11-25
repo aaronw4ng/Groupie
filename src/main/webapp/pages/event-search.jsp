@@ -33,7 +33,7 @@
 
             <div id="start-date">
               <label for="start" id="datelabel">start date</label>
-              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03" />
+              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03" onblur="setMaxEndDate(event)"/>
             </div>
           </div>
           <div class="search-item">
