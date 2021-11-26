@@ -70,25 +70,25 @@ function handleSubmit(event) {
                     console.log(json[i].url)
                     let resultCardString = `
                     <div class="event-result-card">
-                        <p class="result-title">${json[i].eventName}</p>
+                        <p class="result-title" id="result-title-id-${i}">${json[i].eventName}</p>
                         <hr>
-                        <p class="event-info-title"><i class="fas fa-info-circle"></i> event info</p>
+                        <p class="event-info-title" id="event-info-title-id-${i}"><i class="fas fa-info-circle"></i> event info</p>
                         <div class="event-info">   
                             <div>
                                 <p class="result-header">start date</p>
-                                <p class="result-date-range">${json[i].startDateTime}</p>
+                                <p class="result-date-range" id="start-date-id-${i}">${json[i].startDateTime}</p>
                             </div>
                             <div>
                                 <p class="result-header">event link</p>
-                                <a class="result-url" href="${json[i].url}" target="_blank">ticketmaster page</a>
+                                <a class="result-url" id="event-link-${i}" href="${json[i].url}" target="_blank">ticketmaster page</a>
                             </div>
                             <div>
                                 <p class="result-header">venue</p>
-                                <p class="result-venue">${json[i].venues[0].name}</p>
+                                <p class="result-venue" id="venue-date-id-${i}">${json[i].venues[0].name}</p>
                             </div>
                             <hr>
                         </div>
-                        <button class="btn-add-result" onclick="handleResultSelection(${i})">add event</button>
+                        <button class="btn-add-result" id="btn-add-result-id-${i}" onclick="handleResultSelection(${i})">add event</button>
                     </div>
                     `;
                     resultsContainer.innerHTML += resultCardString
@@ -104,7 +104,7 @@ function formatInputDate(dateInput) {
     if (dateInput != "") {
         let dateArr = dateInput.split("-")
         let yearString = dateArr[0]
-        dateInput = yearString + "-" + startDateArr[1] + "-" + startDateArr[2] + "T00:00:00Z"
+        dateInput = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z"
     }
     return dateInput;
 }
