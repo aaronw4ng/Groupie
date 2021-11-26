@@ -12,6 +12,24 @@ body {
     width: 100%;
     padding-top: 8rem;
 }
+.btn-back-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.btn-back-container > p {
+    font-size: 1rem;
+    color : #989898;
+}
+#btn-back {
+    background: none;
+    margin: 0 1rem;
+    margin-right: 0;
+    padding: 0;
+    width: 10%;
+    font-size: 1rem;
+    color : #989898;
+}
 
 /* Search Fields and Layout */
 .event-search-container {
@@ -96,13 +114,13 @@ hr {
 }
 .event-info {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     padding-bottom: 4rem;
 }
 .event-info div {
-    width: 50%;
+    width: 33%;
 }
 .btn-add-result {
     position: absolute;
@@ -121,10 +139,7 @@ hr {
     margin : 1rem 0;
     color:#9762A5;
 }
-.result-date-range {
-    color:#9762A5;
-}
-.result-venue {
+.result-date-range, .result-venue, .result-city, .result-genre, .result-zipcode {
     color:#9762A5;
 }
 .result-title {
@@ -154,17 +169,14 @@ hr {
         margin-right : 0.5rem;
     }
     .event-result-card {
-        font-size: 0.8rem;
         width: 95%;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
     }
     .event-info {
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
+        width: 100%;
         padding-bottom: 4rem;
+    }
+    .event-info div {
+        width: 45%;
     }
     .btn-add-result {
         width: 60%;

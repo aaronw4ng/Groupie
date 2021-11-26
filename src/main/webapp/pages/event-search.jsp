@@ -20,6 +20,10 @@
     </div>
 
     <!-- Search Container -->
+    <!-- <div class="btn-back-container">
+      <p>back to your proposal</p>
+      <button id="btn-back"><i class="fas fa-undo-alt"></i></button>
+    </div> -->
     <div class="event-search-container">
       <form id="event-search-form">
         <div class="search-row">
