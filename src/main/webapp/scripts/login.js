@@ -26,6 +26,9 @@ function handleLoginClick(event) {
                     if (!sessionStorage.getItem("username")) {
                         sessionStorage.setItem("username", usernameInput)
                     }
+                    if (!sessionStorage.getItem("userId")) {
+                        sessionStorage.setItem("userId", result)
+                    }
                     document.location.href = "./pages/create-proposal.jsp"
                 }
                 else {

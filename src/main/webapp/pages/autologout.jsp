@@ -14,7 +14,7 @@
         <button class = "popupButton">Stay</button>
         </div>
     </div>
-    <script src="../scripts/autologout.js"></script>
+    <script type="module" src="../scripts/autologout.js"></script>
 </body>
 
 </html>
