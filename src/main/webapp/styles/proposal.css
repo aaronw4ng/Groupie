@@ -148,6 +148,7 @@ body {
     }
     .principal {
       width: 100%;
+      margin-right: 0;
     }
     .added-user {
       width: 100%;

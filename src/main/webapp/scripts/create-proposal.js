@@ -17,6 +17,10 @@ if (sessionStorage.getItem("proposalId")) {
     isNewProposal = false
 }
 
+if (sessionStorage.getItem("proposalName")) {
+    document.querySelector("#input-proposal-name").value = sessionStorage.getItem("proposalName")
+}
+
 let eventsContainer = document.querySelector(".events-container")
 
 let searchInput = document.querySelector("#user-search-input")
@@ -36,6 +40,13 @@ function handleAddUsersClick(event) {
 function handleFindEventClick(event) {
     event.preventDefault()
     document.location.href = "./event-search.jsp"
+}
+
+// Save proposal name in session storage
+function handleProposalNameBlur(event) {
+    event.preventDefault()
+    console.log(event.target.value)
+    sessionStorage.setItem("proposalName", event.target.value)
 }
 
 // Present user with deletion confirmation
@@ -63,6 +74,17 @@ function formatEvents(eventsList) {
         eventsList[item] = JSON.parse(eventsList[item])
     }
     return JSON.stringify(eventsList)
+
+}
+
+// Clean Up Session Storage 
+function cleanUpSessionStorage() {
+    let keys = ["users", "proposalName", "selected", "events"]
+    for (key in keys) {
+        if (sessionStorage.getItem(keys[key])) {
+            sessionStorage.removeItem(keys[key])
+        }
+    }
 
 }
 
@@ -98,6 +120,7 @@ function handleCreateProposalClick(event) {
         },
         success: function(result) {
             if (result) {
+                cleanUpSessionStorage()
                 alert("Proposal sent successfully!")
             }
             else {

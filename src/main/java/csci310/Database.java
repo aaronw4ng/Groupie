@@ -537,6 +537,29 @@ public class Database {
 		return proposals;
 	}
 
+	// block or unblock blocked_user_id by user_id
+	public Boolean setBlockUser(boolean block, int userId, int blockedUserId) throws Exception {
+		try{
+			PreparedStatement stmt = block ? connection.prepareStatement("INSERT INTO blocklist (user_id, blocked_user_id) VALUES (?, ?)") :
+					connection.prepareStatement("DELETE FROM blocklist WHERE user_id = ? AND blocked_user_id = ?");
+			stmt.setInt(1, userId);
+			stmt.setInt(2, blockedUserId);
+			int rowsAffected = stmt.executeUpdate();
+			stmt.close();
+			System.out.println("Set Block Status: " + userId + " - " + blockedUserId + " block:" + block);
+			return rowsAffected == 1;
+		}
+		catch (Exception e){
+			// update failed, potentially due to duplicate entry
+			if (e.getMessage().contains("constraint")){
+				return false;
+			}
+			else{
+				throw e;
+			}
+		}
+	}
+
 	// all user/availibility related functions
 	// returns if the any changes were made to the database
 	// if setting availability to true, the "until" field doesn't matter
@@ -565,8 +588,11 @@ public class Database {
 		List<Integer> expired = new ArrayList<Integer>();
 		while (rs.next()) {
 			String until = rs.getString("until");
-			// if until is not null, check if current time is after until
-			if (new Date(System.currentTimeMillis()).after(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").parse(until))) {
+			// check if until is INDEFINITE
+			if (until.equals("INDEFINITE")) {
+				continue;
+			} // then check if until has been reached
+			else if (new Date(System.currentTimeMillis()).after(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").parse(until))) {
 				// if current time is after until, add user to expired availability list
 				expired.add(rs.getInt("user_id"));
 			}
@@ -601,11 +627,26 @@ public class Database {
 			boolean isAvailable = rs.getBoolean("availability");
 			UserAvailability u = new UserAvailability(userName, userId, isAvailable);
 			users.add(u);
-			System.out.println(userId + " " + userName + " " + isAvailable + " ");
+			// System.out.println(userId + " " + userName + " " + isAvailable + " ");
 		}
 		rs.close();
 		stmt.close();
-		// TODO: set whoever blocked me as unavailable
+		// set whoever blocked me as unavailable
+		System.out.println("Showing UserList based on UserID " + myId);
+		for (UserAvailability u:users) {
+			PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM blocklist WHERE user_id = ? AND blocked_user_id = ?");
+			stmt2.setInt(1, u.userId);
+			stmt2.setInt(2, myId);
+			ResultSet rs2 = stmt2.executeQuery();
+			if (rs2.next()) {
+				u.isAvailable = false;
+			}
+			rs2.close();
+			stmt2.close();
+
+			// test print
+			System.out.println("Availability: " + u.userId + " - " + u.isAvailable);
+		}
 		return users;
   }
   
@@ -629,6 +670,30 @@ public class Database {
 		responsesStmt.setInt(2, userId);
 		int rows = responsesStmt.executeUpdate();
 		System.out.println("Rows affected from removing responses: " + rows);
+
+		return true;
+	}
+
+	// Removes an event from a sent proposal
+	public Boolean removeEventFromSentProposal(int proposalId, int eventId) throws Exception {
+		System.out.println("Trying to remove event " + eventId + " from proposal id " + proposalId);
+		// Remove all responses related to event ID
+		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND event_id = ?");
+		responsesStmt.setInt(1, proposalId);
+		responsesStmt.setInt(2, eventId);
+		int rows = responsesStmt.executeUpdate();
+		System.out.println("Rows affected from removing responses: " + rows);
+
+		// Remove event ID from events list
+		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ? AND event_id = ?");
+		eventsStmt.setInt(1, proposalId);
+		eventsStmt.setInt(2, eventId);
+		int eventsRowsAffected = eventsStmt.executeUpdate();
+		System.out.println("Rows affected from removing event from events: " + eventsRowsAffected);
+		// Check that only one event was deleted from the database
+		if (eventsRowsAffected != 1) {
+			return false;
+		}
 
 		return true;
 	}
