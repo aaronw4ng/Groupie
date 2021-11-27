@@ -35,6 +35,9 @@ function handleRegisterClick(event) {
           if (!sessionStorage.getItem("username")) {
             sessionStorage.setItem("username", usernameInput)
           }
+          if (!sessionStorage.getItem("userId")) {
+            sessionStorage.setItem("userId", result)
+          }
         } else {
           setWarnings(usernameInputField, "Username has already been taken", "username-taken")
         }

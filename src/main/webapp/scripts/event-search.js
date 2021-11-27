@@ -67,7 +67,7 @@ function handleSubmit(event) {
                 resultsCount.innerHTML = countString
                 // Parse JSON & add results cards to Container
                 for (let i = 0; i < json.length; i++) {
-                    console.log(json[i].url)
+                    console.log(json[i])
                     let resultCardString = `
                     <div class="event-result-card">
                         <p class="result-title" id="result-title-id-${i}">${json[i].eventName}</p>
@@ -76,7 +76,7 @@ function handleSubmit(event) {
                         <div class="event-info">   
                             <div>
                                 <p class="result-header">start date</p>
-                                <p class="result-date-range" id="start-date-id-${i}">${json[i].startDateTime}</p>
+                                <p class="result-date-range" id="start-date-id-${i}">${json[i].startDateTime.substring(0,10)}</p>
                             </div>
                             <div>
                                 <p class="result-header">event link</p>
@@ -84,7 +84,19 @@ function handleSubmit(event) {
                             </div>
                             <div>
                                 <p class="result-header">venue</p>
-                                <p class="result-venue" id="venue-date-id-${i}">${json[i].venues[0].name}</p>
+                                <p class="result-venue" id="venue-id-${i}">${json[i].venues[0].name}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">city</p>
+                                <p class="result-city" id="city-id-${i}">${json[i].venues[0].name}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">genre</p>
+                                <p class="result-genre" id="genre-id-${i}">${json[i].venues[0].name}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">zipcode</p>
+                                <p class="result-zipcode" id="zipcode-id-${i}">${json[i].venues[0].name}</p>
                             </div>
                             <hr>
                         </div>
@@ -148,4 +160,14 @@ button.onclick = function() {
 function setFilters() {
     var div = document.getElementById('search-filters');
     div.style.display = 'none'
+}
+
+function setMaxEndDate(event) {
+    let currDate = new Date(event.target.value)
+    var newDate = new Date(currDate.setMonth(currDate.getMonth()+6));
+    newDate = newDate.toISOString().substr(0,10)
+    console.log(newDate)
+    document.querySelector("#end").setAttribute("min", event.target.value)
+    document.querySelector("#end").setAttribute("max", newDate)
+
 }
