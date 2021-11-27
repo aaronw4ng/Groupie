@@ -165,21 +165,6 @@ public class StepDefinitions {
 	}
 
 	// *** CREATE PROPOSAL PAGE ***
-
-	@Then("user should see an error alert")
-	public void user_should_see_an_error_alert() {
-		WebDriverWait wait = new WebDriverWait(driver, 300);
-		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-		assertTrue(alert != null);
-	}
-
-	@Then("user should have successfully sent proposal")
-	public void user_should_have_successfully_sent_proposal() {
-		WebDriverWait wait = new WebDriverWait(driver, 300);
-		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-		assertTrue(alert != null);
-	}
-
 	@When("user inputs {string} in proposal name")
 	public void user_inputs_in_proposal_name(String string) {
 		WebElement queryBox = driver.findElement(By.id("input-proposal-name"));
@@ -197,6 +182,30 @@ public class StepDefinitions {
 	@When("user adds first user result")
 	public void user_adds_first_user_result() {
 		driver.findElement(By.id("user-card-1")).click();
+	}
+
+	@When("user adds first event result")
+	public void user_adds_first_event_result() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("btn-add-result-id-0")).click();
+	}
+
+	@Then("user should see an error alert")
+	public void user_should_see_an_error_alert() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertTrue(alert != null);
+	}
+
+	@Then("user should have successfully sent proposal")
+	public void user_should_have_successfully_sent_proposal() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertTrue(alert != null);
 	}
 
 	// *** SEARCH EVENTS ***
@@ -235,21 +244,6 @@ public class StepDefinitions {
 		// Write code here that turns the phrase above into concrete actions
 		Select genre = new Select(driver.findElement(By.id("event-genre-input")));
 		genre.selectByValue(string);
-	}
-
-	@When("user adds first event result")
-	public void user_adds_first_event_result() {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		driver.findElement(By.id("btn-add-result-id-1")).click();
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Then("user should see {string}")
