@@ -173,6 +173,32 @@ public class StepDefinitions {
 		assertTrue(alert != null);
 	}
 
+	@Then("user should have successfully sent proposal")
+	public void user_should_have_successfully_sent_proposal() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertTrue(alert != null);
+	}
+
+	@When("user inputs {string} in proposal name")
+	public void user_inputs_in_proposal_name(String string) {
+		WebElement queryBox = driver.findElement(By.id("input-proposal-name"));
+		queryBox.sendKeys(string);
+		// Click outside of selection 
+		driver.findElement(By.id("proposal-name-header")).click();
+	}
+
+	@When("user inputs {string} in user search")
+	public void user_inputs_in_user_search(String string) {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.sendKeys(string);
+	}
+
+	@When("user adds first user result")
+	public void user_adds_first_user_result() {
+		driver.findElement(By.id("user-card-1")).click();
+	}
+
 	// *** SEARCH EVENTS ***
 	@When("user inputs {string} in event search")
 	public void user_inputs_in_event_search(String string) {
@@ -209,6 +235,21 @@ public class StepDefinitions {
 		// Write code here that turns the phrase above into concrete actions
 		Select genre = new Select(driver.findElement(By.id("event-genre-input")));
 		genre.selectByValue(string);
+	}
+
+	@When("user adds first event result")
+	public void user_adds_first_event_result() {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("btn-add-result-id-1")).click();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Then("user should see {string}")

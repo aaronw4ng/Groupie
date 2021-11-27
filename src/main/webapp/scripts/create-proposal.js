@@ -29,7 +29,8 @@ let searchInput = document.querySelector("#user-search-input")
 
 function handleAddUsersClick(event) {
     event.preventDefault()
-    if (searchInput.style.display === "none") {
+    console.log(searchInput.style.display)
+    if (searchInput.style.display !== "block") {
         searchInput.style.display = "block"
     }
     else {
