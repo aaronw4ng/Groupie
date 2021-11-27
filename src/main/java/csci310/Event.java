@@ -8,6 +8,9 @@ public class Event {
     public int eventId;
     public String url;
     public String startDateTime;
+    public String segment;
+    public String genre;
+    public String subGenre;
     public List<Venue> venues = new ArrayList<>();
 
     public Event() {

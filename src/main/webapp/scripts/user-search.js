@@ -1,8 +1,13 @@
 // GET ALL USERS
 
 // TODO: Implement userID in login/create account
+let currentUserId = ""
+
 if (sessionStorage.getItem("username")) {
     const currentUsername = sessionStorage.getItem("username")
+}
+if (sessionStorage.getItem("userId")) {
+    currentUserId = sessionStorage.getItem("userId")
 }
 else {
     document.location.href = "../index.jsp"
@@ -16,7 +21,7 @@ window.onload = function() {
         method: "POST",
         url: "../GetAllUsersServlet",
         data: {
-            userId: 4
+            userId: currentUserId
         },
         success: function(result) {
             if (result) {
@@ -32,7 +37,7 @@ window.onload = function() {
 }
 
 // TEST INPUT
-const testUsers = [{username: "Gary", id: 1, isAvailable: false }, {username: "HairyGary", id: 2, isAvailable: true }, {username: "urCuteKnees", id: 3, isAvailable: true }, {username: "urMom33", id: 4, isAvailable: true }, {username: "yewwww", id: 5, isAvailable: true }, {username: "bingBONG", id: 6, isAvailable: false }, {username: "Matthew1", id: 7, isAvailable: false }, {username: "Matt1", id: 8, isAvailable: true }, {username: "username1", id: 9, isAvailable: true }]
+// const testUsers = [{username: "Gary", id: 1, isAvailable: false }, {username: "HairyGary", id: 2, isAvailable: true }, {username: "urCuteKnees", id: 3, isAvailable: true }, {username: "urMom33", id: 4, isAvailable: true }, {username: "yewwww", id: 5, isAvailable: true }, {username: "bingBONG", id: 6, isAvailable: false }, {username: "Matthew1", id: 7, isAvailable: false }, {username: "Matt1", id: 8, isAvailable: true }, {username: "username1", id: 9, isAvailable: true }]
 let userResultsContainer = document.querySelector("#user-results-container")
 let addedUserContainer = document.querySelector("#added-user-container")
 
