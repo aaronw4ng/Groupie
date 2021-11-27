@@ -205,8 +205,24 @@ public class StepDefinitions {
 	public void user_should_have_successfully_sent_proposal() {
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-		assertTrue(alert != null);
+		assertEquals("Proposal sent successfully!", alert.getText());
 	}
+
+
+	@Then("user should have successfully saved proposal")
+	public void userShouldHaveSuccessfullySavedProposal() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Draft successfully saved!", alert.getText());
+	}
+
+	@Then("user should see an error alert message {string}")
+	public void userShouldSeeAnErrorAlertMessage(String string) {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals(string, alert.getText());
+	}
+
 
 	// *** SEARCH EVENTS ***
 	@When("user inputs {string} in event search")
@@ -381,5 +397,4 @@ public class StepDefinitions {
 	public void after() {
 		driver.quit();
 	}
-
 }

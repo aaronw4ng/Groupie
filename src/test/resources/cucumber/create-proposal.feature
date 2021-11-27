@@ -32,7 +32,7 @@ Scenario: User successfully saves a draft
     And user inputs "username1" in user search
     And user adds first user result
     And user clicks "btn-save-draft" button
-    Then user should have successfully sent proposal
+    Then user should have successfully saved proposal
 
 Scenario: User attempts to create proposal with empty events and users selections
     Given user is on the Login page
@@ -51,7 +51,7 @@ Scenario: User attempts to create proposal with no events
     And user clicks "btn-login" button
     And user accepts the alert
     And user clicks "btn-send-proposal" button
-    Then user should see an error alert
+    Then user should see an error alert message "Must have one or more event selected."
 
 Scenario: User attempts to create proposal with no invitees
     Given user is on the Login page
@@ -64,4 +64,4 @@ Scenario: User attempts to create proposal with no invitees
     And user clicks "event-search-button" button
     And user adds first event result
     And user clicks "btn-send-proposal" button
-    Then user should see an error alert
+    Then user should see an error alert message "Must have one or more users selected."
