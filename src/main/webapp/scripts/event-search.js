@@ -88,15 +88,15 @@ function handleSubmit(event) {
                             </div>
                             <div>
                                 <p class="result-header">city</p>
-                                <p class="result-city" id="city-id-${i}">${json[i].venues[0].name}</p>
+                                <p class="result-city" id="city-id-${i}">${json[i].venues[0].city}</p>
                             </div>
                             <div>
                                 <p class="result-header">genre</p>
-                                <p class="result-genre" id="genre-id-${i}">${json[i].venues[0].name}</p>
+                                <p class="result-genre" id="genre-id-${i}">${json[i].genre}</p>
                             </div>
                             <div>
                                 <p class="result-header">zipcode</p>
-                                <p class="result-zipcode" id="zipcode-id-${i}">${json[i].venues[0].name}</p>
+                                <p class="result-zipcode" id="zipcode-id-${i}">${json[i].venues[0].zipCode}</p>
                             </div>
                             <hr>
                         </div>
