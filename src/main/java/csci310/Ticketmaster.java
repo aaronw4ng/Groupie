@@ -151,6 +151,11 @@ public class Ticketmaster {
             newEvent.setURLEvent(getAsStringDefaultNA(eventDetails, "url"));
             // get start date and time of event
             newEvent.setStartDateTime(getAsStringDefaultNA(eventDetails.getAsJsonObject("dates").getAsJsonObject("start"), "dateTime"));
+            // System.out.println("--------");
+            // System.out.println(eventDetails.getAsJsonArray("classifications").get(0).getAsJsonObject());
+            newEvent.segment = getAsStringDefaultNA(eventDetails.getAsJsonArray("classifications").get(0).getAsJsonObject().getAsJsonObject("segment"), "name");
+            newEvent.genre = getAsStringDefaultNA(eventDetails.getAsJsonArray("classifications").get(0).getAsJsonObject().getAsJsonObject("genre"), "name");
+            newEvent.subGenre = getAsStringDefaultNA(eventDetails.getAsJsonArray("classifications").get(0).getAsJsonObject().getAsJsonObject("subGenre"), "name");
             // get venues of event
             JsonArray venuesArray = eventDetails.getAsJsonObject("_embedded").getAsJsonArray("venues");
             List<Venue> venues = new ArrayList<>();
@@ -181,6 +186,7 @@ public class Ticketmaster {
         try {
             String result = this.getSearchResult(host);
             ArrayList<Event> refinedListOfEvents = this.parseEventsArray(result);
+            // System.out.println(result);
             // convert the refined results of list into events back into json format
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.toJson(refinedListOfEvents);
