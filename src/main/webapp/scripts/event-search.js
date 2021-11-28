@@ -171,3 +171,5 @@ function setMaxEndDate(event) {
     document.querySelector("#end").setAttribute("max", newDate)
 
 }
+
+setFilters()
