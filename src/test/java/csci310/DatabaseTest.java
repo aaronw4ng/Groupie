@@ -821,6 +821,10 @@ public class DatabaseTest {
 		availabilities = testDB.getAllUsers(3);
 		assertEquals(false, availabilities.get(0).isAvailable);
 		assertEquals(true, availabilities.get(1).isAvailable);
+		// also check if didIBlock is working
+		availabilities = testDB.getAllUsers(1);
+		assertEquals(false, availabilities.get(0).didIBlock);
+		assertEquals(true, availabilities.get(1).didIBlock);
 
 		assertTrue(testDB.setBlockUser(true, 2, 3));
 		availabilities = testDB.getAllUsers(3);
