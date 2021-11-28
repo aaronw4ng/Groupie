@@ -208,13 +208,14 @@ public class Database {
 		}
 
 		// insert proposal into proposals table
-		String query = "INSERT INTO proposals (owner_id, is_draft, title, description) VALUES(?,?,?,?)";
+		String query = "INSERT INTO proposals (owner_id, is_draft, is_finalized, title, description) VALUES(?,?,?,?,?)";
 		PreparedStatement pst;
 		pst = connection.prepareStatement(query);
 		pst.setInt(1, userID);
 		pst.setString(2, "1"); // default value for is_draft is true
-		pst.setString(3, title);
-		pst.setString(4, descript);
+		pst.setString(3, "0"); // default value for is_finalized is false
+		pst.setString(4, title);
+		pst.setString(5, descript);
 		pst.executeUpdate();
 		// successful add to proposal table
 		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
@@ -486,6 +487,7 @@ public class Database {
 				proposal.title = rs.getString("title");
 				proposal.description = rs.getString("description");
 				proposal.isDraft = rs.getBoolean("is_draft");
+				proposal.isFinalized = rs.getBoolean("is_finalized");
 				proposals.add(proposal);
 
 				// test print
@@ -517,6 +519,7 @@ public class Database {
 					proposal.title = rs2.getString("title");
 					proposal.description = rs2.getString("description");
 					proposal.isDraft = rs2.getBoolean("is_draft");
+					proposal.isFinalized = rs2.getBoolean("is_finalized");
 				}
 				rs2.close();
 				stmt2.close();

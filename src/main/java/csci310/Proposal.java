@@ -8,6 +8,7 @@ public class Proposal {
     public String title;
     public String description;
     public Boolean isDraft;
+    public Boolean isFinalized;
     public List<Event> events;
     public List<User> invitees;
    // private Map<User, Response> mapOfResponses;
