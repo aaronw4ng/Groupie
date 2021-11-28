@@ -610,7 +610,7 @@ public class DatabaseTest {
 		testDB.createRequiredTables();
 		// Empty proposal table, so shouldn't be able to delete anything
 		try {
-			Boolean draftStatus = testDB.isDraft(1);
+			testDB.isDraft(1);
 			fail();
 		} catch (Exception e) {
 			// expecting an error here

@@ -1,7 +1,6 @@
 package csci310.servlets;
 
 import csci310.Database;
-import csci310.UserAvailability;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
