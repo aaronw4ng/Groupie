@@ -12,6 +12,7 @@ public class Event {
     public String genre;
     public String subGenre;
     public List<Venue> venues = new ArrayList<>();
+    public List<Response> responses = new ArrayList<>();
 
     public Event() {
         this.eventName = "";

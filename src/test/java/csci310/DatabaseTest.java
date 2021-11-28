@@ -2,6 +2,9 @@ package csci310;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+
+import csci310.servlets.GetAllNonDraftProposalsServlet;
+
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -834,7 +837,26 @@ public class DatabaseTest {
 		Boolean sentStatus = testDB.sendProposal(newProposalId);
 		assertEquals(true, sentStatus);
 
+		// check that the responses are not filled out
+		List<Proposal> proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 2);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(1).isFilledOut, false);
+
 		// now the users should be able to indicate responses
+		testDB.indicateResponse(1, 1, 2, "yes", 4);
+		proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 2);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, true);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).availability, "yes");
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).excitement, 4);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).userId, 2);
+
+		// TODO: test that when all responses are filled out, begin next phase
 		
 	}
 
