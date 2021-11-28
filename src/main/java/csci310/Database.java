@@ -625,7 +625,7 @@ public class Database {
 			}
 			String userName = rs.getString("username");
 			boolean isAvailable = rs.getBoolean("availability");
-			UserAvailability u = new UserAvailability(userName, userId, isAvailable);
+			UserAvailability u = new UserAvailability(userName, userId, isAvailable, false);
 			users.add(u);
 			// System.out.println(userId + " " + userName + " " + isAvailable + " ");
 		}
@@ -643,9 +643,26 @@ public class Database {
 			}
 			rs2.close();
 			stmt2.close();
+		}
 
-			// test print
-			System.out.println("Availability: " + u.userId + " - " + u.isAvailable);
+		// set whoever I blocked as didIBlock=true
+		PreparedStatement stmt3 = connection.prepareStatement("SELECT * FROM blocklist WHERE user_id = ?");
+		stmt3.setInt(1, myId);
+		ResultSet rs3 = stmt3.executeQuery();
+		while (rs3.next()) {
+			int blockedUserId = rs3.getInt("blocked_user_id");
+			for (UserAvailability u:users) {
+				if (u.userId == blockedUserId) {
+					u.didIBlock = true;
+					break;
+				}
+			}
+		}
+		rs3.close();
+		stmt3.close();
+		// test print
+		for (UserAvailability u:users) {
+			System.out.println("UserAvailability: " + u.userId + " " + u.userName + " " + u.isAvailable + " " + u.didIBlock);
 		}
 		return users;
   }
