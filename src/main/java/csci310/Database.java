@@ -534,10 +534,16 @@ public class Database {
 		for (Proposal proposal: proposals) {
 			proposal.events = getEventsFromProposal(proposal.proposalId);
 			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
+			// TODO: each event should have a list of responses
 		}
 
 		// TODO: check for finalized proposals and return declined & accepted results
 		return proposals;
+	}
+
+	// indicate the user's response to the event
+	public Boolean indicateResponse(int proposalId, int eventId, int userId, int response) throws Exception {
+		return false;
 	}
 
 	// block or unblock blocked_user_id by user_id
