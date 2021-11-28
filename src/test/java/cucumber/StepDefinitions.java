@@ -2,6 +2,7 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -339,6 +340,17 @@ public class StepDefinitions {
 		}
 		String result = driver.findElement(By.id("genre-id-0")).getText();
 		assertTrue(result.equalsIgnoreCase(string));
+	}
+
+	/* For Automatic Logout When User Inactive */
+	@And("user does nothing for over 60s")
+	public void userDoesNothingForOverS() {
+		// Wait for at least 70s and do nothing for pop up to show
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@After()
