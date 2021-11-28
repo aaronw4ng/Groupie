@@ -220,6 +220,9 @@ public class Database {
 		// successful add to proposal table
 		System.out.println("Added proposal: " + owner + " " + title + " " + descript);
 
+		// add the owner to the invited list
+		invited.add(owner);
+
 		// Try to fetch the proposal id
 		int proposalID = queryProposalID(owner, title);
 		// Add events to the proposal
@@ -597,7 +600,21 @@ public class Database {
 			return rowsAffected == 1;
 		} else {
 			// meaning that a new response was made, need to check if all responses are filled out
-			
+			List<Event> events = getEventsFromProposal(proposalId);
+			boolean allResponsesFilledOut = true;
+			outer:
+			for (Event event: events) {
+				for (Response response: event.responses) {
+					if (!response.isFilledOut) {
+						allResponsesFilledOut = false;
+						break outer;
+					}
+				}
+			}
+			if (allResponsesFilledOut) {
+				// all responses are filled out, system decides best event
+				
+			}
 		}
 		return rowsAffected == 1;
 	}

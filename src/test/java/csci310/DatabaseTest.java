@@ -774,17 +774,17 @@ public class DatabaseTest {
 		Boolean sentStatus = testDB.sendProposal(newProposalId);
 		assertEquals(true, sentStatus);
 
-		// TODO check is not draft and responses inited
+		// check is not draft and responses inited
 		List<Proposal> result = testDB.getAllNonDraftProposals(1, true);
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals(result.get(0).title, "Remove Invitee from Sent Proposal");
 		assertEquals(result.get(0).isDraft, false);
 		
-		// user1 shouldn't be part of anyone's proposal
+		// user1 should be in his own proposal
 		result = testDB.getAllNonDraftProposals(1, false);
 		assertNotNull(result);
-		assertEquals(0, result.size());
+		assertEquals(1, result.size());
 
 		// user2 should be part of user1's proposal
 		result = testDB.getAllNonDraftProposals(2, false);
