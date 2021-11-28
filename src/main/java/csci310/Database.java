@@ -416,26 +416,31 @@ public class Database {
 		stmt.close();
 
 		// check for responses
-		// for (Event event: events) {
-		// 	PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM responses WHERE event_id = ?");
-		// 	stmt2.setInt(1, event.eventId);
-		// 	ResultSet rs2 = stmt2.executeQuery();
-		// 	List<Response> responses = new ArrayList<>();
-		// 	while (rs2.next()) {
-		// 		Response response = new Response();
-		// 		response.responseId = rs2.getInt("response_id");
-		// 		response.proposalId = rs2.getInt("proposal_id");
-		// 		response.eventId = rs2.getInt("event_id");
-		// 		response.userId = rs2.getInt("user_id");
-		// 		response.availability = rs2.getString("availability");
-		// 		response.excitement = rs2.getInt("excitement");
-		// 		responses.add(response);
-		// 	}
-		// 	rs2.close();
-		// 	stmt2.close();
-		// 	event.responses = responses;
-		// }
-		// *the above functionality has been moved to GetAllNonDraftProposals only
+		for (Event event: events) {
+			PreparedStatement stmt2 = connection.prepareStatement(
+				"SELECT response_id, proposal_id, event_id, r.user_id, username, r.availability, excitement, is_filled_out FROM responses r INNER JOIN users u ON r.user_id = u.user_id WHERE event_id = ?");
+			stmt2.setInt(1, event.eventId);
+			ResultSet rs2 = stmt2.executeQuery();
+			List<Response> responses = new ArrayList<>();
+			while (rs2.next()) {
+				Response response = new Response();
+				response.responseId = rs2.getInt("response_id");
+				response.proposalId = rs2.getInt("proposal_id");
+				response.eventId = rs2.getInt("event_id");
+				response.userId = rs2.getInt("user_id");
+				response.userName = rs2.getString("username");
+				response.availability = rs2.getString("availability");
+				response.excitement = rs2.getInt("excitement");
+				response.isFilledOut = rs2.getBoolean("is_filled_out");
+				responses.add(response);
+				
+				// test print
+				System.out.println("Response: " + response.userName + " " + response.availability + " " + response.excitement + " " + response.isFilledOut);
+			}
+			rs2.close();
+			stmt2.close();
+			event.responses = responses;
+		}
 		return events;
 	}
 
@@ -557,41 +562,6 @@ public class Database {
 		for (Proposal proposal: proposals) {
 			proposal.events = getEventsFromProposal(proposal.proposalId);
 			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
-			//  each event should have a list of responses
-			for (Event event: proposal.events) {
-				// test print
-				System.out.println(" - Responses for Event ID: " + event.eventId);
-				for (User invitee: proposal.invitees) {
-					PreparedStatement stmt4 = connection.prepareStatement("SELECT * FROM responses WHERE proposal_id = ? AND event_id = ? AND user_id = ?");
-					stmt4.setInt(1, proposal.proposalId);
-					stmt4.setInt(2, event.eventId);
-					stmt4.setInt(3, invitee.userId);
-					ResultSet rs4 = stmt4.executeQuery();
-					while (rs4.next()) {
-						Response response = new Response();
-						response.responseId = rs4.getInt("response_id");
-						response.proposalId = proposal.proposalId;
-						response.eventId = event.eventId;
-						response.userId = invitee.userId;
-						response.userName = invitee.username;
-						response.availability = rs4.getString("availability");
-						response.excitement = rs4.getInt("excitement");
-						response.isFilledOut = rs4.getBoolean("is_filled_out");
-						event.responses.add(response);
-
-						// test print
-						System.out.println("----------");
-						System.out.println("Response ID: " + response.responseId + 
-								"\nProposal ID: " + response.proposalId + 
-								"\nEvent ID: " + response.eventId + 
-								"\nUser ID: " + response.userId + 
-								"\nUser Name: " + response.userName + 
-								"\nAvailability: " + response.availability + 
-								"\nExcitement: " + response.excitement +
-								"\nIs Filled Out: " + response.isFilledOut);
-					}
-				}
-			}
 		}
 
 		// TODO: check for finalized proposals and return declined & accepted results
@@ -600,7 +570,18 @@ public class Database {
 
 	// indicate the user's response to the event
 	public Boolean indicateResponse(int proposalId, int eventId, int userId, String availability, int excitement) throws Exception {
-		PreparedStatement stmt = connection.prepareStatement("UPDATE responses SET availability = ?, excitement = ?, is_filled_out = ? WHERE proposal_id = ? AND event_id = ? AND user_id = ?");
+		// first check if the response has been filled out before
+		boolean wasFilledOut = false;
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM responses WHERE proposal_id = ? AND event_id = ? AND user_id = ?");
+		stmt.setInt(1, proposalId);
+		stmt.setInt(2, eventId);
+		stmt.setInt(3, userId);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()){
+			wasFilledOut = rs.getBoolean("is_filled_out");
+		}
+
+		stmt = connection.prepareStatement("UPDATE responses SET availability = ?, excitement = ?, is_filled_out = ? WHERE proposal_id = ? AND event_id = ? AND user_id = ?");
 		stmt.setString(1, availability.toLowerCase());
 		stmt.setInt(2, excitement);
 		stmt.setBoolean(3, true);
@@ -610,7 +591,14 @@ public class Database {
 		int rowsAffected = stmt.executeUpdate();
 		stmt.close();
 		// TODO: check if all responses are filled out
-
+		if (wasFilledOut) {
+			// meaning that the response was already filled out, nothing needs to happen
+			// this was merely an update
+			return rowsAffected == 1;
+		} else {
+			// meaning that a new response was made, need to check if all responses are filled out
+			
+		}
 		return rowsAffected == 1;
 	}
 

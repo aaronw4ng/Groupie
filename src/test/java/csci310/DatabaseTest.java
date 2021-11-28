@@ -3,8 +3,6 @@ package csci310;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import csci310.servlets.GetAllNonDraftProposalsServlet;
-
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -857,7 +855,7 @@ public class DatabaseTest {
 		assertEquals(proposals.get(0).events.get(0).responses.get(0).userId, 2);
 
 		// TODO: test that when all responses are filled out, begin next phase
-		
+
 	}
 
 	@Test
