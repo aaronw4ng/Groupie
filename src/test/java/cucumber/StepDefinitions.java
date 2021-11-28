@@ -399,7 +399,7 @@ public class StepDefinitions {
 
 	/* For Automatic Logout When User Inactive */
 	@And("user does nothing for over 60s")
-	public void userDoesNothingForOverS() {
+	public void userDoesNothingForOver60s() {
 		// Wait for at least 70s and do nothing for pop up to show
 		try {
 			Thread.sleep(7000);
