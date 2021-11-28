@@ -12,7 +12,7 @@ Scenario: User successfully creates a proposal
     And user clicks "event-search-button" button
     And user adds first event result
     And user clicks "btn-add-users" button
-    And user inputs "username1" in user search
+    And user inputs "a" in user search
     And user adds first user result
     And user clicks "btn-send-proposal" button
     Then user should have successfully sent proposal
@@ -29,7 +29,7 @@ Scenario: User successfully saves a draft
     And user clicks "event-search-button" button
     And user adds first event result
     And user clicks "btn-add-users" button
-    And user inputs "username1" in user search
+    And user inputs "a" in user search
     And user adds first user result
     And user clicks "btn-save-draft" button
     Then user should have successfully saved proposal

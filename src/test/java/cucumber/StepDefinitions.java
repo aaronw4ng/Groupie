@@ -8,11 +8,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import io.cucumber.java.eo.Se;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Action;
@@ -177,10 +173,18 @@ public class StepDefinitions {
 	public void user_inputs_in_user_search(String string) {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.sendKeys(string);
+		queryBox.click();
+		queryBox.sendKeys(Keys.BACK_SPACE);
+		queryBox.sendKeys(string);
 	}
 
 	@When("user adds first user result")
 	public void user_adds_first_user_result() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		driver.findElement(By.id("user-card-1")).click();
 	}
 
