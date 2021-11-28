@@ -699,10 +699,11 @@ public class DatabaseTest {
 
 		List<User> result = testDB.getInviteesFromProposal(1);
 		assertNotNull(result);
-		assertEquals(2, result.size());
+		assertEquals(3, result.size());
 
 		assertEquals(result.get(0).username, "invitee 1");
 		assertEquals(result.get(1).username, "invitee 2");
+		assertEquals(result.get(2).username, "test user");
 
 		testDB.dropAllTables();
 		testDB.close();
@@ -781,8 +782,13 @@ public class DatabaseTest {
 		assertEquals(result.get(0).title, "Remove Invitee from Sent Proposal");
 		assertEquals(result.get(0).isDraft, false);
 		
-		// user1 should be in his own proposal
+		// user1 should not be see proposals that he is the owner of
 		result = testDB.getAllNonDraftProposals(1, false);
+		assertNotNull(result);
+		assertEquals(0, result.size());
+
+		// user1 should be able to see his own proposals here
+		result = testDB.getAllNonDraftProposals(1, true);
 		assertNotNull(result);
 		assertEquals(1, result.size());
 
@@ -839,16 +845,17 @@ public class DatabaseTest {
 		List<Proposal> proposals = testDB.getAllNonDraftProposals(2, false);
 		assertNotNull(proposals);
 		assertEquals(1, proposals.size());
-		assertEquals(proposals.get(0).events.get(0).responses.size(), 2);
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
 		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, false);
 		assertEquals(proposals.get(0).events.get(0).responses.get(1).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(2).isFilledOut, false);
 
 		// now the users should be able to indicate responses
 		testDB.indicateResponse(1, 1, 2, "yes", 4);
 		proposals = testDB.getAllNonDraftProposals(2, false);
 		assertNotNull(proposals);
 		assertEquals(1, proposals.size());
-		assertEquals(proposals.get(0).events.get(0).responses.size(), 2);
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
 		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, true);
 		assertEquals(proposals.get(0).events.get(0).responses.get(0).availability, "yes");
 		assertEquals(proposals.get(0).events.get(0).responses.get(0).excitement, 4);

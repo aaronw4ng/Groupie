@@ -530,35 +530,23 @@ public class Database {
 		}
 		else{
 			// get all proposals that the user is invited to
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM invitees WHERE invitee_id = ?");
-			stmt.setString(1, String.valueOf(userId));
+			PreparedStatement stmt = connection.prepareStatement(
+				"SELECT i.proposal_id,i.invitee_id,title,description,is_draft,is_finalized FROM invitees i INNER JOIN proposals p WHERE i.invitee_id = ? AND i.invitee_id != p.owner_id");
+			stmt.setInt(1, userId);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Proposal proposal = new Proposal(new User(""));
 				proposal.proposalId = rs.getInt("proposal_id");
+				proposal.title = rs.getString("title");
+				proposal.description = rs.getString("description");
+				proposal.isDraft = rs.getBoolean("is_draft");
+				proposal.isFinalized = rs.getBoolean("is_finalized");
 				proposals.add(proposal);
-			}
-			rs.close();
-			stmt.close();
-
-			// get more details for each proposal
-			for (Proposal proposal: proposals) {
-				PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM proposals WHERE proposal_id = ?");
-				stmt2.setString(1, String.valueOf(proposal.proposalId));
-				ResultSet rs2 = stmt2.executeQuery();
-				while (rs2.next()) {
-					proposal.title = rs2.getString("title");
-					proposal.description = rs2.getString("description");
-					proposal.isDraft = rs2.getBoolean("is_draft");
-					proposal.isFinalized = rs2.getBoolean("is_finalized");
-				}
-				rs2.close();
-				stmt2.close();
-
-				// test print
 				System.out.println("Proposal ID: " + proposal.proposalId);
 				System.out.println("Proposal Title: " + proposal.title);
 			}
+			rs.close();
+			stmt.close();
 		}
 
 		// add details for each events
@@ -593,10 +581,10 @@ public class Database {
 		stmt.setInt(6, userId);
 		int rowsAffected = stmt.executeUpdate();
 		stmt.close();
-		// TODO: check if all responses are filled out
+		// check if all responses are filled out
 		if (wasFilledOut) {
 			// meaning that the response was already filled out, nothing needs to happen
-			// this was merely an update
+			// this was merely an update on a previously filled out response
 			return rowsAffected == 1;
 		} else {
 			// meaning that a new response was made, need to check if all responses are filled out
