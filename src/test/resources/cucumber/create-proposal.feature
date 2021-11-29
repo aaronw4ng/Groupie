@@ -48,6 +48,8 @@ Scenario: User attempts to create proposal with no events
     And user inputs "password1" in password
     And user clicks "btn-login" button
     And user accepts the alert
+    And user clicks "btn-add-users" button
+    And user adds first user result
     And user clicks "btn-send-proposal" button
     Then user should see an error alert message "Must have one or more event selected."
 
