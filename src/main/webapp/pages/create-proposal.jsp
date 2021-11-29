@@ -43,7 +43,7 @@
       </div>
       <div class="form-col">
         <button id="btn-add-users" onclick="handleAddUsersClick(event)">+ add users</button>
-        <input class="field-input" id="user-search-input" placeholder="search username" onkeyup="handleInputChange(event)">
+        <input class="field-input" id="user-search-input" placeholder="search username" onkeyup="handleInputChange(event)" onfocus="handleUserInputFocus(event)">
       </div>
       <div id="user-results-container">
         
