@@ -1025,6 +1025,155 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testSetBestEvent() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		// Create a proposal first
+		// add user to database first
+		testDB.register("Test User", "Test Password"); // userId = 1
+		String title = "Test Indicate Responses";
+		String descript = "This is a test description for indicating responses to events";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1"); // userId = 2
+		testDB.register("Invitee 2", "PS2"); // userId = 3
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
+
+		// Send the proposal
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
+		assertEquals(true, sentStatus);
+
+		// check that the responses are not filled out
+		List<Proposal> proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(1).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(2).isFilledOut, false);
+
+		// now the users should be able to indicate responses
+		testDB.indicateResponse(1, 1, 2, "yes", 4);
+		proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, true);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).availability, "yes");
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).excitement, 4);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).userId, 2);
+
+		// test that when all responses are filled out, begin next phase
+		assertTrue(testDB.indicateResponse(1, 1, 3, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 1, 1, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 2, 1, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 2, 2, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 2, 3, "yes", 4));
+		proposals = testDB.getAllNonDraftProposals(2, false);
+
+		// expect other users to still see the proposal as unfinalized
+		assertEquals(0, proposals.get(0).bestEventId);
+
+		// expect to ask owner to indicate final best event
+		proposals = testDB.getAllNonDraftProposals(1, true);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).is_candidate_for_best_event, true);
+		assertEquals(proposals.get(0).events.get(1).is_candidate_for_best_event, true);
+		assertEquals(proposals.get(0).isFinalized, false);
+		assertEquals(proposals.get(0).isDraft, false);
+
+		// TODO: test when owner/non-owner tries to set best event
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
+	public void testSetFinalDecision() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		// Create a proposal first
+		// add user to database first
+		testDB.register("Test User", "Test Password"); // userId = 1
+		String title = "Test Indicate Responses";
+		String descript = "This is a test description for indicating responses to events";
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+		invitees.add("Invitee 2");
+		// add invitees as users
+		testDB.register("Invitee 1", "PS1"); // userId = 2
+		testDB.register("Invitee 2", "PS2"); // userId = 3
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1));
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2));
+		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
+		assertEquals(1, newProposalId);
+
+		// Send the proposal
+		Boolean sentStatus = testDB.sendProposal(newProposalId);
+		assertEquals(true, sentStatus);
+
+		// check that the responses are not filled out
+		List<Proposal> proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(1).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(2).isFilledOut, false);
+
+		// now the users should be able to indicate responses
+		testDB.indicateResponse(1, 1, 2, "yes", 4);
+		proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, true);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).availability, "yes");
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).excitement, 4);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).userId, 2);
+
+		// test that when all responses are filled out, begin next phase
+		assertTrue(testDB.indicateResponse(1, 1, 3, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 1, 1, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 2, 1, "yes", 2));
+		assertTrue(testDB.indicateResponse(1, 2, 2, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 2, 3, "yes", 4));
+		proposals = testDB.getAllNonDraftProposals(2, false);
+
+		// expect the have both events pass for availability filtering, but only event 1
+		// passes for excitement filtering as the final best event
+		assertEquals(1, proposals.get(0).bestEventId);
+		assertEquals("Birthday", proposals.get(0).bestEvent.eventName);
+		assertEquals(proposals.get(0).isFinalized, true);
+		assertEquals(proposals.get(0).isDraft, false);
+
+		// TODO: test when users accept or reject proposals
+
+		testDB.dropAllTables();
+		testDB.close();
+	}
+
+	@Test
 	public void testSetBlockUser() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();

@@ -708,6 +708,15 @@ public class Database {
 		return rowsAffected == 1;
 	}
 
+	// the owner of the proposal decides which event to set as the best event
+	public boolean setBestEvent(int proposalId, int eventId) throws Exception {
+		return false;
+	}
+
+	public boolean setFinalDecision(int proposalId, int eventId) throws Exception {
+		return false;
+	}
+
 	// block or unblock blocked_user_id by user_id
 	public Boolean setBlockUser(boolean block, int userId, int blockedUserId) throws Exception {
 		try{
