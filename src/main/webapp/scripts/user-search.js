@@ -68,11 +68,12 @@ function searchUsers(target) {
     console.log(filteredUsers)
 
     // Display Filtered Users Cards
+    let i = 1
     filteredUsers.forEach(user => {
         let cardString = ``
         if (user.isAvailable) {
             cardString = `
-            <div class="user-card" data-user="${user.userName}" data-id="${user.userId}" onclick="handleSelectUser(event)">
+            <div id="user-card-${i}" class="user-card" data-user="${user.userName}" data-id="${user.userId}" onclick="handleSelectUser(event)">
                 <p><i class="fas fa-users"></i> ${user.userName}</p>
             </div>
             `;
@@ -85,6 +86,7 @@ function searchUsers(target) {
             `;
         }
         userResultsContainer.innerHTML += cardString
+        i++
     })
 
 }

@@ -2,16 +2,13 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import io.cucumber.java.eo.Se;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Action;
@@ -164,6 +161,42 @@ public class StepDefinitions {
 	}
 
 	// *** CREATE PROPOSAL PAGE ***
+	@When("user inputs {string} in proposal name")
+	public void user_inputs_in_proposal_name(String string) {
+		WebElement queryBox = driver.findElement(By.id("input-proposal-name"));
+		queryBox.sendKeys(string);
+		// Click outside of selection 
+		driver.findElement(By.id("proposal-name-header")).click();
+	}
+
+	@When("user inputs {string} in user search")
+	public void user_inputs_in_user_search(String string) {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.sendKeys(string);
+		queryBox.click();
+		queryBox.sendKeys(Keys.BACK_SPACE);
+		queryBox.sendKeys(string);
+	}
+
+	@When("user adds first user result")
+	public void user_adds_first_user_result() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("user-card-1")).click();
+	}
+
+	@When("user adds first event result")
+	public void user_adds_first_event_result() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("btn-add-result-id-0")).click();
+	}
 
 	@Then("user should see an error alert")
 	public void user_should_see_an_error_alert() {
@@ -171,6 +204,29 @@ public class StepDefinitions {
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 		assertTrue(alert != null);
 	}
+
+	@Then("user should have successfully sent proposal")
+	public void user_should_have_successfully_sent_proposal() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Proposal sent successfully!", alert.getText());
+	}
+
+
+	@Then("user should have successfully saved proposal")
+	public void userShouldHaveSuccessfullySavedProposal() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Draft successfully saved!", alert.getText());
+	}
+
+	@Then("user should see an error alert message {string}")
+	public void userShouldSeeAnErrorAlertMessage(String string) {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals(string, alert.getText());
+	}
+
 
 	// *** SEARCH EVENTS ***
 	@When("user inputs {string} in event search")
@@ -339,6 +395,17 @@ public class StepDefinitions {
 		}
 		String result = driver.findElement(By.id("genre-id-0")).getText();
 		assertTrue(result.equalsIgnoreCase(string));
+	}
+
+	/* For Automatic Logout When User Inactive */
+	@And("user does nothing for over 60s")
+	public void userDoesNothingForOver60s() {
+		// Wait for at least 70s and do nothing for pop up to show
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@After()
