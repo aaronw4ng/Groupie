@@ -60,6 +60,7 @@ function handleInputChange(event) {
 }
 
 function displayUsers(userList) {
+    userResultsContainer.innerHTML = ""
     // Display Filtered Users Cards
     let i = 1
     userList.forEach(user => {
