@@ -370,10 +370,7 @@ public class StepDefinitions {
 
 	@Then("user should see events located in zipcode {string}")
 	public void user_should_see_events_located_in_zipcode(String string) {
-		// Write code here that turns the phrase above into concrete actions
 		// buffer time for event search to give back results
-		// TODO MIGHT REMOVE ZIPCODE FUNCTION
-		/*
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -382,8 +379,6 @@ public class StepDefinitions {
 		String result = driver.findElement(By.id("zipcode-id-0")).getText();
 		System.out.println("zipcode: " + result);
 		assertTrue(result.equalsIgnoreCase(string));
-
-		 */
 	}
 
 	@Then("user should see events related to {string}")
