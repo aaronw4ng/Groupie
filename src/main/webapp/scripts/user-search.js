@@ -59,17 +59,11 @@ function handleInputChange(event) {
     
 }
 
-function searchUsers(target) {
-    // Filter users array for users that contain target string
-    // TODO: change testUsers to usersList when implementation allows for it
-    let filteredUsers = USERS_LIST.filter( (user) => {
-        return user.userName.toLowerCase().includes(target.toLowerCase())
-    })
-    console.log(filteredUsers)
-
+function displayUsers(userList) {
+    userResultsContainer.innerHTML = ""
     // Display Filtered Users Cards
     let i = 1
-    filteredUsers.forEach(user => {
+    userList.forEach(user => {
         let cardString = ``
         if (user.isAvailable) {
             cardString = `
@@ -88,7 +82,21 @@ function searchUsers(target) {
         userResultsContainer.innerHTML += cardString
         i++
     })
+}
 
+// Display all existing users upon first click
+function handleUserInputFocus(event) {
+    displayUsers(USERS_LIST)
+}
+
+function searchUsers(target) {
+    // Filter users array for users that contain target string
+    // TODO: change testUsers to usersList when implementation allows for it
+    let filteredUsers = USERS_LIST.filter( (user) => {
+        return user.userName.toLowerCase().includes(target.toLowerCase())
+    })
+    // console.log(filteredUsers)
+    displayUsers(filteredUsers)
 }
 
 // Get Users list from session storage
@@ -103,7 +111,7 @@ function userInSelected(username) {
     // Check if user in users list
     usersList.forEach(user => {
         if (user == username) {
-            console.log("SAME")
+            // console.log("SAME")
             count++
         }
     })
@@ -162,7 +170,7 @@ function handleUserRemoval(event) {
         let userCard = event.srcElement.parentElement
         console.log("DATASET: " + userCard.dataset.username)
         userCard.remove()
-        console.log("USERS: " + users)
+        // console.log("USERS: " + users)
         // Remove user from user lists
         users = users.filter(user => {
             return user !== userCard.dataset.username
