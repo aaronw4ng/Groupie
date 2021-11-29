@@ -417,6 +417,16 @@ public class StepDefinitions {
 		assertEquals("https://localhost:8080/index.jsp", currURL);
 	}
 
+	@Then("user manually types in the event search page")
+	public void userManuallyTypesInTheEventSearchPage() {
+		driver.get("https://localhost:8080/pages/event-search.jsp");
+	}
+
+	@Then("user manually types in the proposal details page")
+	public void userManuallyTypesInTheProposalDetailsPage() {
+		driver.get("https://localhost:8080/pages/proposal-details.jsp");
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
