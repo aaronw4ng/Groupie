@@ -14,5 +14,16 @@ import java.util.concurrent.TimeUnit;
 public class SetBestEventServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        try{
+            int proposalId = Integer.parseInt(request.getParameter("proposalId"));
+            int eventId = Integer.parseInt(request.getParameter("eventId"));
+            Database db = (Database) getServletContext().getAttribute("database");
+            PrintWriter out = response.getWriter();
+            out.print(db.setBestEvent(proposalId, eventId));
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new ServletException("Set Best Event Servlet Failed");
+        }
     }
 }
