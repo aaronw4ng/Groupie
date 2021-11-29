@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Event {
     public String eventName;
+    public boolean is_candidate_for_best_event;
     public int eventId;
     public String url;
     public String startDateTime;

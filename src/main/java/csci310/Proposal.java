@@ -9,9 +9,11 @@ public class Proposal {
     public String description;
     public Boolean isDraft;
     public Boolean isFinalized;
+    public Boolean needsOwnersSelection = false;
     public List<Event> events;
     public List<User> invitees;
-   // private Map<User, Response> mapOfResponses;
+    // private Map<User, Response> mapOfResponses;
+    public int bestEventId;
     public Event bestEvent;
     public List<User> accepted;
     public List<User> declined;

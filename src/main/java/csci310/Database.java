@@ -399,6 +399,7 @@ public class Database {
 			event.eventName = rs.getString("event_name");
 			event.url = rs.getString("event_link");
 			event.startDateTime = rs.getString("start_date_time");
+			event.is_candidate_for_best_event = rs.getBoolean("is_candidate_for_best_event");
 			// get venue
 			List<Venue> venues = new ArrayList<Venue>();
 			Venue venue = new Venue(
@@ -413,7 +414,12 @@ public class Database {
 			events.add(event);
 
 			// test print 
-			System.out.println("Event: " + event.eventName + " " + event.startDateTime);
+			if (event.is_candidate_for_best_event) {
+				System.out.println("Event: " + event.eventName + " is a candidate for best event");
+			}
+			else{
+				System.out.println("Event: " + event.eventName + " " + event.startDateTime);
+			}
 		}
 		rs.close();
 		stmt.close();
@@ -519,6 +525,8 @@ public class Database {
 				proposal.description = rs.getString("description");
 				proposal.isDraft = rs.getBoolean("is_draft");
 				proposal.isFinalized = rs.getBoolean("is_finalized");
+				proposal.bestEventId = rs.getInt("best_event_id");
+				proposal.needsOwnersSelection = rs.getBoolean("needs_owners_selection");
 				proposals.add(proposal);
 
 				// test print
@@ -531,7 +539,7 @@ public class Database {
 		else{
 			// get all proposals that the user is invited to
 			PreparedStatement stmt = connection.prepareStatement(
-				"SELECT i.proposal_id,i.invitee_id,title,description,is_draft,is_finalized FROM invitees i INNER JOIN proposals p WHERE i.invitee_id = ? AND i.invitee_id != p.owner_id");
+				"SELECT i.proposal_id,i.invitee_id,title,description,is_draft,is_finalized,best_event_id FROM invitees i INNER JOIN proposals p WHERE i.invitee_id = ? AND i.invitee_id != p.owner_id");
 			stmt.setInt(1, userId);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -541,7 +549,9 @@ public class Database {
 				proposal.description = rs.getString("description");
 				proposal.isDraft = rs.getBoolean("is_draft");
 				proposal.isFinalized = rs.getBoolean("is_finalized");
+				proposal.bestEventId = rs.getInt("best_event_id");
 				proposals.add(proposal);
+
 				System.out.println("Proposal ID: " + proposal.proposalId);
 				System.out.println("Proposal Title: " + proposal.title);
 			}
@@ -555,7 +565,21 @@ public class Database {
 			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
 		}
 
-		// TODO: check for finalized proposals and return declined & accepted results
+		// check for finalized proposals and return declined & accepted results
+		for (Proposal proposal: proposals) {
+			if (proposal.isFinalized) {
+				// set best event to the correct object
+				for (Event event: proposal.events) {
+					if (event.eventId == proposal.bestEventId) {
+						proposal.bestEvent = event;
+						break;
+					}
+				}
+				// test print all best event
+				System.out.println("Proposal Best Event ID: " + proposal.bestEventId);
+			}
+		}
+
 		return proposals;
 	}
 
@@ -601,7 +625,84 @@ public class Database {
 			}
 			if (allResponsesFilledOut) {
 				// all responses are filled out, system decides best event
-				
+				float currentBestScore = -1;
+				List<Event> bestEvents_availability = new ArrayList<>();
+				for (Event e: events) {
+					float score = 0;
+					for (Response r: e.responses) {
+						if (r.availability.toLowerCase().equals("yes")) {
+							score += 1.0;
+						}
+						else if (r.availability.toLowerCase().equals("maybe")) {
+							score += 0.1;
+						}
+					}
+					if (score > currentBestScore) {
+						currentBestScore = score;
+						bestEvents_availability.clear();
+						bestEvents_availability.add(e);
+					} else if (score == currentBestScore) {
+						bestEvents_availability.add(e);
+					}
+				}
+				// test print
+				System.out.println("Best events based on availability: ");
+				for (Event e: bestEvents_availability) {
+					System.out.println("Event ID: " + e.eventId + " Event Title: " + e.eventName);
+				}
+
+				List<Event> bestEvents_excitement = new ArrayList<>();
+				if (bestEvents_availability.size() != 1) {
+					// now check for excitement
+					currentBestScore = -1;
+					for (Event e: bestEvents_availability) {
+						int score = 0;
+						for (Response r: e.responses) {
+							score += r.excitement;
+						}
+						if (score > currentBestScore) {
+							currentBestScore = score;
+							bestEvents_excitement.clear();
+							bestEvents_excitement.add(e);
+						} else if (score == currentBestScore) {
+							bestEvents_excitement.add(e);
+						}
+					}
+				}
+				else{
+					bestEvents_excitement.addAll(bestEvents_availability);
+				}
+				// test print
+				System.out.println("Best events based on excitement after availability filtering: ");
+				for (Event e: bestEvents_excitement) {
+					System.out.println("Event ID: " + e.eventId + " Event Title: " + e.eventName);
+				}
+
+				// now we have a final list of events with the best score
+				if (bestEvents_excitement.size() == 1) {
+					// only one event with the best score, so we can just set the event as the best event
+					stmt = connection.prepareStatement("UPDATE proposals SET best_event_id = ?, is_finalized = ? WHERE proposal_id = ?");
+					stmt.setInt(1, bestEvents_excitement.get(0).eventId);
+					stmt.setBoolean(2, true);
+					stmt.setInt(3, proposalId);
+					rowsAffected = stmt.executeUpdate();
+					stmt.close();
+				} else {
+					// multiple events with the best score, so we need the owner to decide which event to set as the best event
+					stmt = connection.prepareStatement("UPDATE proposals SET needs_owners_selection = ? WHERE proposal_id = ?");
+					stmt.setBoolean(1, true);
+					stmt.setInt(2, proposalId);
+					rowsAffected = stmt.executeUpdate();
+					stmt.close();
+
+					for (Event e: bestEvents_excitement) {
+						stmt = connection.prepareStatement("UPDATE events SET is_candidate_for_best_event = ? WHERE event_id = ?");
+						stmt.setBoolean(1, true);
+						stmt.setInt(2, e.eventId);
+						rowsAffected = stmt.executeUpdate();
+						stmt.close();
+					}
+				}
 			}
 		}
 		return rowsAffected == 1;
