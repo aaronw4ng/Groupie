@@ -10,7 +10,11 @@ function startAutoLogoutRoutine() {
     function resetTimer() {
         clearTimeout(idleTimeout);
         // console.log("resetting");
-        idleTimeout = setTimeout(() => location.href = "../index.jsp", 60000);
+        idleTimeout = setTimeout(() => {
+            location.href = "../index.jsp"
+            sessionStorage.clear()
+        }
+        , 60000);
         idleTime = 0;
     }
 
