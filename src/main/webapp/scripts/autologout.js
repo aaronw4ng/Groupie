@@ -1,5 +1,6 @@
-var idleTime = 0;
-window.onload = function() {
+function startAutoLogoutRoutine() {
+    let popUp = document.querySelector(".popup")
+    var idleTime = 0;
     resetTimer;
 
     document.onmousemove = resetTimer;
@@ -15,13 +16,13 @@ window.onload = function() {
 
     var idleAction = setInterval(function() {
         if (idleTime >= 50) {
-            $('.popup').show();
+            popUp.classList.add("show")
             if (idleTime == 1) $('#seconds-inactive').html(idleTime + " second");
             else $('#seconds-inactive').html(idleTime + " seconds");
             idleTime++;
         }
         else {
-            $('.popup').hide();
+            popUp.classList.remove("show")
             idleTime++;
         }
     }, 1000);
