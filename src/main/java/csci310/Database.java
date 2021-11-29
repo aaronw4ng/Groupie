@@ -622,7 +622,7 @@ public class Database {
 		stmt.setInt(4, proposalId);
 		stmt.setInt(5, eventId);
 		stmt.setInt(6, userId);
-		int rowsAffected = stmt.executeUpdate();
+		stmt.executeUpdate();
 		stmt.close();
 		// check if all responses are filled out
 		if (wasFilledOut) {
@@ -704,21 +704,21 @@ public class Database {
 					stmt.setInt(1, bestEvents_excitement.get(0).eventId);
 					stmt.setBoolean(2, true);
 					stmt.setInt(3, proposalId);
-					rowsAffected = stmt.executeUpdate();
+					stmt.executeUpdate();
 					stmt.close();
 				} else {
 					// multiple events with the best score, so we need the owner to decide which event to set as the best event
 					stmt = connection.prepareStatement("UPDATE proposals SET needs_owners_selection = ? WHERE proposal_id = ?");
 					stmt.setBoolean(1, true);
 					stmt.setInt(2, proposalId);
-					rowsAffected = stmt.executeUpdate();
+					stmt.executeUpdate();
 					stmt.close();
 
 					for (Event e: bestEvents_excitement) {
 						stmt = connection.prepareStatement("UPDATE events SET is_candidate_for_best_event = ? WHERE event_id = ?");
 						stmt.setBoolean(1, true);
 						stmt.setInt(2, e.eventId);
-						rowsAffected = stmt.executeUpdate();
+						stmt.executeUpdate();
 						stmt.close();
 					}
 				}
