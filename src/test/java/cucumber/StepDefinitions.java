@@ -38,6 +38,7 @@ public class StepDefinitions {
 	private String USERNAME_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	private static String generatedUsername = null;
+	private static String generatedUsername2 = null;
 
 	private ChromeOptions handlingSSL = new ChromeOptions();
 	private WebDriver driver;
@@ -48,6 +49,9 @@ public class StepDefinitions {
 		driver = new ChromeDriver(handlingSSL);
 		if (generatedUsername == null) {
 			generatedUsername = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		}
+		if (generatedUsername2 == null) {
+			generatedUsername2 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
 		}
 	}
 
@@ -105,6 +109,11 @@ public class StepDefinitions {
 	@When("user inputs in username")
 	public void user_inputs_username() {
 		driver.findElement(By.id("input-username")).sendKeys(generatedUsername);
+	}
+
+	@When("user inputs in second username")
+	public void userInputsInSecondUsername() {
+		driver.findElement(By.id("input-username")).sendKeys(generatedUsername2);
 	}
 
 	@When("user inputs {string} in password")
@@ -169,17 +178,10 @@ public class StepDefinitions {
 		driver.findElement(By.id("proposal-name-header")).click();
 	}
 
-	@When("user inputs {string} in user search")
-	public void user_inputs_in_user_search(String string) {
-		WebElement queryBox = driver.findElement(By.id("user-search-input"));
-		queryBox.sendKeys(string);
-		queryBox.click();
-		queryBox.sendKeys(Keys.BACK_SPACE);
-		queryBox.sendKeys(string);
-	}
-
 	@When("user adds first user result")
 	public void user_adds_first_user_result() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
