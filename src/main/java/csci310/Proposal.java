@@ -17,6 +17,7 @@ public class Proposal {
     public Event bestEvent;
     public List<User> accepted;
     public List<User> declined;
+    public List<User> notResponded;
 
     public Proposal(User user) {
         this.user = user;
@@ -25,6 +26,7 @@ public class Proposal {
         //mapOfResponses = new TreeMap<>();
         accepted = new ArrayList<>();
         declined = new ArrayList<>();
+        notResponded = new ArrayList<>();
     }
 
     public Proposal() {

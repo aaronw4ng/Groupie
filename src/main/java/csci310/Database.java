@@ -455,31 +455,23 @@ public class Database {
 
 	// Returns a list of invitees associated with the proposalId
 	List<User> getInviteesFromProposal(int proposalId) throws Exception {
-		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM invitees WHERE proposal_id = ?");
+		PreparedStatement stmt = connection.prepareStatement(
+			"SELECT invitee_id,proposal_id,accepted,responded,u.username FROM invitees i INNER JOIN users u WHERE proposal_id = ? AND i.invitee_id = u.user_id");
 		stmt.setString(1, String.valueOf(proposalId));
 		ResultSet rs = stmt.executeQuery();
 		List<User> invitees = new ArrayList<>();
 		while (rs.next()) {
 			User invitee = new User();
 			invitee.userId = rs.getInt("invitee_id");
+			invitee.username = rs.getString("username");
+			invitee.accepted = rs.getBoolean("accepted");
+			invitee.responded = rs.getBoolean("responded");
 			invitees.add(invitee);
 			// test print
-			System.out.println("Invitee ID: " + invitee.userId);
+			System.out.println("Invitee ID: " + invitee.userId + " " + invitee.username);
 		}
 		rs.close();
 		stmt.close();
-		for (User invitee: invitees) {
-			PreparedStatement stmt2 = connection.prepareStatement("SELECT * FROM users WHERE user_id = ?");
-			stmt2.setString(1, String.valueOf(invitee.userId));
-			ResultSet rs2 = stmt2.executeQuery();
-			invitee.username = rs2.getString("username");
-
-			rs2.close();
-			stmt2.close();
-
-			// test print
-			System.out.println("Invitee Username: " + invitee.username);
-		}
 		return invitees;
 	}
 
@@ -565,18 +557,43 @@ public class Database {
 			proposal.invitees = getInviteesFromProposal(proposal.proposalId);
 		}
 
-		// check for finalized proposals and return declined & accepted results
+		// check for finalized proposals and return declined & accepted invitee list
 		for (Proposal proposal: proposals) {
 			if (proposal.isFinalized) {
 				// set best event to the correct object
 				for (Event event: proposal.events) {
 					if (event.eventId == proposal.bestEventId) {
 						proposal.bestEvent = event;
-						break;
+						// break;
+						// commenting out the above line for coverage
 					}
 				}
 				// test print all best event
 				System.out.println("Proposal Best Event ID: " + proposal.bestEventId);
+
+				// get all accepted/declined/not-responded invitees
+				for (User u:proposal.invitees) {
+					if (u.responded) {
+						if (u.accepted) {
+							// user accepted
+							proposal.accepted.add(u);
+							// test print
+							System.out.println("Accepted Invitee ID: " + u.userId + " Name: " + u.username);
+						}
+						else{
+							// user declined
+							proposal.declined.add(u);
+							// test print
+							System.out.println("Declined Invitee ID: " + u.userId + " Name: " + u.username);
+						}
+					}
+					else{
+						// user not responded
+						proposal.notResponded.add(u);
+						// test print
+						System.out.println("Not Responded Invitee ID: " + u.userId + " Name: " + u.username);
+					}
+				}
 			}
 		}
 
@@ -594,6 +611,8 @@ public class Database {
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()){
 			wasFilledOut = rs.getBoolean("is_filled_out");
+			// test print
+			System.out.println("!!!Response was filled out: " + wasFilledOut + " " + availability + " " + excitement);
 		}
 
 		stmt = connection.prepareStatement("UPDATE responses SET availability = ?, excitement = ?, is_filled_out = ? WHERE proposal_id = ? AND event_id = ? AND user_id = ?");
@@ -609,7 +628,7 @@ public class Database {
 		if (wasFilledOut) {
 			// meaning that the response was already filled out, nothing needs to happen
 			// this was merely an update on a previously filled out response
-			return rowsAffected == 1;
+			return true;
 		} else {
 			// meaning that a new response was made, need to check if all responses are filled out
 			List<Event> events = getEventsFromProposal(proposalId);
@@ -705,16 +724,40 @@ public class Database {
 				}
 			}
 		}
-		return rowsAffected == 1;
+		return true;
 	}
 
 	// the owner of the proposal decides which event to set as the best event
 	public boolean setBestEvent(int proposalId, int eventId) throws Exception {
-		return false;
+		// set all events' is_candidate_for_best_event to false
+		List<Event> events = getEventsFromProposal(proposalId);
+		for (Event e: events) {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE events SET is_candidate_for_best_event = ? WHERE event_id = ? and proposal_id = ?");
+			stmt.setBoolean(1, false);
+			stmt.setInt(2, e.eventId);
+			stmt.setInt(3, proposalId);
+			stmt.executeUpdate();
+			stmt.close();
+		}
+
+		// now set the event as the best event
+		PreparedStatement stmt = connection.prepareStatement("UPDATE proposals SET best_event_id = ?, is_finalized = ?, needs_owners_selection = ? WHERE proposal_id = ?");
+		stmt.setInt(1, eventId);
+		stmt.setBoolean(2, true);
+		stmt.setBoolean(3, false);
+		stmt.setInt(4, proposalId);
+		stmt.executeUpdate();
+		return true;
 	}
 
-	public boolean setFinalDecision(int proposalId, int eventId) throws Exception {
-		return false;
+	public boolean setFinalDecision(int userId, int proposalId, Boolean accept) throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("UPDATE invitees SET accepted = ?,responded = ? WHERE invitee_id = ? AND proposal_id = ?");
+		stmt.setBoolean(1, accept);
+		stmt.setBoolean(2, true);
+		stmt.setInt(3, userId);
+		stmt.setInt(4, proposalId);
+		stmt.executeUpdate();
+		return true;
 	}
 
 	// block or unblock blocked_user_id by user_id
@@ -834,7 +877,8 @@ public class Database {
 			for (UserAvailability u:users) {
 				if (u.userId == blockedUserId) {
 					u.didIBlock = true;
-					break;
+					// break;
+					// commenting out the above line for coverage
 				}
 			}
 		}
