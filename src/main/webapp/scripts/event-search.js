@@ -7,6 +7,8 @@ if (sessionStorage.getItem("selected") == null) {
     sessionStorage.setItem("selected", "[]")
 }
 
+let endDateInput
+
 function handleSubmit(event) {
     event.preventDefault();
     const keywordInput = document.querySelector("#event-search-input").value
@@ -14,13 +16,17 @@ function handleSubmit(event) {
     const cityInput = document.querySelector("#event-city-input").value
     const genreInput = document.querySelector("#event-genre-input").value
     let startDateInput = document.querySelector("#start").value
-    let endDateInput = document.querySelector("#end").value
+    if (document.querySelector("#end").value !== "") {
+        endDateInput = document.querySelector("#end").value
+        endDateInput = formatInputDate(endDateInput);
+    }
+    else {
 
+    }
     console.log("KEYWORD:", keywordInput, "ZIPCODE:", zipcodeInput, "CITY:", cityInput, "START:", startDateInput, "END:", endDateInput)
     
     // Date Formatting for Servlet
     startDateInput = formatInputDate(startDateInput);
-    endDateInput = formatInputDate(endDateInput);
 
     // ********* TESTS **********
     // Test Return object
@@ -162,6 +168,7 @@ function setFilters() {
     div.style.display = 'none'
 }
 
+// TODO: calculate end date that is 6 months from CURRENT date regardless of user input for start date
 function setMaxEndDate(event) {
     let currDate = new Date(event.target.value)
     var newDate = new Date(currDate.setMonth(currDate.getMonth()+6));
@@ -169,6 +176,7 @@ function setMaxEndDate(event) {
     console.log(newDate)
     document.querySelector("#end").setAttribute("min", event.target.value)
     document.querySelector("#end").setAttribute("max", newDate)
+    endDateInput = newDate
 
 }
 

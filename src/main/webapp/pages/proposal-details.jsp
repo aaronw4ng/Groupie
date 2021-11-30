@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="../styles/proposal-details.css" />
     <script src="https://kit.fontawesome.com/d4a13a138b.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <title>groupie | proposal</title>
+    <title>groupie | proposal details</title>
 </head>
 <body>
   <div class="header">

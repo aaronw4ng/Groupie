@@ -1,0 +1,214 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    padding: 0;
+    margin : 0;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+:root {
+    --details-color : #989898;
+    --primary-color : #9762A5;
+}
+#event-details-page {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    width: 70%;
+}
+.details-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.btn-back-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 35%;
+}
+.page-title {
+    color : var(--details-color);
+    font-weight: 500;
+}
+.btn-back-container > p {
+    font-size: 1rem;
+    color : var(--details-color);
+}
+#btn-back {
+    background: none;
+    margin: 0 1rem;
+    margin-right: 0;
+    padding: 0;
+    width: 10%;
+    font-size: 1rem;
+    color : var(--details-color);
+}
+/* DETAILS */
+#details-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.details-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 31%;
+    margin : 0 1%;
+}
+#event-link {
+    display: block;
+    margin : 1rem 0;
+}
+.section-title {
+    color : var(--details-color);
+    font-size: 1rem;
+}
+.section-info {
+    color : var(--primary-color);
+    font-size: 1.5rem;
+}
+/* RESPONSES */
+#responses-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+#user-response-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    background: #FBFBFB;
+    border: 4px solid #9762A5;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding : 1.5rem;
+    width : 80%;
+}
+.response-card-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+}
+#username, #username-header {
+    margin: 0;
+    padding: 0;
+}
+#response-card-split {
+    display: none;
+}
+.user-response-prompt {
+    color: #989898;
+}
+.availability-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.btn-availability {
+    background-color: transparent;
+    width : auto;
+    color : #989898;
+    font-size: 2rem;
+    margin: 0;
+    padding : 0 1rem;
+    height: auto;
+}
+.excitement-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.excitement-star {
+    background-color: transparent;
+    width : 40%;
+    color : #989898;
+    font-size: 2rem;
+    margin: 0;
+    padding : 0;
+    height: auto;
+}
+.excitement-star:disabled {
+    background: transparent;
+}
+.excitement-star:hover, .btn-availability:hover {
+    background-color: transparent;
+    color: #9762A540;
+}
+.highlight-response {
+    color : #9762A5;
+}
+.save-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding-top : 1.5rem;
+}
+#btn-save-user-resp {
+    margin : 0;
+}
+/* OTHER USER RESP */
+.other-response-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    background: #FBFBFB;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding : 1.5rem;
+    margin: 1rem 0;
+    width : 80%;
+}
+.response-available {
+    color : #90BE6D;
+    font-size: 2rem;
+}
+.response-unavailable {
+    color : #F94144;
+    font-size: 2rem;
+}
+.other-excitement-star {
+    color : #9762A5;
+    font-size: 2rem;
+}
+
+@media (max-width : 991px) {
+    #user-response-card {
+        width : 100%;
+    }
+}
+@media (max-width : 776px) {
+    #user-response-card {
+        flex-direction: column;
+    }
+    .save-container {
+        justify-content: center;
+    }
+    .response-card-col {
+        width: 100%;
+    }
+    #response-card-split {
+        display: block;
+        width: 100%;
+    }
+}
