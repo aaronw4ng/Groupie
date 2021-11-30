@@ -1349,7 +1349,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testSetUsersAvailability() throws Exception {
+	public void testSetUserAvailability() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
