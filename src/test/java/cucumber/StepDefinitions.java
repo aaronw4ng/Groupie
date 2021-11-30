@@ -405,6 +405,28 @@ public class StepDefinitions {
 		}
 	}
 
+	/* Restrict access to pages to only logged in users */
+	@When("user manually types in the create proposal page")
+	public void userManuallyTypesInTheCreateProposalPage() {
+		driver.get("https://localhost:8080/pages/create-proposal.jsp");
+	}
+
+	@Then("user should be redirected to login page")
+	public void userShouldBeRedirectedToLoginPage() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("https://localhost:8080/index.jsp", currURL);
+	}
+
+	@Then("user manually types in the event search page")
+	public void userManuallyTypesInTheEventSearchPage() {
+		driver.get("https://localhost:8080/pages/event-search.jsp");
+	}
+
+	@Then("user manually types in the proposal details page")
+	public void userManuallyTypesInTheProposalDetailsPage() {
+		driver.get("https://localhost:8080/pages/proposal-details.jsp");
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
