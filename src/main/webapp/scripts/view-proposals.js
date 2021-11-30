@@ -10,18 +10,19 @@ if (sessionStorage.getItem("userId")) {
 else {
 }
 
+// Store finalized & unfinaized proposals in separate arrays
 let REC_PROPOSALS_FINAL = []
 let REC_PROPOSALS_DRAFT = []
 
 
 // Retrieve all proposals on window load
-// TODO: pass more IDs for data!
 window.onload = function() {
     $.ajax({
         method: "POST",
-        url: "../GetAllNonDraftProposalsServlet",
+        url: "../getAllNonDraftProposals",
         data: {
-            userId: currentUserId
+            userID: currentUserId,
+            isOwner: false
         },
         success: function(result) {
         if (result) {
@@ -36,7 +37,7 @@ window.onload = function() {
     }),
     $.ajax({
         method: "POST",
-        url: "../GetAllDraftProposalsServlet",
+        url: "../getAllDraftProposals",
         data: {
             userId: currentUserId
         },

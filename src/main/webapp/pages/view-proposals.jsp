@@ -32,12 +32,12 @@
       <!-- TODO: Link to proposal details page -->
       <div id="border">
         <h4>Proposal Name 1</h4>
-          <h3 class="strong-result">not finalized</h3>
+          <h3 class="not-finalized"style="color:darkred;">not finalized</h3>
       </div>
 
         <div id="border">
           <h4>Proposal Name 2</h4>
-          <h3 class="strong-result">April 3, 2023</h3>
+          <h3 class="finalized" style="color:goldenrod;">April 3, 2023</h3>
         </div>
         </div>
 
