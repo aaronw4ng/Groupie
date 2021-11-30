@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Event {
     public String eventName;
+    public boolean is_candidate_for_best_event;
     public int eventId;
     public String url;
     public String startDateTime;
@@ -12,6 +13,7 @@ public class Event {
     public String genre;
     public String subGenre;
     public List<Venue> venues = new ArrayList<>();
+    public List<Response> responses = new ArrayList<>();
 
     public Event() {
         this.eventName = "";

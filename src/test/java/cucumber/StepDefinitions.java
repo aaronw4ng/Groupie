@@ -2,16 +2,13 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import io.cucumber.java.eo.Se;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Action;
@@ -41,6 +38,7 @@ public class StepDefinitions {
 	private String USERNAME_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	private static String generatedUsername = null;
+	private static String generatedUsername2 = null;
 
 	private ChromeOptions handlingSSL = new ChromeOptions();
 	private WebDriver driver;
@@ -51,6 +49,9 @@ public class StepDefinitions {
 		driver = new ChromeDriver(handlingSSL);
 		if (generatedUsername == null) {
 			generatedUsername = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		}
+		if (generatedUsername2 == null) {
+			generatedUsername2 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
 		}
 	}
 
@@ -110,6 +111,11 @@ public class StepDefinitions {
 		driver.findElement(By.id("input-username")).sendKeys(generatedUsername);
 	}
 
+	@When("user inputs in second username")
+	public void userInputsInSecondUsername() {
+		driver.findElement(By.id("input-username")).sendKeys(generatedUsername2);
+	}
+
 	@When("user inputs {string} in password")
 	public void user_inputs_password(String string) {
 		driver.findElement(By.id("input-password")).sendKeys(string);
@@ -164,6 +170,35 @@ public class StepDefinitions {
 	}
 
 	// *** CREATE PROPOSAL PAGE ***
+	@When("user inputs {string} in proposal name")
+	public void user_inputs_in_proposal_name(String string) {
+		WebElement queryBox = driver.findElement(By.id("input-proposal-name"));
+		queryBox.sendKeys(string);
+		// Click outside of selection 
+		driver.findElement(By.id("proposal-name-header")).click();
+	}
+
+	@When("user adds first user result")
+	public void user_adds_first_user_result() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("user-card-1")).click();
+	}
+
+	@When("user adds first event result")
+	public void user_adds_first_event_result() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("btn-add-result-id-0")).click();
+	}
 
 	@Then("user should see an error alert")
 	public void user_should_see_an_error_alert() {
@@ -171,6 +206,29 @@ public class StepDefinitions {
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 		assertTrue(alert != null);
 	}
+
+	@Then("user should have successfully sent proposal")
+	public void user_should_have_successfully_sent_proposal() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Proposal sent successfully!", alert.getText());
+	}
+
+
+	@Then("user should have successfully saved proposal")
+	public void userShouldHaveSuccessfullySavedProposal() {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Draft successfully saved!", alert.getText());
+	}
+
+	@Then("user should see an error alert message {string}")
+	public void userShouldSeeAnErrorAlertMessage(String string) {
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals(string, alert.getText());
+	}
+
 
 	// *** SEARCH EVENTS ***
 	@When("user inputs {string} in event search")
@@ -312,10 +370,7 @@ public class StepDefinitions {
 
 	@Then("user should see events located in zipcode {string}")
 	public void user_should_see_events_located_in_zipcode(String string) {
-		// Write code here that turns the phrase above into concrete actions
 		// buffer time for event search to give back results
-		// TODO MIGHT REMOVE ZIPCODE FUNCTION
-		/*
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -324,8 +379,6 @@ public class StepDefinitions {
 		String result = driver.findElement(By.id("zipcode-id-0")).getText();
 		System.out.println("zipcode: " + result);
 		assertTrue(result.equalsIgnoreCase(string));
-
-		 */
 	}
 
 	@Then("user should see events related to {string}")
@@ -339,6 +392,39 @@ public class StepDefinitions {
 		}
 		String result = driver.findElement(By.id("genre-id-0")).getText();
 		assertTrue(result.equalsIgnoreCase(string));
+	}
+
+	/* For Automatic Logout When User Inactive */
+	@And("user does nothing for over 60s")
+	public void userDoesNothingForOver60s() {
+		// Wait for at least 70s and do nothing for pop up to show
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/* Restrict access to pages to only logged in users */
+	@When("user manually types in the create proposal page")
+	public void userManuallyTypesInTheCreateProposalPage() {
+		driver.get("https://localhost:8080/pages/create-proposal.jsp");
+	}
+
+	@Then("user should be redirected to login page")
+	public void userShouldBeRedirectedToLoginPage() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("https://localhost:8080/index.jsp", currURL);
+	}
+
+	@Then("user manually types in the event search page")
+	public void userManuallyTypesInTheEventSearchPage() {
+		driver.get("https://localhost:8080/pages/event-search.jsp");
+	}
+
+	@Then("user manually types in the proposal details page")
+	public void userManuallyTypesInTheProposalDetailsPage() {
+		driver.get("https://localhost:8080/pages/proposal-details.jsp");
 	}
 
 	@After()

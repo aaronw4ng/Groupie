@@ -164,10 +164,14 @@ public class Ticketmaster {
                 JsonObject venueObject = venuesArray.get(j).getAsJsonObject();
                 String venueName = getAsStringDefaultNA(venueObject, "name");
                 String address = getAsStringDefaultNA(venueObject.getAsJsonObject("address"), "line1");
+                String postalCode = getAsStringDefaultNA(venueObject, "postalCode");
                 String venueCity = getAsStringDefaultNA(venueObject.getAsJsonObject("city"), "name");
                 String state = getAsStringDefaultNA(venueObject.getAsJsonObject("state"), "stateCode");
                 String country = getAsStringDefaultNA(venueObject.getAsJsonObject("country"), "countryCode");
                 Venue venue = new Venue(venueName, address, venueCity, state, country);
+                venue.zipcode = postalCode;
+                // test print
+                System.out.println("Zipcode: " + venue.zipcode);
                 venues.add(venue);
             }
             // add venues to event

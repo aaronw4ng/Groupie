@@ -22,7 +22,7 @@
 
     <form id="proposal-form">
       <!-- Proposal Name -->
-      <p class="input-header">proposal name</p>
+      <p class="input-header" id="proposal-name-header">proposal name</p>
       <input class="field-input" type="text" id="input-proposal-name" value="new proposal" onblur="handleProposalNameBlur(event)">
       <i class="fas fa-pen"></i>
       <hr>
@@ -43,7 +43,7 @@
       </div>
       <div class="form-col">
         <button id="btn-add-users" onclick="handleAddUsersClick(event)">+ add users</button>
-        <input class="field-input" id="user-search-input" placeholder="search username" onkeyup="handleInputChange(event)">
+        <input class="field-input" id="user-search-input" placeholder="search username" onkeyup="handleInputChange(event)" onfocus="handleUserInputFocus(event)">
       </div>
       <div id="user-results-container">
         

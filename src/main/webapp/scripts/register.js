@@ -38,6 +38,7 @@ function handleRegisterClick(event) {
           if (!sessionStorage.getItem("userId")) {
             sessionStorage.setItem("userId", result)
           }
+          document.location.href = "create-proposal.jsp"
         } else {
           setWarnings(usernameInputField, "Username has already been taken", "username-taken")
         }

@@ -96,7 +96,7 @@ function handleSubmit(event) {
                             </div>
                             <div>
                                 <p class="result-header">zipcode</p>
-                                <p class="result-zipcode" id="zipcode-id-${i}">${json[i].venues[0].zipCode}</p>
+                                <p class="result-zipcode" id="zipcode-id-${i}">${json[i].venues[0].zipcode}</p>
                             </div>
                             <hr>
                         </div>
@@ -171,3 +171,5 @@ function setMaxEndDate(event) {
     document.querySelector("#end").setAttribute("max", newDate)
 
 }
+
+setFilters()
