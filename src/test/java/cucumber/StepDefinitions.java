@@ -173,6 +173,8 @@ public class StepDefinitions {
 	@When("user inputs {string} in proposal name")
 	public void user_inputs_in_proposal_name(String string) {
 		WebElement queryBox = driver.findElement(By.id("input-proposal-name"));
+		// clear the placeholder value
+		queryBox.clear();
 		queryBox.sendKeys(string);
 		// Click outside of selection 
 		driver.findElement(By.id("proposal-name-header")).click();
@@ -370,10 +372,7 @@ public class StepDefinitions {
 
 	@Then("user should see events located in zipcode {string}")
 	public void user_should_see_events_located_in_zipcode(String string) {
-		// Write code here that turns the phrase above into concrete actions
 		// buffer time for event search to give back results
-		// TODO MIGHT REMOVE ZIPCODE FUNCTION
-		/*
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -382,8 +381,6 @@ public class StepDefinitions {
 		String result = driver.findElement(By.id("zipcode-id-0")).getText();
 		System.out.println("zipcode: " + result);
 		assertTrue(result.equalsIgnoreCase(string));
-
-		 */
 	}
 
 	@Then("user should see events related to {string}")
@@ -408,6 +405,28 @@ public class StepDefinitions {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/* Restrict access to pages to only logged in users */
+	@When("user manually types in the create proposal page")
+	public void userManuallyTypesInTheCreateProposalPage() {
+		driver.get("https://localhost:8080/pages/create-proposal.jsp");
+	}
+
+	@Then("user should be redirected to login page")
+	public void userShouldBeRedirectedToLoginPage() {
+		String currURL = driver.getCurrentUrl();
+		assertEquals("https://localhost:8080/index.jsp", currURL);
+	}
+
+	@Then("user manually types in the event search page")
+	public void userManuallyTypesInTheEventSearchPage() {
+		driver.get("https://localhost:8080/pages/event-search.jsp");
+	}
+
+	@Then("user manually types in the proposal details page")
+	public void userManuallyTypesInTheProposalDetailsPage() {
+		driver.get("https://localhost:8080/pages/proposal-details.jsp");
 	}
 
 	@After()

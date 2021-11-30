@@ -6,6 +6,7 @@ public class Venue {
     String city;
     String state;
     String country;
+    String zipcode;
 
     public Venue(String n, String a, String ci, String s, String co) {
         this.name = n;
