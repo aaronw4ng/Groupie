@@ -2,18 +2,13 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import io.cucumber.java.eo.Se;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -397,14 +392,16 @@ public class StepDefinitions {
 	}
 
 	/* For Automatic Logout When User Inactive */
-	@And("user does nothing for over 60s")
+	@When("user does nothing for over 60s")
 	public void userDoesNothingForOver60s() {
-		// Wait for at least 70s and do nothing for pop up to show
-		try {
-			Thread.sleep(7000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		// Wait until pop up shows
+		WebElement element = (new WebDriverWait(driver, 65000))
+				.until(ExpectedConditions.elementToBeClickable(By.id("stayButton")));
+	}
+
+	@Then("auto log out pop up shows")
+	public void autoLogOutPopUpShows() {
+		assertEquals("Stay", driver.findElement(By.id("stayButton")).getText());
 	}
 
 	/* Restrict access to pages to only logged in users */

@@ -11,7 +11,7 @@
     <div class="popup">
         <div id="popupContent">
             <p>Your session has been inactive for <span id="seconds-inactive"></span>. Do you wish to remain logged in?</p>
-        <button class = "popupButton">Stay</button>
+        <button id="stayButton" class = "popupButton">Stay</button>
         </div>
     </div>
     <script type="module" src="../scripts/autologout.js"></script>

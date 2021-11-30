@@ -15,4 +15,4 @@ Scenario: User is logged out because of 60s of inactivity
   And user clicks "btn-login" button
   And user accepts the alert
   And user does nothing for over 60s
-  Then user should be on Login page
+  Then auto log out pop up shows
