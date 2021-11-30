@@ -802,6 +802,23 @@ public class Database {
 		return true;
 	}
 
+	public UserAvailability getUserAvailability(int userId) throws Exception {
+		refreshUsersAvailability();
+		PreparedStatement stmt = connection.prepareStatement("SELECT username, availability, until FROM users WHERE user_id = ?");
+		stmt.setInt(1, userId);
+		ResultSet rs = stmt.executeQuery();
+		UserAvailability ua = null;
+		while (rs.next()) {
+			String username = rs.getString("username");
+			String until = rs.getString("until");
+			Boolean isAvailable = rs.getBoolean("availability");
+			ua = new UserAvailability(username, userId, isAvailable, !isAvailable);
+			ua.until = until;
+			System.out.println("Retrieved availability for user: " + userId + " " + isAvailable + " until " + until);
+		}
+		return ua;
+	}
+
 	// refresh all users' availability by checking for until and current timestamp
 	public void refreshUsersAvailability() throws Exception {
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE availability = ?");
