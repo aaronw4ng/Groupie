@@ -20,7 +20,10 @@ import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GetUserAvailabilityServletTest {
     private HttpServletRequest request;
@@ -68,16 +71,50 @@ public class GetUserAvailabilityServletTest {
         testDB.register("user2", "ps2");
         testDB.register("user3", "ps3");
 
-        List<UserAvailability> availabilities = testDB.getAllUsers(3);
-		assertEquals(true, availabilities.get(0).isAvailable);
+        UserAvailability status = testDB.getUserAvailability(1);
+		assertNotNull(status);
+		assertEquals(1, status.userId);
+		assertEquals(true, status.isAvailable);
+		assertEquals(false, status.didIBlock);
+		assertEquals("null", status.until);
+
+		// check if updates are successful
+		Date nextDate = new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1));
+		String nextDateString = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(nextDate);
+		assertEquals(true, testDB.setUserAvailability(1, false, nextDateString));
+		assertEquals(true, testDB.setUserAvailability(2, true, ""));
+		assertEquals(false, testDB.setUserAvailability(4, false, ""));
+
+		// check availabilities changed
+		List<UserAvailability> availabilities = testDB.getAllUsers(3);
+		assertEquals(2, availabilities.size());
+		assertEquals(1, availabilities.get(0).userId);
+		assertEquals(false, availabilities.get(0).isAvailable);
+		assertEquals(2, availabilities.get(1).userId);
 		assertEquals(true, availabilities.get(1).isAvailable);
 
-        fail();
+		// check that the user status has changed
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        Mockito.when(response.getWriter()).thenReturn(pw);
+        Mockito.when(request.getParameter("userId")).thenReturn("1");
+        GetUserAvailabilityServlet servlet = new GetUserAvailabilityServlet();
+        servlet.init(config);
+        servlet.doPost(request, response);
+        String result = sw.toString();
+        System.out.println(result);
+
+		// status = testDB.getUserAvailability(1);
+		// assertNotNull(status);
+		// assertEquals(1, status.userId);
+		// assertEquals(false, status.isAvailable);
+		// assertEquals(true, status.didIBlock);
+		// assertEquals(nextDateString, status.until);
 
         // close database for coverage
         testDB.close();
         try{
-            // servlet.doPost(request, response);
+            servlet.doPost(request, response);
             fail("Should have thown an exception");
         }
         catch(Exception e){
