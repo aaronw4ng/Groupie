@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import csci310.AppServletContextListener;
 import csci310.Ticketmaster;
 
 import javax.servlet.ServletConfig;

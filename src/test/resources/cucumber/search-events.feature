@@ -28,6 +28,7 @@ Scenario: User searches based on start date
   And user clicks "btn-login" button
   And user accepts the alert
   And user clicks "btn-event-find" button
+  And user clicks "toggleFilters" button
   And user selects "01-01-2022" in start date
   And user clicks "event-search-button" button
   Then user should see events after "01-01-2022"
@@ -39,6 +40,7 @@ Scenario: User searches based on end date
   And user clicks "btn-login" button
   And user accepts the alert
   And user clicks "btn-event-find" button
+  And user clicks "toggleFilters" button
   And user selects "01-01-2022" in end date
   And user clicks "event-search-button" button
   Then user should see events before "01-01-2022"
@@ -50,6 +52,7 @@ Scenario: User searches based on city
   And user clicks "btn-login" button
   And user accepts the alert
   And user clicks "btn-event-find" button
+  And user clicks "toggleFilters" button
   And user inputs "Sacramento" in city
   And user clicks "event-search-button" button
   Then user should see events located in city "Sacramento"
@@ -61,6 +64,7 @@ Scenario: User searches based on zipcode
   And user clicks "btn-login" button
   And user accepts the alert
   And user clicks "btn-event-find" button
+  And user clicks "toggleFilters" button
   And user inputs "90007" in zipcode
   And user clicks "event-search-button" button
   Then user should see events located in zipcode "90007"
@@ -72,6 +76,7 @@ Scenario: User searches based on genre
   And user clicks "btn-login" button
   And user accepts the alert
   And user clicks "btn-event-find" button
+  And user clicks "toggleFilters" button
   And user selects "Pop" in genre
   And user clicks "event-search-button" button
   Then user should see events related to "Pop"

@@ -29,7 +29,8 @@ let searchInput = document.querySelector("#user-search-input")
 
 function handleAddUsersClick(event) {
     event.preventDefault()
-    if (searchInput.style.display === "none") {
+    console.log(searchInput.style.display)
+    if (searchInput.style.display !== "block") {
         searchInput.style.display = "block"
     }
     else {
@@ -70,6 +71,7 @@ function handleDeleteEvent(event) {
 
 // Format Events - formats events list to be sent to the servlets
 function formatEvents(eventsList) {
+    if (eventsList === "null") return
     for (item in eventsList) {
         eventsList[item] = JSON.parse(eventsList[item])
     }
@@ -97,7 +99,7 @@ function handleCreateProposalClick(event) {
     let titleInput = document.querySelector("#input-proposal-name").value
     console.log(users, selectedEvents, titleInput)
     // Check for empty users/events
-    if (selectedEvents.length === 0) {
+    if (selectedEvents === "null") {
         alert("Must have one or more event selected.")
         return
     }
@@ -195,3 +197,4 @@ function populateEventsContainer(proposedEvents) {
 }
 
 displaySelectedEvents()
+startAutoLogoutRoutine()

@@ -8,24 +8,20 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class UnblockUserServlet extends HttpServlet {
+public class SetFinalDecisionServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try{
+            int proposalId = Integer.parseInt(request.getParameter("proposalId"));
             int userId = Integer.parseInt(request.getParameter("userId"));
-            int blockedUserId = Integer.parseInt(request.getParameter("blockedUserId"));
+            Boolean accept = Boolean.parseBoolean(request.getParameter("accept"));
             Database db = (Database) getServletContext().getAttribute("database");
             PrintWriter out = response.getWriter();
-            if (db.setBlockUser(false, userId, blockedUserId)){
-                out.print(true);
-            }
-            else {
-                out.print(false);
-            }
-        } 
-        catch (Exception e) {
+            out.print(db.setFinalDecision(userId, proposalId, accept));
+        }
+        catch (Exception e){
             System.out.println(e.getMessage());
-            throw new ServletException("Block User Servlet Failed");
+            throw new ServletException("Set Final Decision Servlet Failed");
         }
     }
 }
