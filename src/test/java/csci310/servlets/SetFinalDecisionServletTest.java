@@ -4,6 +4,7 @@ import csci310.AppServletContextListener;
 import csci310.Database;
 import csci310.Event;
 import csci310.Venue;
+import csci310.Proposal;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -24,7 +25,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetAllNonDraftProposalsServletTest {
+public class SetFinalDecisionServletTest {
     private HttpServletRequest request;
     private HttpServletResponse response;
 
@@ -68,8 +69,8 @@ public class GetAllNonDraftProposalsServletTest {
         // Create a proposal first
 		// add user to database first
 		testDB.register("Test User", "Test Password"); // userId = 1
-		String title = "Remove Invitee from Sent Proposal";
-		String descript = "This is a test description for removing an invitee after sending proposal test!";
+		String title = "Test Indicate Responses";
+		String descript = "This is a test description for indicating responses to events";
 		List<String> invitees = new ArrayList<>();
 		invitees.add("Invitee 1");
 		invitees.add("Invitee 2");
@@ -86,76 +87,71 @@ public class GetAllNonDraftProposalsServletTest {
 		int newProposalId = testDB.savesDraftProposal("Test User", title, descript, invitees, events, true, -1);
 		assertEquals(1, newProposalId);
 
-        // Send the proposal
+		// Send the proposal
 		Boolean sentStatus = testDB.sendProposal(newProposalId);
 		assertEquals(true, sentStatus);
 
-        // check response
-        Mockito.when(request.getParameter("userId")).thenReturn("1");
-        Mockito.when(request.getParameter("isOwner")).thenReturn("true");
+		// check that the responses are not filled out
+		List<Proposal> proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(1).isFilledOut, false);
+		assertEquals(proposals.get(0).events.get(0).responses.get(2).isFilledOut, false);
+
+		// now the users should be able to indicate responses
+		testDB.indicateResponse(1, 1, 2, "yes", 4);
+		proposals = testDB.getAllNonDraftProposals(2, false);
+		assertNotNull(proposals);
+		assertEquals(1, proposals.size());
+		assertEquals(proposals.get(0).events.get(0).responses.size(), 3);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).isFilledOut, true);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).availability, "yes");
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).excitement, 4);
+		assertEquals(proposals.get(0).events.get(0).responses.get(0).userId, 2);
+
+		// test that when all responses are filled out, begin next phase
+		assertTrue(testDB.indicateResponse(1, 1, 3, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 1, 1, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 2, 1, "yes", 2));
+		assertTrue(testDB.indicateResponse(1, 2, 2, "yes", 4));
+		assertTrue(testDB.indicateResponse(1, 2, 3, "yes", 4));
+		proposals = testDB.getAllNonDraftProposals(2, false);
+
+		// expect the have both events pass for availability filtering, but only event 1
+		// passes for excitement filtering as the final best event
+		assertEquals(1, proposals.get(0).bestEventId);
+		assertEquals("Birthday", proposals.get(0).bestEvent.eventName);
+		assertEquals(proposals.get(0).isFinalized, true);
+		assertEquals(proposals.get(0).isDraft, false);
+
+		// test when users accept or reject proposals
+		// assertTrue(testDB.setFinalDecision(2, 1, true));
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        Mockito.when(response.getWriter()).thenReturn(pw);
-        GetAllNonDraftProposalsServlet servlet = new GetAllNonDraftProposalsServlet();
+        Mockito.doReturn(pw).when(response).getWriter();
+        Mockito.doReturn("2").when(request).getParameter("userId");
+        Mockito.doReturn("1").when(request).getParameter("proposalId");
+        Mockito.doReturn("true").when(request).getParameter("accept");
+        SetFinalDecisionServlet servlet = new SetFinalDecisionServlet();
         servlet.init(config);
         servlet.doPost(request, response);
         String result = sw.getBuffer().toString();
-        System.out.println(result);
-        assertTrue(result.contains("birthdayVenue"));
-        assertTrue(result.contains("BTSConcertVenue"));
-        assertTrue(result.contains("invitee 1"));
-        assertTrue(result.contains("invitee 2"));
+        assertEquals("true", result);
 
-        // check empty response
-        Mockito.when(request.getParameter("userId")).thenReturn("2");
-        Mockito.when(request.getParameter("isOwner")).thenReturn("true");
-        sw = new StringWriter();
-        pw = new PrintWriter(sw);
-        Mockito.when(response.getWriter()).thenReturn(pw);
-        servlet = new GetAllNonDraftProposalsServlet();
-        servlet.init(config);
-        servlet.doPost(request, response);
-        result = sw.getBuffer().toString();
-        System.out.println(result);
-        assertTrue(result.equals("[]"));
+		proposals = testDB.getAllNonDraftProposals(2, false);
+		assertEquals(proposals.get(0).accepted.size(), 1);
+		assertEquals(proposals.get(0).declined.size(), 0);
+		assertEquals(proposals.get(0).notResponded.size(), 2);
 
-        // check empty response
-        Mockito.when(request.getParameter("userId")).thenReturn("1");
-        Mockito.when(request.getParameter("isOwner")).thenReturn("false");
-        sw = new StringWriter();
-        pw = new PrintWriter(sw);
-        Mockito.when(response.getWriter()).thenReturn(pw);
-        servlet = new GetAllNonDraftProposalsServlet();
-        servlet.init(config);
-        servlet.doPost(request, response);
-        result = sw.getBuffer().toString();
-        System.out.println(result);
-        assertTrue(result.equals("[]"));
-
-        // check response
-        Mockito.when(request.getParameter("userId")).thenReturn("2");
-        Mockito.when(request.getParameter("isOwner")).thenReturn("false");
-        sw = new StringWriter();
-        pw = new PrintWriter(sw);
-        Mockito.when(response.getWriter()).thenReturn(pw);
-        servlet = new GetAllNonDraftProposalsServlet();
-        servlet.init(config);
-        servlet.doPost(request, response);
-        result = sw.getBuffer().toString();
-        System.out.println(result);
-        assertTrue(result.contains("birthdayVenue"));
-        assertTrue(result.contains("BTSConcertVenue"));
-        assertTrue(result.contains("invitee 1"));
-        assertTrue(result.contains("invitee 2"));
-
-        // close database for full coverage
+        // close database for coverage
         testDB.close();
         try{
             servlet.doPost(request, response);
-            fail("Should have thrown an exception");
-        }
-        catch(Exception e){
-            assertTrue(e.getMessage().contains("failed"));
+            fail("Should have thown an exception");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Failed"));
         }
     }
 }

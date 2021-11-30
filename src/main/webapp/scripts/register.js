@@ -31,6 +31,14 @@ function handleRegisterClick(event) {
         // otherwise, it will return -1
         if (result != "-1") {
           alert("Account successfully created!")
+          // User session persistence
+          if (!sessionStorage.getItem("username")) {
+            sessionStorage.setItem("username", usernameInput)
+          }
+          if (!sessionStorage.getItem("userId")) {
+            sessionStorage.setItem("userId", result)
+          }
+          document.location.href = "create-proposal.jsp"
         } else {
           setWarnings(usernameInputField, "Username has already been taken", "username-taken")
         }

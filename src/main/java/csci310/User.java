@@ -9,7 +9,8 @@ public class User {
     public ArrayList<User> blockedUsers;
     public ArrayList<Proposal> receivedProposals;
     public ArrayList<Proposal> sentProposals;
-
+    Boolean accepted;
+    Boolean responded;
 
     public User(String username) throws Exception {
         this.username = username;

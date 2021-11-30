@@ -9,6 +9,9 @@
     overflow: auto;
     background-color: rgba(0,0,0,0.4);
 }
+.popup.show {
+    display: block;
+}
 
 #popupContent {
     text-align: center;

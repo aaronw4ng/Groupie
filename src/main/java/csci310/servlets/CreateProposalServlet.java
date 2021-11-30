@@ -27,6 +27,7 @@ public class CreateProposalServlet extends HttpServlet {
             Boolean isNew = Boolean.parseBoolean(request.getParameter("isNew"));
             int proposalId = Integer.parseInt(request.getParameter("proposalId"));
             JsonArray invitedJson = new Gson().fromJson(invited, JsonArray.class);
+            System.out.println("HERE");
             List<String> invitedList = new ArrayList<>();
             for (int i = 0; i < invitedJson.size(); i++) {
                 invitedList.add(invitedJson.get(i).getAsString());

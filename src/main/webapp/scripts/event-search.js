@@ -1,3 +1,8 @@
+// User access
+if (!sessionStorage.getItem("username")) {
+    document.location.href = "../index.jsp"
+}
+
 if (sessionStorage.getItem("selected") == null) {
     sessionStorage.setItem("selected", "[]")
 }
@@ -7,25 +12,15 @@ function handleSubmit(event) {
     const keywordInput = document.querySelector("#event-search-input").value
     const zipcodeInput = document.querySelector("#event-zip-input").value
     const cityInput = document.querySelector("#event-city-input").value
+    const genreInput = document.querySelector("#event-genre-input").value
     let startDateInput = document.querySelector("#start").value
     let endDateInput = document.querySelector("#end").value
 
     console.log("KEYWORD:", keywordInput, "ZIPCODE:", zipcodeInput, "CITY:", cityInput, "START:", startDateInput, "END:", endDateInput)
     
     // Date Formatting for Servlet
-    if (startDateInput != "") {
-        let startDateArr = startDateInput.split("-")
-        console.log(startDateArr)
-        let yearString = startDateArr[0]
-        startDateInput = yearString + "-" + startDateArr[1] + "-" + startDateArr[2] + "T00:00:00Z"
-        console.log(startDateInput)
-    }
-
-    if (endDateInput != "") {
-        let endDateArr = endDateInput.split("-")
-        let yearString = endDateArr[0]
-        endDateInput = yearString + "-" + endDateArr[1] + "-" + endDateArr[2] + "T00:00:00Z"
-    }
+    startDateInput = formatInputDate(startDateInput);
+    endDateInput = formatInputDate(endDateInput);
 
     // ********* TESTS **********
     // Test Return object
@@ -54,13 +49,14 @@ function handleSubmit(event) {
             zipCode: zipcodeInput,
             city: cityInput,
             startDate: startDateInput,
-            endDate: endDateInput
+            endDate: endDateInput,
+            genre: genreInput
         },
 
         success: function(result) {
             console.log(result)
             if (result == "No results found!") {
-                resultsContainer.innerHTML = "No events found."
+                resultsContainer.innerHTML += `<p>No events found.</p>`
             }
             else {
                 // Store response json string in session storage
@@ -71,15 +67,40 @@ function handleSubmit(event) {
                 resultsCount.innerHTML = countString
                 // Parse JSON & add results cards to Container
                 for (let i = 0; i < json.length; i++) {
-                    console.log(json[i].url)
+                    console.log(json[i])
                     let resultCardString = `
                     <div class="event-result-card">
-                        <div class="event-info">
-                            <h1 class="result-title">${json[i].eventName}</h1>
-                            <p class="result-date-range">${json[i].startDateTime}</p>
-                            <a class="result-url" href="${json[i].url}" target="_blank">ticketmaster page</a>
+                        <p class="result-title" id="result-title-id-${i}">${json[i].eventName}</p>
+                        <hr>
+                        <p class="event-info-title" id="event-info-title-id-${i}"><i class="fas fa-info-circle"></i> event info</p>
+                        <div class="event-info">   
+                            <div>
+                                <p class="result-header">start date</p>
+                                <p class="result-date-range" id="start-date-id-${i}">${json[i].startDateTime.substring(0,10)}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">event link</p>
+                                <a class="result-url" id="event-link-${i}" href="${json[i].url}" target="_blank">ticketmaster page</a>
+                            </div>
+                            <div>
+                                <p class="result-header">venue</p>
+                                <p class="result-venue" id="venue-id-${i}">${json[i].venues[0].name}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">city</p>
+                                <p class="result-city" id="city-id-${i}">${json[i].venues[0].city}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">genre</p>
+                                <p class="result-genre" id="genre-id-${i}">${json[i].genre}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">zipcode</p>
+                                <p class="result-zipcode" id="zipcode-id-${i}">${json[i].venues[0].zipcode}</p>
+                            </div>
+                            <hr>
                         </div>
-                        <button class="btn-add-result" onclick="handleResultSelection(${i})">add event</button>
+                        <button class="btn-add-result" id="btn-add-result-id-${i}" onclick="handleResultSelection(${i})">add event</button>
                     </div>
                     `;
                     resultsContainer.innerHTML += resultCardString
@@ -88,6 +109,16 @@ function handleSubmit(event) {
             }
         }
     })
+}
+
+// Function to format data for servlet
+function formatInputDate(dateInput) {
+    if (dateInput != "") {
+        let dateArr = dateInput.split("-")
+        let yearString = dateArr[0]
+        dateInput = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z"
+    }
+    return dateInput;
 }
 
 function clearContainer(container) {
@@ -130,3 +161,15 @@ function setFilters() {
     var div = document.getElementById('search-filters');
     div.style.display = 'none'
 }
+
+function setMaxEndDate(event) {
+    let currDate = new Date(event.target.value)
+    var newDate = new Date(currDate.setMonth(currDate.getMonth()+6));
+    newDate = newDate.toISOString().substr(0,10)
+    console.log(newDate)
+    document.querySelector("#end").setAttribute("min", event.target.value)
+    document.querySelector("#end").setAttribute("max", newDate)
+
+}
+
+setFilters()

@@ -33,6 +33,34 @@
     <servlet-name>SaveDraftProposalServlet</servlet-name>
     <servlet-class>csci310.servlets.SaveDraftProposalServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.RemoveInviteeFromSentProposalServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetAllDraftProposalsServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetAllDraftProposalsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetAllNonDraftProposalsServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetAllNonDraftProposalsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>BlockUserServlet</servlet-name>
+    <servlet-class>csci310.servlets.BlockUserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SetAvailabilityServlet</servlet-name>
+    <servlet-class>csci310.servlets.SetAvailabilityServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UnblockUserServlet</servlet-name>
+    <servlet-class>csci310.servlets.UnblockUserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>RemoveEventFromSentProposalServlet</servlet-name>
+    <servlet-class>csci310.servlets.RemoveEventFromSentProposalServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -61,5 +89,32 @@
     <servlet-name>SaveDraftProposalServlet</servlet-name>
     <url-pattern>/saveDraftProposal</url-pattern>
   </servlet-mapping>
-
+  <servlet-mapping>
+    <servlet-name>RemoveInviteeFromSentProposalServlet</servlet-name>
+    <url-pattern>/removeInviteeFromSentProposal</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetAllDraftProposalsServlet</servlet-name>
+    <url-pattern>/getAllDraftProposals</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetAllNonDraftProposalsServlet</servlet-name>
+    <url-pattern>/getAllNonDraftProposals</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BlockUserServlet</servlet-name>
+    <url-pattern>/blockUser</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SetAvailabilityServlet</servlet-name>
+    <url-pattern>/setAvailability</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UnblockUserServlet</servlet-name>
+    <url-pattern>/unblockUser</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RemoveEventFromSentProposalServlet</servlet-name>
+    <url-pattern>/removeEventFromSentProposalServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

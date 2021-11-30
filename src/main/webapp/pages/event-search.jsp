@@ -20,6 +20,10 @@
     </div>
 
     <!-- Search Container -->
+    <!-- <div class="btn-back-container">
+      <p>back to your proposal</p>
+      <button id="btn-back"><i class="fas fa-undo-alt"></i></button>
+    </div> -->
     <div class="event-search-container">
       <form id="event-search-form">
         <div class="search-row">
@@ -33,7 +37,7 @@
 
             <div id="start-date">
               <label for="start" id="datelabel">start date</label>
-              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03" />
+              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03" onblur="setMaxEndDate(event)"/>
             </div>
           </div>
           <div class="search-item">
@@ -56,10 +60,17 @@
           <div class="search-item">
             <p class="search-input-label">genre</p>
             <select class="search-input" id="event-genre-input">
-              <option value="">Genres</option>
-              <option value="">Blah</option>
-              <option value="">Blah</option>
-              <option value="">Blah</option>
+              <option selected disabled value="">Genres</option>
+              <option value="Pop">Pop</option>
+              <option value="Jazz">Jazz</option>
+              <option value="Classical">Classical</option>
+              <option value="Rock">Rock</option>
+              <option value="Soccer">Soccer</option>
+              <option value="Football">Football</option>
+              <option value="Basketball">Basketball</option>
+              <option value="Theatre">Theatre</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Magic & Illusion">Magic & Illusion</option>
             </select>
           </div>
         </div>
