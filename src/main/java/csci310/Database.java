@@ -783,7 +783,12 @@ public class Database {
 		}
 	}
 
-	
+	// all user/availibility related functions
+	// returns if the any changes were made to the database
+	// if setting availability to true, the "until" field doesn't matter
+	public Boolean setUserAvailability(int userId, Boolean availability, String until) throws Exception {
+		return true;
+	}
 
 	// refresh all users' availability by checking for until and current timestamp
 	public void refreshUsersAvailability() throws Exception {
