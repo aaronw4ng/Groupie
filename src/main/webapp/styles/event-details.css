@@ -192,12 +192,7 @@ body {
     font-size: 2rem;
 }
 
-@media (max-width : 991px) {
-    #user-response-card {
-        width : 100%;
-    }
-}
-@media (max-width : 776px) {
+@media (max-width : 1174px) {
     #user-response-card {
         flex-direction: column;
     }

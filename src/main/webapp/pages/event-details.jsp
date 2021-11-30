@@ -73,6 +73,7 @@
           <p class="user-response-prompt">are you available?</p>
           <div class="availability-container">
             <button id="mark-available" class="btn-availability" onclick="handleAvailableClick(event)"><i class="fas fa-check-circle"></i></button>
+            <button id="mark-available" class="btn-availability" onclick="handleAvailableClick(event)"><i class="fas fa-question-circle"></i></button>
             <button id="mark-unavailable" class="btn-availability" onclick="handleAvailableClick(event)"><i class="fas fa-times-circle"></i></button>
           </div>
         </div>
@@ -121,7 +122,7 @@
        <!-- Example of unavailable user -->
        <div class="other-response-card">
         <div class="response-card-col">
-          <h1 class="other-username" id="other-user-1">username1</h1>
+          <h1 class="other-username" id="other-user-1">username2</h1>
         </div>
         <div class="response-card-col">
           <p class="user-response-prompt">available?</p>
