@@ -787,6 +787,18 @@ public class Database {
 	// returns if the any changes were made to the database
 	// if setting availability to true, the "until" field doesn't matter
 	public Boolean setUserAvailability(int userId, Boolean availability, String until) throws Exception {
+		// update availability
+		PreparedStatement stmt1 = connection.prepareStatement("UPDATE users SET availability = ?, until = ? WHERE user_id = ?");
+		stmt1.setBoolean(1, availability);
+		stmt1.setString(2, until);
+		stmt1.setInt(3, userId);
+		int rowsAffected = stmt1.executeUpdate();
+		stmt1.close();
+		// should only affect one row; otherwise, did not successfully update availability
+		if (rowsAffected != 1) {
+			return false;
+		}
+		System.out.println("Updated availability for user: " + userId + " to " + availability + " until " + until);
 		return true;
 	}
 
