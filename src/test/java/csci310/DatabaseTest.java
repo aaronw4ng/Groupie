@@ -1378,6 +1378,19 @@ public class DatabaseTest {
 	}
 
 	@Test
+	public void testGetUserAvailability() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		testDB.register("user1", "ps1");
+		testDB.register("user2", "ps2");
+		testDB.register("user3", "ps3");
+
+		fail();
+	}
+
+	@Test
 	public void testGetAllUsers() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();

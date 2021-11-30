@@ -802,6 +802,10 @@ public class Database {
 		return true;
 	}
 
+	public UserAvailability getUserAvailability(int userId) throws Exception {
+		return null;
+	}
+
 	// refresh all users' availability by checking for until and current timestamp
 	public void refreshUsersAvailability() throws Exception {
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE availability = ?");
