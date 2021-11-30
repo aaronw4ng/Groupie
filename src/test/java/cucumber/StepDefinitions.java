@@ -173,6 +173,8 @@ public class StepDefinitions {
 	@When("user inputs {string} in proposal name")
 	public void user_inputs_in_proposal_name(String string) {
 		WebElement queryBox = driver.findElement(By.id("input-proposal-name"));
+		// clear the placeholder value
+		queryBox.clear();
 		queryBox.sendKeys(string);
 		// Click outside of selection 
 		driver.findElement(By.id("proposal-name-header")).click();
