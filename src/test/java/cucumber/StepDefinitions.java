@@ -427,6 +427,42 @@ public class StepDefinitions {
 		driver.get("https://localhost:8080/pages/proposal-details.jsp");
 	}
 
+	/* DELETE PROPOSAL */
+	@When("user navigates to View Proposals page")
+	public void user_navigates_to_View_Proposals_page() {
+		// TODO: click the proper header in the nav menu
+	}
+
+	@When("user clicks the first owned proposal")
+	public void user_clicks_the_first_owned_proposal() {
+		// TODO: click first owned proposal on view proposals page
+	}
+
+	@When("user deletes all users")
+	public void user_deletes_all_users() {
+		// TODO: go through all user cards and click the remove button, and accept the confirmation
+	}
+
+	@When("user clicks the delete proposal button")
+	public void user_clicks_the_delete_proposal_button() {
+		// This is a placeholder function until page is implemented
+	}
+
+	@When("user deletes all events")
+	public void user_deletes_all_events() {
+		// TODO: go through all event cards and click the remove button, and accept the confirmation
+	}
+
+	@When("user accepts the confirmation")
+	public void user_accepts_the_confirmation() {
+		// TODO: await confirmation popup and click 'OK'
+	}
+
+	@Then("the proposal should be deleted")
+	public void the_proposal_should_be_deleted() {
+		// TODO: check url that back on view proposal page
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
