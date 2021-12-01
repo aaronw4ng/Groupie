@@ -20,9 +20,13 @@ function handleSubmit(event) {
         endDateInput = document.querySelector("#end").value
         endDateInput = formatInputDate(endDateInput);
     }
-    else {
 
+    if (keywordInput === "" && zipcodeInput === "" && cityInput === "" && genreInput === "" && startDateInput === "" && endDateInput === "") {
+        console.log("EMPTY")
+        alert("Empty input fields! Please try again.")
+        return
     }
+
     console.log("KEYWORD:", keywordInput, "ZIPCODE:", zipcodeInput, "CITY:", cityInput, "START:", startDateInput, "END:", endDateInput)
     
     // Date Formatting for Servlet
@@ -168,16 +172,28 @@ function setFilters() {
     div.style.display = 'none'
 }
 
-// TODO: calculate end date that is 6 months from CURRENT date regardless of user input for start date
-function setMaxEndDate(event) {
-    let currDate = new Date(event.target.value)
-    var newDate = new Date(currDate.setMonth(currDate.getMonth()+6));
+function setMaxEndDate() {
+    // let currDate = new Date(event.target.value)
+
+    var currDate = new Date();
+    // var dd = String(today.getDate()).padStart(2, '0');
+    // var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    // var yyyy = today.getFullYear();
+
+    // today = mm + '/' + dd + '/' + yyyy;
+    console.log("TODAY: " + currDate)
+
+    var newDate = new Date();
+    newDate.setMonth(currDate.getMonth()+6)
     newDate = newDate.toISOString().substr(0,10)
-    console.log(newDate)
-    document.querySelector("#end").setAttribute("min", event.target.value)
+    currDate = currDate.toISOString().substr(0,10)
+    console.log(newDate + "CURR" + currDate)
+    document.querySelector("#start").setAttribute("min", currDate)
+    document.querySelector("#start").setAttribute("max", newDate)
     document.querySelector("#end").setAttribute("max", newDate)
     endDateInput = newDate
 
 }
 
+setMaxEndDate()
 setFilters()
