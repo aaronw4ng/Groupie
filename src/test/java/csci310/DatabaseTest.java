@@ -1600,25 +1600,12 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testHelperRemoveEvent() throws Exception {
-		Database testDB = new Database("test.db");
-		testDB.dropAllTables();
-		testDB.createRequiredTables();
-
-		int status = testDB.helperRemoveEventFromSent("responses", 1, 2);
-		assertEquals(1, status);
-
-		testDB.dropAllTables();
-		testDB.close();
-
-	}
-
 	public void testExecuteSQLDelete() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 
-		int status = testDB.helperRemoveEventFromSent("responses", 1, 2);
+		int status = testDB.executeSQLDelete("responses", 1, 2);
 		assertEquals(1, status);
 
 		testDB.dropAllTables();
