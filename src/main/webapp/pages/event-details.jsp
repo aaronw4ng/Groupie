@@ -154,6 +154,7 @@
     <p>team 27</p>
   </div>
 
+  <script src="../scripts/autologout.js"></script>
   <script src="../scripts/event-details.js"></script>
 
 </body>

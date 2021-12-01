@@ -34,15 +34,16 @@
         <h1 class="section-title">events</h1>
         <p class="section-description">click to view event details</p>
         <div class="events-container">
-          <div class="event-card">
+          <div data-event-id="1" class="event-card">
             <h1>event one</h1>
+            <button id="btn-delete-event-1" class="btn-delete" onclick="handleDeleteClick(event, 'event')">X</button>
           </div>
-        </div>
-        <div class="events-container">
-          <div class="event-card">
+          <div data-event-id="2" class="event-card">
             <h1>event two</h1>
+            <button id="btn-delete-event-2" class="btn-delete" onclick="handleDeleteClick(event, 'event')">X</button>
           </div>
         </div>
+        
       </div>
       
       <hr>
@@ -54,7 +55,10 @@
           <div class="user-card">
             <p id="proposal-host-header"><i class="fas fa-crown"></i> proposal host</p>
             <h1>user one</h1>
-            
+          </div>
+          <div data-user-id="2" class="user-card">
+            <h1>user two</h1>
+            <button id="btn-delete-user-2" class="btn-delete" onclick="handleDeleteClick(event, 'user')">X</button>
           </div>
         </div>
 
@@ -66,6 +70,7 @@
   <div id="footer">
     <p>team 27</p>
   </div>
+  <script src="../scripts/autologout.js"></script>
   <script src="../scripts/proposal-details.js"></script>
 </body>
   <!-- <jsp:include page="autologout.jsp"></jsp:include> -->

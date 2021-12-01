@@ -1,3 +1,8 @@
+// User access
+if (!sessionStorage.getItem("username")) {
+    document.location.href = "../index.jsp"
+}
+
 // GLOBALS
 let userID
 let eventID
@@ -132,3 +137,5 @@ function handleBackBtnClick(event) {
     cleanSessionStorage()
     document.location.href = "#"
 }
+
+startAutoLogoutRoutine()
