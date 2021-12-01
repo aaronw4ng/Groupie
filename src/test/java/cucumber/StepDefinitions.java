@@ -2,18 +2,13 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import io.cucumber.java.eo.Se;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -272,11 +267,9 @@ public class StepDefinitions {
 
 	@Then("user should see {string}")
 	public void user_should_see_event_results(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		String result = driver.findElement(By.id("event-search-result-count")).getText();
-		// TODO: finish up assertion
-		//assertTrue(result.getText().equalsIgnoreCase(string));
-
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals(string, alert.getText());
 	}
 
 	@Then("user should see {string} event name")
@@ -397,14 +390,16 @@ public class StepDefinitions {
 	}
 
 	/* For Automatic Logout When User Inactive */
-	@And("user does nothing for over 60s")
+	@When("user does nothing for over 60s")
 	public void userDoesNothingForOver60s() {
-		// Wait for at least 70s and do nothing for pop up to show
-		try {
-			Thread.sleep(7000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		// Wait until pop up shows
+		WebElement element = (new WebDriverWait(driver, 65000))
+				.until(ExpectedConditions.elementToBeClickable(By.id("stayButton")));
+	}
+
+	@Then("auto log out pop up shows")
+	public void autoLogOutPopUpShows() {
+		assertEquals("Stay", driver.findElement(By.id("stayButton")).getText());
 	}
 
 	/* Restrict access to pages to only logged in users */
@@ -463,10 +458,27 @@ public class StepDefinitions {
 	@Then("the proposal should be deleted")
 	public void the_proposal_should_be_deleted() {
 		// TODO: check url that back on view proposal page
+	/* Filter user search when inviting user */
+	@When("user types in friend")
+	public void userTypesInFriend() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(generatedUsername2);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Then("user results should be filtered")
+	public void userResultsShouldBeFiltered() {
+		assertEquals(generatedUsername2.toLowerCase(), driver.findElement(By.id("user-card-1")).getText());
 	}
 
 	@After()
 	public void after() {
 		driver.quit();
 	}
+
 }
