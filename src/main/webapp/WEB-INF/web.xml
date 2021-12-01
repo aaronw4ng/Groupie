@@ -61,6 +61,22 @@
     <servlet-name>RemoveEventFromSentProposalServlet</servlet-name>
     <servlet-class>csci310.servlets.RemoveEventFromSentProposalServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GetUserAvailabilityServlet</servlet-name>
+    <servlet-class>csci310.servlets.GetUserAvailabilityServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>IndicateResponseServlet</servlet-name>
+    <servlet-class>csci310.servlets.IndicateResponseServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SetBestEventServlet</servlet-name>
+    <servlet-class>csci310.servlets.SetBestEventServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SetFinalDecisionServlet</servlet-name>
+    <servlet-class>csci310.servlets.SetFinalDecisionServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -116,5 +132,21 @@
   <servlet-mapping>
     <servlet-name>RemoveEventFromSentProposalServlet</servlet-name>
     <url-pattern>/removeEventFromSentProposalServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetUserAvailabilityServlet</servlet-name>
+    <url-pattern>/getUserAvailability</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IndicateResponseServlet</servlet-name>
+    <url-pattern>/indicateResponse</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SetBestEventServlet</servlet-name>
+    <url-pattern>/setBestEvent</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SetFinalDecisionServlet</servlet-name>
+    <url-pattern>/setFinalDecision</url-pattern>
   </servlet-mapping>
 </web-app>
