@@ -22,7 +22,7 @@
         <h1 id="event-name-header">event name</h1>
         <div class="btn-back-container">
             <p>back to proposal</p>
-            <button id="btn-back"><i class="fas fa-undo-alt"></i></button>
+            <button id="btn-back" onclick="handleBackBtnClick(event)"><i class="fas fa-undo-alt"></i></button>
         </div>
     </div>
 
@@ -73,7 +73,7 @@
           <p class="user-response-prompt">are you available?</p>
           <div class="availability-container">
             <button id="mark-available" class="btn-availability" onclick="handleAvailableClick(event)"><i class="fas fa-check-circle"></i></button>
-            <button id="mark-available" class="btn-availability" onclick="handleAvailableClick(event)"><i class="fas fa-question-circle"></i></button>
+            <button id="mark-maybe" class="btn-availability" onclick="handleAvailableClick(event)"><i class="fas fa-question-circle"></i></button>
             <button id="mark-unavailable" class="btn-availability" onclick="handleAvailableClick(event)"><i class="fas fa-times-circle"></i></button>
           </div>
         </div>

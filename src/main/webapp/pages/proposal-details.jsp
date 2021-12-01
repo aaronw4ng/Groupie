@@ -22,7 +22,7 @@
           <h1 id="page-title"><i class="fas fa-info-circle"></i> proposal details</h1>
           <div class="btn-back-container">
               <p>back to your groupies</p>
-              <button id="btn-back"><i class="fas fa-undo-alt"></i></button>
+              <button id="btn-back" onclick="handleBackBtnClick(event)"><i class="fas fa-undo-alt"></i></button>
           </div>
       </div>
       <h1 class="section-title">title</h1>
@@ -52,7 +52,9 @@
         <p class="section-description">see who's in your groupie</p>
         <div class="users-container">
           <div class="user-card">
+            <p id="proposal-host-header"><i class="fas fa-crown"></i> proposal host</p>
             <h1>user one</h1>
+            
           </div>
         </div>
 
@@ -64,7 +66,7 @@
   <div id="footer">
     <p>team 27</p>
   </div>
-
+  <script src="../scripts/proposal-details.js"></script>
 </body>
   <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>

@@ -14,6 +14,19 @@ if (sessionStorage.contains("proposalId")) {
 }
 // END GLOBALS
 
+// ** FILL IN EVENT INFO **
+function fillEventInfo() {
+    let eventNameInfo = document.querySelector("#event-name-header")
+    let startDateInfo = document.querySelector("#start-date")
+    let endDateInfo = document.querySelector("#end-date")
+    let cityInfo = document.querySelector("#city")
+    let zipcodeInfo = document.querySelector("#zipcode")
+    let venueInfo = document.querySelector("#venue")
+    let eventLinkInfo = document.querySelector("#event-link")
+
+    // TODO: dynamically set values from SS
+}
+
 function handleExcitementStarClick(event) {
     console.log(event)
     if (event.srcElement.className == "excitement-star") {
@@ -62,14 +75,19 @@ function handleAvailableClick(event) {
             availableBtns[i].firstElementChild.classList.remove("highlight-response")
         }
     }
+    event.srcElement.classList.add("highlight-response")
     if (event.srcElement.id == "mark-available" || event.srcElement.parentElement.id == "mark-available") {
         console.log("AVAILABLE")
-        event.srcElement.classList.add("highlight-response")
+        fillStars(1)
         sessionStorage.setItem("availability", "yes")
         toggleExcitementSelection(false)
     }
-    else {
-        event.srcElement.classList.add("highlight-response")
+    else if (event.srcElement.id == "mark-maybe" || event.srcElement.parentElement.id == "mark-maybe") {
+        fillStars(1)
+        sessionStorage.setItem("availability", "maybe")
+        toggleExcitementSelection(false)
+    }
+    else {        
         fillStars(0)
         sessionStorage.setItem("availability", "no")
         sessionStorage.setItem("excitement", "0")
@@ -100,4 +118,17 @@ function handleSaveUserRespClick(event) {
             }
         }
     })
+}
+
+// BACK BTN PRESS
+function handleBackBtnClick(event) {
+    function cleanSessionStorage() {
+        for (var i = 0; i < sessionStorage.length; i++) {
+            if (sessionStorage.key(i) !== "username" && sessionStorage.key(i) !== "userId") {
+                sessionStorage.removeItem(sessionStorage.key(i))
+            }
+        }
+    }
+    cleanSessionStorage()
+    document.location.href = "#"
 }
