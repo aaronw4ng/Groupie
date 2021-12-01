@@ -966,12 +966,15 @@ public class Database {
 
 	// Helper function for executing SQL delete statements
 	public int helperRemoveEventFromSent(String table, int proposalId, int eventId) throws Exception {
-		String sql = "DELETE FROM " + " WHERE proposal_id = ? AND event_id = ?";
+		String sql = "DELETE FROM " + table + " WHERE proposal_id = ? AND event_id = ?";
 		PreparedStatement stmt = connection.prepareStatement(sql);
-		stmt.setString(1, table);
-		stmt.setInt(2, proposalId);
-		stmt.setInt(3, eventId);
+		stmt.setInt(1, proposalId);
+		stmt.setInt(2, eventId);
 
 		return stmt.executeUpdate();
+	}
+
+	public int executeSQLDelete(String table, int proposalId, int eventId) throws Exception {
+		return 1;
 	}
 }
