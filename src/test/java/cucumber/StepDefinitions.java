@@ -272,11 +272,9 @@ public class StepDefinitions {
 
 	@Then("user should see {string}")
 	public void user_should_see_event_results(String string) {
-		// Write code here that turns the phrase above into concrete actions
-		String result = driver.findElement(By.id("event-search-result-count")).getText();
-		// TODO: finish up assertion
-		//assertTrue(result.getText().equalsIgnoreCase(string));
-
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals(string, alert.getText());
 	}
 
 	@Then("user should see {string} event name")

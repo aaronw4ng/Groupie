@@ -16,8 +16,9 @@ function handleSubmit(event) {
     let startDateInput = document.querySelector("#start").value
     let endDateInput = document.querySelector("#end").value
 
-    if (keywordInput === "" && zipcodeInput === "" && cityInput === "" && genreInput === "" && startDateInput === "") {
+    if (keywordInput === "" && zipcodeInput === "" && cityInput === "" && genreInput === "" && startDateInput === "" && endDateInput === "") {
         console.log("EMPTY")
+        alert("Empty input fields! Please try again.")
         return
     }
 
