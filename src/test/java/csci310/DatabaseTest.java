@@ -1599,14 +1599,37 @@ public class DatabaseTest {
 		testDB.close();
 	}
 
+	// This functionality is all tested in the function above, but must be recreated for testing this helper function in isolation
 	@Test
 	public void testExecuteSQLDelete() throws Exception {
 		Database testDB = new Database("test.db");
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
+		String title = "Test remove event from sent proposal helper";
 
-		int status = testDB.executeSQLDelete("responses", 1, 2);
-		assertEquals(1, status);
+		// Add user, invitee, events to database
+		testDB.register("test", "11111111"); // userId = 1
+		testDB.register("test1", "111111111");
+
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+
+		// Pass events to proposal
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Venue> venues2 = new ArrayList<>();
+		venues2.add(new Venue("BTSConcertVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1)); // eventId = 1
+		events.add(new Event("BTS Concert", "TestURL", "TestStartDate", venues2)); // eventId = 2
+
+		// Create and send proposal
+		int newProposalId = testDB.savesDraftProposal("Test User", title, "descript", invitees, events, true, -1);
+		testDB.sendProposal(newProposalId); // proposalId = 1
+
+		// Test helper function for main deleteFromSentProposal (would be called there)
+		int status = testDB.executeSQLDelete("events", 1, 1);
+		assertEquals(0, status);
 
 		testDB.dropAllTables();
 		testDB.close();
