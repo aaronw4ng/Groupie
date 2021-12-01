@@ -949,11 +949,11 @@ public class Database {
 	// Removes an event and associated responses from a sent proposal
 	public Boolean removeEventFromSentProposal(int proposalId, int eventId) throws Exception {
 		System.out.println("Trying to remove event " + eventId + " from proposal id " + proposalId);
-		// Remove all responses related to event ID
+		// Remove all responses related to event ID using helper
 		int rows = helperRemoveEventFromSent("responses", proposalId, eventId);
 		System.out.println("Rows affected from removing item: " + rows);
 
-		// Remove event ID from events list
+		// Remove event ID from events list using helper
 		int eventsRowsAffected = helperRemoveEventFromSent("events", proposalId, eventId);
 		System.out.println("Rows affected from removing event from events: " + eventsRowsAffected);
 
@@ -966,6 +966,12 @@ public class Database {
 
 	// Helper function for executing SQL delete statements
 	public int helperRemoveEventFromSent(String table, int proposalId, int eventId) throws Exception {
-		return 1;
+		String sql = "DELETE FROM " + " WHERE proposal_id = ? AND event_id = ?";
+		PreparedStatement stmt = connection.prepareStatement(sql);
+		stmt.setString(1, table);
+		stmt.setInt(2, proposalId);
+		stmt.setInt(3, eventId);
+
+		return stmt.executeUpdate();
 	}
 }
