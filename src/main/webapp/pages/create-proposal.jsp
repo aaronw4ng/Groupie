@@ -62,9 +62,9 @@
   <div id="footer">
     <p>team 27</p>
   </div>
-
+  <jsp:include page="autologout.jsp"></jsp:include>
+  <script src="../scripts/autologout.js"></script>
   <script src="../scripts/create-proposal.js"></script>
   <script src="../scripts/user-search.js"></script>
 </body>
-  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>
