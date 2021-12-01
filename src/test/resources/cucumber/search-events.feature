@@ -8,7 +8,7 @@ Scenario: User searches based on empty fields
   And user accepts the alert
   And user clicks "btn-event-find" button
   And user clicks "event-search-button" button
-  Then user should see "No events found."
+  Then user should see "Empty input fields! Please try again."
 
 Scenario: User searches based on keyword
   Given user is on the Login page
