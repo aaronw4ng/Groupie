@@ -519,6 +519,8 @@ public class Database {
 				proposal.isFinalized = rs.getBoolean("is_finalized");
 				proposal.bestEventId = rs.getInt("best_event_id");
 				proposal.needsOwnersSelection = rs.getBoolean("needs_owners_selection");
+				proposal.user = new User();
+				proposal.user.userId = rs.getInt("owner_id");
 				proposals.add(proposal);
 
 				// test print
@@ -531,7 +533,7 @@ public class Database {
 		else{
 			// get all proposals that the user is invited to
 			PreparedStatement stmt = connection.prepareStatement(
-				"SELECT i.proposal_id,i.invitee_id,title,description,is_draft,is_finalized,best_event_id FROM invitees i INNER JOIN proposals p WHERE i.invitee_id = ? AND i.invitee_id != p.owner_id");
+				"SELECT owner_id,i.proposal_id,i.invitee_id,title,description,is_draft,is_finalized,best_event_id FROM invitees i INNER JOIN proposals p WHERE i.invitee_id = ? AND i.invitee_id != p.owner_id");
 			stmt.setInt(1, userId);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -542,6 +544,8 @@ public class Database {
 				proposal.isDraft = rs.getBoolean("is_draft");
 				proposal.isFinalized = rs.getBoolean("is_finalized");
 				proposal.bestEventId = rs.getInt("best_event_id");
+				proposal.user = new User();
+				proposal.user.userId = rs.getInt("owner_id");
 				proposals.add(proposal);
 
 				System.out.println("Proposal ID: " + proposal.proposalId);
@@ -549,6 +553,16 @@ public class Database {
 			}
 			rs.close();
 			stmt.close();
+		}
+
+		for (Proposal proposal: proposals) {
+			// get user name of the owner
+			PreparedStatement stmt = connection.prepareStatement("SELECT username FROM users WHERE user_id = ?");
+			stmt.setString(1, String.valueOf(proposal.user.userId));
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				proposal.user.username = rs.getString("username");
+			}
 		}
 
 		// add details for each events
@@ -800,6 +814,23 @@ public class Database {
 		}
 		System.out.println("Updated availability for user: " + userId + " to " + availability + " until " + until);
 		return true;
+	}
+
+	public UserAvailability getUserAvailability(int userId) throws Exception {
+		refreshUsersAvailability();
+		PreparedStatement stmt = connection.prepareStatement("SELECT username, availability, until FROM users WHERE user_id = ?");
+		stmt.setInt(1, userId);
+		ResultSet rs = stmt.executeQuery();
+		UserAvailability ua = null;
+		while (rs.next()) {
+			String username = rs.getString("username");
+			String until = rs.getString("until");
+			Boolean isAvailable = rs.getBoolean("availability");
+			ua = new UserAvailability(username, userId, isAvailable, !isAvailable);
+			ua.until = until;
+			System.out.println("Retrieved availability for user: " + userId + " " + isAvailable + " until " + until);
+		}
+		return ua;
 	}
 
 	// refresh all users' availability by checking for until and current timestamp
