@@ -458,6 +458,8 @@ public class StepDefinitions {
 	@Then("the proposal should be deleted")
 	public void the_proposal_should_be_deleted() {
 		// TODO: check url that back on view proposal page
+	}
+
 	/* Filter user search when inviting user */
 	@When("user types in friend")
 	public void userTypesInFriend() {
