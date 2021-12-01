@@ -197,3 +197,4 @@ function populateEventsContainer(proposedEvents) {
 }
 
 displaySelectedEvents()
+startAutoLogoutRoutine()
