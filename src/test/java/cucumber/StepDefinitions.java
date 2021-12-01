@@ -429,8 +429,27 @@ public class StepDefinitions {
 		driver.get("https://localhost:8080/pages/proposal-details.jsp");
 	}
 
+	/* Filter user search when inviting user */
+	@When("user types in friend")
+	public void userTypesInFriend() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(generatedUsername2);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Then("user results should be filtered")
+	public void userResultsShouldBeFiltered() {
+		assertEquals(generatedUsername2.toLowerCase(), driver.findElement(By.id("user-card-1")).getText());
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
 	}
+
 }
