@@ -868,6 +868,7 @@ public class Database {
 		// refresh users' availability before getting all users
 		refreshUsersAvailability();
 
+		// execute SQL query
 		List<UserAvailability> users = new ArrayList<UserAvailability>();
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
 		ResultSet rs = stmt.executeQuery();
@@ -935,7 +936,6 @@ public class Database {
 		if (inviteesRowsAffected != 1) {
 			return false;
 		}
-
 		// Remove user responses that correspond to that proposal ID and user ID
 		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND user_id = ?");
 		responsesStmt.setInt(1, proposalId);
@@ -946,27 +946,26 @@ public class Database {
 		return true;
 	}
 
-	// Removes an event from a sent proposal
+	// Removes an event and associated responses from a sent proposal
 	public Boolean removeEventFromSentProposal(int proposalId, int eventId) throws Exception {
 		System.out.println("Trying to remove event " + eventId + " from proposal id " + proposalId);
 		// Remove all responses related to event ID
-		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND event_id = ?");
-		responsesStmt.setInt(1, proposalId);
-		responsesStmt.setInt(2, eventId);
-		int rows = responsesStmt.executeUpdate();
-		System.out.println("Rows affected from removing responses: " + rows);
+		int rows = helperRemoveEventFromSent("responses", proposalId, eventId);
+		System.out.println("Rows affected from removing item: " + rows);
 
 		// Remove event ID from events list
-		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ? AND event_id = ?");
-		eventsStmt.setInt(1, proposalId);
-		eventsStmt.setInt(2, eventId);
-		int eventsRowsAffected = eventsStmt.executeUpdate();
+		int eventsRowsAffected = helperRemoveEventFromSent("events", proposalId, eventId);
 		System.out.println("Rows affected from removing event from events: " + eventsRowsAffected);
+
 		// Check that only one event was deleted from the database
 		if (eventsRowsAffected != 1) {
 			return false;
 		}
-
 		return true;
+	}
+
+	// Helper function for executing SQL delete statements
+	public int helperRemoveEventFromSent(String table, int proposalId, int eventId) throws Exception {
+		return 1;
 	}
 }

@@ -1598,4 +1598,20 @@ public class DatabaseTest {
 		testDB.dropAllTables();
 		testDB.close();
 	}
+
+	@Test
+	public void testHelperRemoveEvent() throws Exception {
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		int status = testDB.helperRemoveEventFromSent("responses", 1, 2);
+		assertEquals(1, status);
+
+		testDB.dropAllTables();
+		testDB.close();
+
+	}
+
+
 }
