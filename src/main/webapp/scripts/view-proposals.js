@@ -71,11 +71,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 //       }
 //     })
 // }
-
+let proposalResultsContainer = document.querySelector(
+  "#proposal-results-container"
+  )
 const getEvents = async () => {
-    let proposalResultsContainer = document.querySelector(
-        "#proposal-results-container"
-        )
+    
         proposalResultsContainer.innerHTML = ""
 
   console.log("Getting events....")
@@ -118,7 +118,7 @@ const getDraftProposals = userId => {
     url: "../getAllDraftProposals",
     success: function (result) {
       draftProposals = result
-      displayResults(draftProposals)
+      // displayResults(JSON.parse(draftProposals))
     },
   })
   return draftProposals
@@ -135,6 +135,7 @@ const getFinalizedOwnedProposals = userId => {
     url: "../getAllNonDraftProposals",
     success: function (result) {
       finalizedOwnedProposals = result
+      displayResults(JSON.parse(finalizedOwnedProposals))
     },
   })
   return finalizedOwnedProposals
