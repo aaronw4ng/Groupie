@@ -222,7 +222,7 @@ function displayResults(filteredResults, container, proposalType) {
         <div id="${proposalType}-container-${i}" data-json='${JSON.stringify(
           result
         )}' class="proposal-card" onclick="handleProposalResultClick(event)">
-          <h1 class="proposal-title">${result.title}</h1>
+          <h1 class="proposal-title" id="proposal-card-${i}">${result.title}</h1>
         </div>
         `
     container.innerHTML += resultsCard
