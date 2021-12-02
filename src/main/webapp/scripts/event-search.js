@@ -7,6 +7,8 @@ if (sessionStorage.getItem("selected") == null) {
     sessionStorage.setItem("selected", "[]")
 }
 
+let endDateInput
+
 function handleSubmit(event) {
     event.preventDefault();
     const keywordInput = document.querySelector("#event-search-input").value
@@ -14,7 +16,11 @@ function handleSubmit(event) {
     const cityInput = document.querySelector("#event-city-input").value
     const genreInput = document.querySelector("#event-genre-input").value
     let startDateInput = document.querySelector("#start").value
-    let endDateInput = document.querySelector("#end").value
+    endDateInput = document.querySelector("#end").value
+    if (document.querySelector("#end").value !== "") {
+        endDateInput = document.querySelector("#end").value
+        endDateInput = formatInputDate(endDateInput);
+    }
 
     if (keywordInput === "" && zipcodeInput === "" && cityInput === "" && genreInput === "" && startDateInput === "" && endDateInput === "") {
         console.log("EMPTY")
@@ -26,7 +32,6 @@ function handleSubmit(event) {
     
     // Date Formatting for Servlet
     startDateInput = formatInputDate(startDateInput);
-    endDateInput = formatInputDate(endDateInput);
 
     // ********* TESTS **********
     // Test Return object
@@ -187,6 +192,7 @@ function setMaxEndDate() {
     document.querySelector("#start").setAttribute("min", currDate)
     document.querySelector("#start").setAttribute("max", newDate)
     document.querySelector("#end").setAttribute("max", newDate)
+    // endDateInput = newDate
 
 }
 
