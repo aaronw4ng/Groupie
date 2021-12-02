@@ -34,6 +34,7 @@ public class StepDefinitions {
 
 	private static String generatedUsername = null;
 	private static String generatedUsername2 = null;
+	private static String generatedUsername3 = null;
 
 	private ChromeOptions handlingSSL = new ChromeOptions();
 	private WebDriver driver;
@@ -47,6 +48,9 @@ public class StepDefinitions {
 		}
 		if (generatedUsername2 == null) {
 			generatedUsername2 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		}
+		if (generatedUsername3 == null) {
+			generatedUsername3 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
 		}
 	}
 
@@ -69,13 +73,23 @@ public class StepDefinitions {
 	@Then("the {string} button should be disabled")
 	public void the_button_should_be_disabled(String string) {
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		boolean isEnabled = driver.findElement(By.id(string)).isEnabled();
-		// System.out.println(driver.findElement(By.id(string)).isEnabled());
+		System.out.println(driver.findElement(By.id(string)).isEnabled());
 		assertTrue(isEnabled == false);
+	}
+
+	@When("user waits for login cool down period")
+	public void userWaitsForLoginCoolDownPeriod() {
+		// wait for 60+ seconds to try again
+		try {
+			Thread.sleep(60500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// *** CREATE ACCOUNT PAGE ***
@@ -109,6 +123,11 @@ public class StepDefinitions {
 	@When("user inputs in second username")
 	public void userInputsInSecondUsername() {
 		driver.findElement(By.id("input-username")).sendKeys(generatedUsername2);
+	}
+
+	@When("user inputs in third username")
+	public void userInputsInThirdUsername() {
+		driver.findElement(By.id("input-username")).sendKeys(generatedUsername3);
 	}
 
 	@When("user inputs {string} in password")
@@ -476,6 +495,74 @@ public class StepDefinitions {
 	@Then("user results should be filtered")
 	public void userResultsShouldBeFiltered() {
 		assertEquals(generatedUsername2.toLowerCase(), driver.findElement(By.id("user-card-1")).getText());
+	}
+
+	/* View Sent Proposals */
+	@When("user logs out")
+	public void userLogsOut() {
+		user_clicks_button("logout-btn");
+	}
+
+	@When("second user logs in")
+	public void secondUserLogsIn() {
+		userInputsInSecondUsername();
+		user_inputs_password("password1");
+	}
+
+	@When("second user navigates to View Proposals page")
+	public void secondUserNavigatesToViewProposalsPage() {
+		user_navigates_to_View_Proposals_page();
+	}
+
+	@Then("user sees their first proposal that they sent out")
+	public void userSeesTheirFirstProposalThatTheySentOut() {
+	}
+
+	@Then("second user sees the proposal from first user")
+	public void secondUserSeesTheProposalFromFirstUser() {
+	}
+
+	/* Delete event from proposal at any time */
+	@When("user clicks on {string} proposal")
+	public void userClicksOnProposal(String arg0) {
+	}
+
+	@When("user presses button to remove the {string} event")
+	public void userPressesButtonToRemoveTheEvent(String arg0) {
+	}
+
+	@When("user accepts event delete alert")
+	public void userAcceptsEventDeleteAlert() {
+	}
+
+	@When("user accepts deleting event will delete proposal alert")
+	public void userAcceptsDeletingEventWillDeleteProposalAlert() {
+	}
+
+	@Then("user should see an alert message {string}")
+	public void userShouldSeeAnAlertMessage(String arg0) {
+	}
+
+	/* Remove invitee from proposal */
+	@When("user adds second user result")
+	public void userAddsSecondUserResult() {
+	}
+
+	@When("user presses button to remove the first invitee")
+	public void userPressesButtonToRemoveTheFirstInvitee() {
+	}
+
+	@When("user accepts remove invitee alert")
+	public void userAcceptsRemoveInviteeAlert() {
+	}
+
+	@When("user accepts removing invitee will delete proposal alert")
+	public void userAcceptsRemovingInviteeWillDeleteProposalAlert() {
+	}
+
+	/* View Draft Proposals */
+	@Then("user sees {string} proposal")
+	public void userSeesProposal(String arg0) {
 	}
 
 	@After()
