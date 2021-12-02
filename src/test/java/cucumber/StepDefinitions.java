@@ -2,6 +2,7 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -37,9 +38,15 @@ public class StepDefinitions {
 	private static String generatedUsername2 = null;
 	private static String generatedUsername3 = null;
 
+
 	private String newUser1 = null;
 	private String newUser2 = null;
 	private String newUser3 = null;
+
+	// usernames are for removing event
+	private static String randomUser1 = null;
+	private static String randomUser2 = null;
+  
 
 	private ChromeOptions handlingSSL = new ChromeOptions();
 	private WebDriver driver;
@@ -527,7 +534,13 @@ public class StepDefinitions {
 	/* DELETE PROPOSAL */
 	@When("user navigates to View Proposals page")
 	public void user_navigates_to_View_Proposals_page() {
-		// TODO: click the proper header in the nav menu
+		driver.findElement(By.id("view-proposals-btn")).click();
+		// give buffer time for proposals to show up
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@When("user clicks the first owned proposal")
@@ -604,20 +617,72 @@ public class StepDefinitions {
 	}
 
 	/* Delete event from proposal at any time */
+	@When("two new users are added")
+	public void twoNewUsersAreAdded() {
+		randomUser1 =  RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		randomUser2 =  RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		driver.findElement(By.id("input-username")).sendKeys(randomUser1);
+		user_inputs_password("password1");
+		user_retypes_password("password1");
+		user_clicks_button("btn-create-account"); // create first user
+		user_accepts_the_alert(); // accepts alert
+		user_clicks_button("logout-btn"); // first user logs out
+		user_is_on_the_Create_User_page(); // go back to create user page
+		driver.findElement(By.id("input-username")).sendKeys(randomUser2);
+		user_inputs_password("password1");
+		user_retypes_password("password1");
+		user_clicks_button("btn-create-account"); // create second user
+		user_accepts_the_alert(); // accepts alert
+	}
+
+	@When("second user inputs {string} in proposal name")
+	public void secondUserInputsInProposalName(String arg0) {
+		user_inputs_in_proposal_name(arg0);
+	}
+
+	@When("user clicks on the first proposal")
+	public void userClicksOnTheFirstProposal() {
+		driver.findElement(By.id("proposal-card-0")).click();
+		// buffer for time for items to fill in
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@When("user presses button to remove the first event")
+	public void userPressesButtonToRemoveTheFirstEvent() {
+		driver.findElement(By.id("btn-delete-event-0")).click();
+	}
+
+
+
 	@When("user clicks on {string} proposal")
 	public void userClicksOnProposal(String arg0) {
+
 	}
 
 	@When("user presses button to remove the {string} event")
 	public void userPressesButtonToRemoveTheEvent(String arg0) {
 	}
 
-	@When("user accepts event delete alert")
+	@Then("user accepts event delete alert")
 	public void userAcceptsEventDeleteAlert() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Are you sure you want to delete this event?", alert.getText());
+		user_accepts_the_alert();
 	}
 
-	@When("user accepts deleting event will delete proposal alert")
+	@Then("user accepts deleting event will delete proposal alert")
 	public void userAcceptsDeletingEventWillDeleteProposalAlert() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Are you sure you want to delete this event? Doing so will delete the proposal.", alert.getText());
+		user_accepts_the_alert();
 	}
 
 	@Then("user should see an alert message {string}")
@@ -737,5 +802,4 @@ public class StepDefinitions {
 	public void after() {
 		driver.quit();
 	}
-
 }
