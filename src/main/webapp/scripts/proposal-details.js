@@ -1,17 +1,25 @@
 // User access
+let currUsername = ""
 if (!sessionStorage.getItem("username")) {
     document.location.href = "../index.jsp"
+}
+else {
+    currUsername = sessionStorage.getItem("username")
 }
 
 // ** GLOBALS **
 // Get selected proposal from session storage
 
-let isOwner = false
-
+let proposalJSON
+let isOwner
 let ssProposalID // sessionStorage proposalId
 if (sessionStorage.getItem("selectedProposal")) {
-    let proposalJSON = JSON.parse(sessionStorage.getItem("selectedProposal"))
+    proposalJSON = JSON.parse(sessionStorage.getItem("selectedProposal"))
+    console.log(proposalJSON)
+    isOwner = (proposalJSON.user.username === currUsername)
+    console.log("OWNER? " + isOwner)
     ssProposalID = proposalJSON.proposalId
+    displayAllProposalInfo()
 }
 // ** END GLOBALS **
 
@@ -20,12 +28,44 @@ function displayAllProposalInfo() {
     let eventsContainer = document.querySelector(".events-container")
     let usersContainer = document.querySelector(".users-container")
     const proposalEvents = proposalJSON.events
+    const proposalUsers = proposalJSON.invitees
 
     proposalTitle.innerHTML = proposalJSON.title
 
+    eventsContainer.innerHTML = ""
     for (i in proposalEvents) {
         let event = proposalEvents[i]
+        let eventString = `
+        <div data-event-id="${event.eventId}" class="event-card">
+            <h1>${event.eventName}</h1>
+            <button id="btn-delete-event-${i}" class="btn-delete" onclick="handleDeleteClick(event, 'event')">X</button>
+        </div>
+        `;
+        eventsContainer.innerHTML += eventString
         // TODO: display event title in container
+    }
+
+    usersContainer.innerHTML = ""
+    for (i in proposalUsers) {
+        let user = proposalUsers[i]
+        let userString 
+        if (user.username === proposalJSON.user.username) {
+            userString = `
+            <div class="user-card">
+                <p id="proposal-host-header"><i class="fas fa-crown"></i> proposal host</p>
+                <h1>${user.username}</h1>
+            </div>
+            `;
+        }
+        else {
+            userString = `
+            <div data-user-id="${user.userId}" class="user-card">
+                <h1>${user.username}</h1>
+                <button id="btn-delete-user-${i}" class="btn-delete" onclick="handleDeleteClick(event, 'user')">X</button>
+            </div>
+            `;
+        }
+        usersContainer.innerHTML += userString
     }
 
 }
@@ -65,18 +105,21 @@ function handleDeleteClick(event, type) {
             let allEvents = document.querySelectorAll(".event-card")
             // if deleting last non host user
             if (allEvents.length <= 1) {
-                $.ajax({
-                    method: "POST",
-                    url: "../deleteProposal",
-                    data: {
-                        proposalId: ssProposalID,
-                    },
-                    success: function (result) {
-                        if (result === "true") {
-                            console.log("Proposal Deleted successfully")
+                if (confirm("Are you sure you want to delete this " + type + "? Doing so will delete the proposal.")) {
+                    $.ajax({
+                        method: "POST",
+                        url: "../deleteProposal",
+                        data: {
+                            proposalId: ssProposalID,
+                        },
+                        success: function (result) {
+                            if (result === "true") {
+                                console.log("Proposal Deleted successfully")
+                                document.location.href = "./view-proposals.jsp"
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
 
             // console.log(event)
@@ -137,5 +180,5 @@ function handleDeleteClick(event, type) {
 
 // TODO: add autologout
 
-startAutoLogoutRoutine()
+// startAutoLogoutRoutine()
 displayRemoveButtons()

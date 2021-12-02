@@ -16,6 +16,7 @@ function handleSubmit(event) {
     const cityInput = document.querySelector("#event-city-input").value
     const genreInput = document.querySelector("#event-genre-input").value
     let startDateInput = document.querySelector("#start").value
+    endDateInput = document.querySelector("#end").value
     if (document.querySelector("#end").value !== "") {
         endDateInput = document.querySelector("#end").value
         endDateInput = formatInputDate(endDateInput);
@@ -191,7 +192,7 @@ function setMaxEndDate() {
     document.querySelector("#start").setAttribute("min", currDate)
     document.querySelector("#start").setAttribute("max", newDate)
     document.querySelector("#end").setAttribute("max", newDate)
-    endDateInput = newDate
+    // endDateInput = newDate
 
 }
 
