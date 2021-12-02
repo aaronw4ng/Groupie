@@ -39,9 +39,8 @@ function handleLoginClick(event) {
                     warningMessageContainer.innerHTML = "Attempt: " + attempt + message
                     warningMessageContainer.style.display = "block"
 
-                    if (attempt == 3) {
+                    if (attempt >= 3) {
                         manageLoginAttempts()
-                        attempt = 0;
                     }
                 }
             }
