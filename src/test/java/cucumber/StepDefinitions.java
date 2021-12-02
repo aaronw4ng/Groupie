@@ -2,6 +2,7 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -513,8 +514,30 @@ public class StepDefinitions {
 	public void secondUserSeesTheProposalFromFirstUser() {
 	}
 
+	/* Delete event from proposal at any time */
+	@When("user clicks on {string} proposal")
+	public void userClicksOnProposal(String arg0) {
+	}
+
+	@When("user presses button to remove the {string} event")
+	public void userPressesButtonToRemoveTheEvent(String arg0) {
+	}
+
+	@When("user accepts event delete alert")
+	public void userAcceptsEventDeleteAlert() {
+	}
+
+	@When("user accepts deleting event will delete proposal alert")
+	public void userAcceptsDeletingEventWillDeleteProposalAlert() {
+	}
+
+	@Then("user should see an alert message {string}")
+	public void userShouldSeeAnAlertMessage(String arg0) {
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
 	}
+
 }
