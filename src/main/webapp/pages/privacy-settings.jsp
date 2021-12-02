@@ -17,12 +17,19 @@
     <div class="header">
       <h1>groupie</h1>
       <div class="header-links">
-        <a href="view-proposals.jsp">View Proposals</a>
-        <a href="view-proposals.jsp">Create Proposal</a>
-        <a href="#" class="highlight-link">Privacy</a>
-        <a href="create-proposal.jsp">Logout</a>
-      </div>
-    </div>
+      <a id="view-proposals-btn" href="view-proposals.jsp">View Proposals</a>
+      <a id="create-proposal-btn" href="create-proposal.jsp">Create Proposal</a>
+      <a id="privacy-settings-btn" href="#"  class="highlight-link">Privacy Settings</a>
+      <a id="logout-btn" onclick="leave_site()">Logout</a>
+     </div>
+   </div>
+   <script>
+     function leave_site() {
+         sessionStorage.clear()
+         document.location.href="../index.jsp"
+         console.log("session ended " + sessionStorage.getItem("username"))
+     }
+   </script>
 
     <!-- Blocked Users Container -->
     <div>
@@ -47,12 +54,15 @@
     <div>
       <h1>availability</h1>
       <div class="border">
+          <div id="avail-status"></div>
+          <p>To make yourself unavailable indefinitely, leave time at 0 (measured in hours).</p>
           <div class="btn-view">
-            <button class="selected">available</button>
-            <button>unavailable</button>
+            <button id="avail-but" onclick="toggleAvailability(event)">set available</button>
+            <button id="unavail-but"  onclick="toggleAvailability(event)">set unavailable</button>
           </div>
         <h3>Set Time: </h3>
-      </div>
+    <input type="number" id="hours-unavail" min="0" max="100000">
+      </div
     </div>
 
 </div>

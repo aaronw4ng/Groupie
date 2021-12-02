@@ -24,6 +24,8 @@ window.onload = function() {
                 console.log("all users found: ", result)
                 USERS_LIST = JSON.parse(result)
                 displayBlockedUsers(USERS_LIST)
+                userInputField.value=""
+                showAvailability()
             }
             else {
                 console.log("Error fetching users list")
@@ -31,10 +33,53 @@ window.onload = function() {
         }
     })
     let userInputField = document.querySelector('#block-users-container')
-    userInputField.value=""
+
 }
 
 let blockedUsersContainer = document.querySelector("#blocked-users-container")
+
+function showAvailability() {
+    $.ajax({
+        method: "POST",
+        url: "../getUserAvailability",
+        data: {
+            userId: currentUserId,
+        },
+        success: function(result) {
+            if (result) {
+                console.log("retrieved availability")
+                let json = JSON.parse(result)
+                console.log("availability: "+result)
+
+                let availContainer = document.querySelector("#avail-status")
+                let availMessage = ``;
+                if(json.isAvailable) {
+                    availMessage = `
+                        <h2>You are currently <span class="strong-result">available</span> indefinitely.</h2>
+                    `
+                } else if (json.until != "INDEFINITE"){
+                    //let untilStr = ${json.until}.toString()
+                    availMessage = `
+                        <h2>You are currently <span class="strong-result">unavailable</span> until: </h2>
+                        <h2><span class="strong-result">date:</span> ${json.until.substring(0,10)}</h2>
+                        <h2><span class="strong-result">time:</span> ${json.until.substring(11)}</h2>
+                    `
+                }
+                else {
+                    availMessage = `
+                        <h2>You are currently <span class="strong-result">unavailable indefinitely</span>.</h2>
+                    `
+                }
+                availContainer.innerHTML = availMessage
+                }
+            else {
+                console.log("Error getting availability")
+            }
+        }
+
+    })
+
+}
 
 function displayBlockedUsers(list) {
         blockedUsersContainer.innerHTML = ""
@@ -46,6 +91,65 @@ function displayBlockedUsers(list) {
             `;
             blockedUsersContainer.innerHTML += cardResults
         })
+}
+
+function toggleAvailability(event) {
+    if (event.currentTarget.id == "avail-but") {
+        callSetAvailabile()
+        showAvailability()
+        }
+    else if (event.currentTarget.id == "unavail-but")
+    {
+        localStorage.setItem("time-unavail", document.querySelector("#hours-unavail").value)
+        callSetUnavailabile()
+        showAvailability()
+
+    }
+
+}
+function callSetUnavailabile() {
+        let time = localStorage.getItem("time-unavail")
+        if (!time || time == 0) time = -1
+        $.ajax({
+            method: "POST",
+            url: "../setAvailability",
+            data: {
+                userId: currentUserId,
+                availability: false,
+                hours: time
+            },
+            success: function(result) {
+                if (result) {
+                    console.log("successfully set user unavailable for " + time + " hours")
+                    }
+                else {
+                    console.log("Error blocking user: " + userToBlock)
+                }
+            }
+
+        })
+
+}
+
+function callSetAvailabile() {
+        $.ajax({
+            method: "POST",
+            url: "../setAvailability",
+            data: {
+                userId: currentUserId,
+                availability: true
+            },
+            success: function(result) {
+                if (result) {
+                    console.log("successfully set user available")
+                    }
+                else {
+                    console.log("Error blocking user: " + userToBlock)
+                }
+            }
+
+        })
+
 }
 
 // Store user to unblock in local storage
