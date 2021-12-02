@@ -535,12 +535,6 @@ public class StepDefinitions {
 	@When("user navigates to View Proposals page")
 	public void user_navigates_to_View_Proposals_page() {
 		driver.findElement(By.id("view-proposals-btn")).click();
-		// give buffer time for proposals to show up
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@When("user clicks the first owned proposal")
@@ -633,6 +627,11 @@ public class StepDefinitions {
 		user_retypes_password("password1");
 		user_clicks_button("btn-create-account"); // create second user
 		user_accepts_the_alert(); // accepts alert
+		user_clicks_button("logout-btn"); // second user logs out
+		user_inputs_username(randomUser1); // first user logs in
+		user_inputs_password("password1");
+		user_clicks_button("btn-login");
+		user_accepts_the_alert(); // accepts alert
 	}
 
 	@When("second user inputs {string} in proposal name")
@@ -642,17 +641,24 @@ public class StepDefinitions {
 
 	@When("user clicks on the first proposal")
 	public void userClicksOnTheFirstProposal() {
-		driver.findElement(By.id("proposal-card-0")).click();
 		// buffer for time for items to fill in
+		// give buffer time for proposals to show up
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		driver.findElement(By.id("proposal-card-0")).click();
 	}
 
 	@When("user presses button to remove the first event")
 	public void userPressesButtonToRemoveTheFirstEvent() {
+		// buffer for time for items to fill in
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		driver.findElement(By.id("btn-delete-event-0")).click();
 	}
 
@@ -667,8 +673,8 @@ public class StepDefinitions {
 	public void userPressesButtonToRemoveTheEvent(String arg0) {
 	}
 
-	@Then("user accepts event delete alert")
-	public void userAcceptsEventDeleteAlert() {
+	@Then("user sees event delete alert")
+	public void userSeesEventDeleteAlert() {
 		// Check for success alert popup
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
@@ -676,8 +682,8 @@ public class StepDefinitions {
 		user_accepts_the_alert();
 	}
 
-	@Then("user accepts deleting event will delete proposal alert")
-	public void userAcceptsDeletingEventWillDeleteProposalAlert() {
+	@Then("user sees deleting event will delete proposal alert")
+	public void userSeesDeletingEventWillDeleteProposalAlert() {
 		// Check for success alert popup
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());

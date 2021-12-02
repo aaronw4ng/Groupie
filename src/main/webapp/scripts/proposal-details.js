@@ -4,7 +4,8 @@ if (!sessionStorage.getItem("username")) {
     document.location.href = "../index.jsp"
 }
 else {
-    currUsername = sessionStorage.getItem("username")
+    currUsername = sessionStorage.getItem("username").toLowerCase()
+    console.log(currUsername)
 }
 
 // ** GLOBALS **
