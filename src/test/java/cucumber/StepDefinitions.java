@@ -560,8 +560,14 @@ public class StepDefinitions {
 	public void userAcceptsRemovingInviteeWillDeleteProposalAlert() {
 	}
 
+	/* View Draft Proposals */
+	@Then("user sees {string} proposal")
+	public void userSeesProposal(String arg0) {
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
 	}
+
 }
