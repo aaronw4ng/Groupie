@@ -190,16 +190,18 @@ function filterResults(type, proposalId) {
 
 
 function displayResults(filteredResults) {
+  let i = 0
   filteredResults.forEach(result => {
     console.log(JSON.stringify(result))
     let resultsCard = `
         <div data-json='${JSON.stringify(
           result
         )}' class="proposal-card" onclick="handleProposalResultClick(event)">
-          <h1 class="proposal-title">${result.title}</h1>
+          <h1 class="proposal-title" id="proposal-card-${i}">${result.title}</h1>
         </div>
         `
     proposalResultsContainer.innerHTML += resultsCard
+    i++
   })
 }
 
