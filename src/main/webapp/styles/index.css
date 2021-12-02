@@ -6,6 +6,13 @@ body {
   position: relative;
 }
 
+input#block-users-field {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 1px solid black;
+}
+
 button {
   height: 3rem;
   font-family: inherit;

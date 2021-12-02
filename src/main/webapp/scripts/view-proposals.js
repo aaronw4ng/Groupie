@@ -8,6 +8,7 @@ if (sessionStorage.getItem("userId")) {
     currentUserId = sessionStorage.getItem("userId")
 }
 else {
+    document.location.href = "../index.jsp"
 }
 
 // Store finalized & unfinaized proposals in separate arrays
