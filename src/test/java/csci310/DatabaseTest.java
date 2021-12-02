@@ -1628,8 +1628,22 @@ public class DatabaseTest {
 		testDB.sendProposal(newProposalId); // proposalId = 1
 
 		// Test helper function for main deleteFromSentProposal (would be called there)
-		int status = testDB.executeSQLDelete("events", 1, 1);
+		int status = testDB.executeSQLDelete("events", "event", 1, 1);
 		assertEquals(0, status);
+
+		testDB.dropAllTables();
+		testDB.close();
+
+	}
+
+	@Test
+	public void testHelperDeleteProposal() throws Exception{
+		Database testDB = new Database("test.db");
+		testDB.dropAllTables();
+		testDB.createRequiredTables();
+
+		Boolean status = testDB.helperDeleteProposal("invitees");
+		assertEquals(status, true);
 
 		testDB.dropAllTables();
 		testDB.close();
