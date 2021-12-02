@@ -26,27 +26,37 @@
 
     <!-- Blocked Users Container -->
     <div>
-    <h1>blocked users</h1>
+    <h1>manage privacy settings</h1>
       <div class="border">
-        <h2>List of users</h2>
-        <p> <a href="#">add </a> | <a href="#">remove</a>  </p>
+        <h2>blocked users</h2>
+        <p> select a user in the list to unblock them. </p>
+        <div id="blocked-users-container"></div>
+       <button onclick="handleUnblock()">unblock</button>
+      </div>
+
+      <div class="border">
+        <h2>block a new user</h2>
+        <p> enter a username and click the button to unblock them. </p>
+        <div id="block-users-container">
+            <input id="block-users-field" type="text" onKeyPress="setBlockOption(event)" onKeyUp="setBlockOption(event)"></input>
+        </div>
+       <button onclick="handleBlock()">block</button>
       </div>
 
     <!-- Availability Container -->
     <div>
       <h1>availability</h1>
       <div class="border">
-        <h2>Set yourself as unavailable to stop receiving proposals for the selected amount of time.</h2>
-
           <div class="btn-view">
-            <button class="selected">On</button>
-            <button>Off</button>
+            <button class="selected">available</button>
+            <button>unavailable</button>
           </div>
         <h3>Set Time: </h3>
       </div>
     </div>
 
 </div>
+  <script src="../scripts/privacy-settings.js"></script>
 </body>
   <jsp:include page="autologout.jsp"></jsp:include>
 </html>
