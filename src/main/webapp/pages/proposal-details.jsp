@@ -63,6 +63,10 @@
         </div>
 
       </div>
+
+      <div id="delete-container">
+        <button id="btn-delete-proposal" onclick="handleDeleteProposalClick(event)">delete proposal</button>
+      </div>
   </div>
 
   

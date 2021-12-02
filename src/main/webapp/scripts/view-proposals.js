@@ -12,6 +12,16 @@ else {
 let REC_PROPOSALS_FINAL = []
 let REC_PROPOSALS_DRAFT = []
 
+let sentProposalResultsContainer = document.querySelector(
+"#sent-results-container"
+)
+let receivedProposalResultsContainer = document.querySelector(
+"#received-results-container"
+)
+let draftProposalResultsContainer = document.querySelector(
+"#draft-results-container"
+)
+
 document.addEventListener("DOMContentLoaded", async function () {
     var calendarEl = document.getElementById("calendar")
     await getEvents()
@@ -30,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     })
   
     calendar.render()
+
   })
 
 // Retrieve all proposals on window load
@@ -72,18 +83,27 @@ document.addEventListener("DOMContentLoaded", async function () {
 //       }
 //     })
 // }
-let proposalResultsContainer = document.querySelector(
-  "#proposal-results-container"
-  )
+
+function cleanSessionStorage() {
+  for (var i = 0; i < sessionStorage.length; i++) {
+      if (sessionStorage.key(i) !== "username" && sessionStorage.key(i) !== "userId") {
+          sessionStorage.removeItem(sessionStorage.key(i))
+      }
+  }
+}
+
 const getEvents = async () => {
     
-        proposalResultsContainer.innerHTML = ""
+        sentProposalResultsContainer.innerHTML = ""
+        receivedProposalResultsContainer.innerHTML = ""
+        draftProposalResultsContainer.innerHTML = ""
 
   console.log("Getting events....")
   const userId = sessionStorage.getItem("userId")
-  const draftProposals = await getDraftProposals(userId)
-  const finalizedOwnedProposals = await getFinalizedOwnedProposals(userId)
-  const finalizedInvitedProposals = await getFinalizedInvitedProposals(userId)
+  let draftProposals = await getDraftProposals(userId)
+  let finalizedOwnedProposals = await getFinalizedOwnedProposals(userId)
+  let finalizedInvitedProposals = await getFinalizedInvitedProposals(userId)
+
 
   console.log("Draft Proposals: " + draftProposals)
   console.log("Finalized Owned Proposals: " + finalizedOwnedProposals)
@@ -119,7 +139,8 @@ const getDraftProposals = userId => {
     url: "../getAllDraftProposals",
     success: function (result) {
       draftProposals = result
-      // displayResults(JSON.parse(draftProposals))
+      console.log(draftProposals)
+      displayResults(JSON.parse(draftProposals), draftProposalResultsContainer, "draft")
     },
   })
   return draftProposals
@@ -136,7 +157,8 @@ const getFinalizedOwnedProposals = userId => {
     url: "../getAllNonDraftProposals",
     success: function (result) {
       finalizedOwnedProposals = result
-      displayResults(JSON.parse(finalizedOwnedProposals))
+      console.log(finalizedOwnedProposals)
+      displayResults(JSON.parse(finalizedOwnedProposals), sentProposalResultsContainer, "sent")
     },
   })
   return finalizedOwnedProposals
@@ -153,6 +175,8 @@ const getFinalizedInvitedProposals = userId => {
     url: "../getAllNonDraftProposals",
     success: function (result) {
       finalizedInvitedProposals = result
+      console.log(finalizedInvitedProposals)
+      displayResults(JSON.parse(finalizedInvitedProposals), receivedProposalResultsContainer, "received")
     },
   })
   return finalizedInvitedProposals
@@ -189,22 +213,27 @@ function filterResults(type, proposalId) {
 // Received proposals: Display title of proposal and
 
 
-function displayResults(filteredResults) {
+function displayResults(filteredResults, container, proposalType) {
+  var i = 1
   filteredResults.forEach(result => {
     console.log(JSON.stringify(result))
     let resultsCard = `
-        <div data-json='${JSON.stringify(
+        <div id="${proposalType}-container-${i}" data-json='${JSON.stringify(
           result
         )}' class="proposal-card" onclick="handleProposalResultClick(event)">
           <h1 class="proposal-title">${result.title}</h1>
         </div>
         `
-    proposalResultsContainer.innerHTML += resultsCard
+    container.innerHTML += resultsCard
+    i++
   })
 }
 
 function handleProposalResultClick(event) {
   let proposalJSON = ""
+  if (sessionStorage.getItem("selectedProposal")) {
+    sessionStorage.removeItem("selectedProposal")
+  }
   if (event.srcElement.className === "proposal-title") {
     console.log(event.srcElement.parentElement.dataset.json)
     proposalJSON = event.srcElement.parentElement.dataset.json

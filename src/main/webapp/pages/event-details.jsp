@@ -43,8 +43,8 @@
             <p id="city" class="section-info">Los Angeles</p>
         </div>
         <div class="details-section">
-            <p class="section-title">zipcode</p>
-            <p id="zipcode" class="section-info">90007</p>
+            <p class="section-title">address</p>
+            <p id="address" class="section-info">Hellman Way</p>
         </div>
         <div class="details-section">
             <p class="section-title">venue</p>

@@ -38,8 +38,20 @@
           <option id="received-option" class="proposal-option">received</option>
         </select>
       </div> -->
+      <h1 class="proposal-type-heading">sent proposals</h1>
+      <div id="sent-results-container"></div>
 
-      <div id="proposal-results-container"></div>
+      <hr>
+
+      <h1 class="proposal-type-heading">received proposals</h1>
+      <div id="received-results-container"></div>
+
+      <hr>
+
+      <h1 class="proposal-type-heading">draft proposals</h1>
+      <div id="draft-results-container"></div>
+
+      <hr>
 
       <!-- three buttons: show draft, show finalized, show unfinalized  -->
       <h1 id="page-title">
