@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -29,12 +30,16 @@ public class StepDefinitions {
 	// !Remember to use https for all url
 	private static final String ROOT_URL = "https://localhost:8080/";
 
-	private int USERNAME_LENGTH = 10;
+	private int USERNAME_LENGTH = 20;
 	private String USERNAME_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	private static String generatedUsername = null;
 	private static String generatedUsername2 = null;
 	private static String generatedUsername3 = null;
+
+	private String newUser1 = null;
+	private String newUser2 = null;
+	private String newUser3 = null;
 
 	private ChromeOptions handlingSSL = new ChromeOptions();
 	private WebDriver driver;
@@ -53,6 +58,82 @@ public class StepDefinitions {
 			generatedUsername3 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
 		}
 	}
+
+	/* Terry's Acceptance Tests Tool Kit */
+	private void refreshNewUserNames() {
+		newUser1 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		newUser2 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		newUser3 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+	}
+
+	// overloaded method for inputing username
+	private void user_inputs_username(String username) {
+		driver.findElement(By.id("input-username")).sendKeys(username);
+	}
+
+	private void registerNewUser(String username){
+		user_is_on_the_Create_User_page();
+		user_inputs_username(username);
+		user_inputs_password(username);
+		user_retypes_password(username);
+		user_clicks_button("btn-create-account");
+		user_accepts_the_alert();
+		userLogsOut();
+	}
+	
+	@Given ("a new user is set up")
+	public void setUpOneNewUser() {
+		refreshNewUserNames();
+		registerNewUser(newUser1);
+	}
+
+	@Given ("two new users are set up")
+	public void setUpTwoNewUsers() {
+		refreshNewUserNames();
+		registerNewUser(newUser1);
+		registerNewUser(newUser2);
+	}
+
+	@Given ("three new users are set up")
+	public void setUpThreeNewUsers() {
+		refreshNewUserNames();
+		registerNewUser(newUser1);
+		registerNewUser(newUser2);
+		registerNewUser(newUser3);
+	}
+
+	private void newUserLogsIn(String username) {
+		user_is_on_the_Login_page();
+		user_inputs_username(username);
+		user_inputs_password(username);
+		user_clicks_button("btn-login");
+		user_accepts_the_alert();
+	}
+
+	@Given ("new user one logs in")
+	public void newUserOneLogsIn() {
+		newUserLogsIn(newUser1);
+	}
+
+	@Given ("new user two logs in")
+	public void newUserTwoLogsIn() {
+		newUserLogsIn(newUser2);
+	}
+
+	@Given ("new user three logs in")
+	public void newUserThreeLogsIn() {
+		newUserLogsIn(newUser3);
+	}
+
+	@When ("wait for {float} seconds")
+	public void waitForSeconds(float seconds) {
+		try {
+			Thread.sleep((long)(seconds * 1000));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	// *** LOGIN PAGE ***
 
@@ -563,6 +644,93 @@ public class StepDefinitions {
 	/* View Draft Proposals */
 	@Then("user sees {string} proposal")
 	public void userSeesProposal(String arg0) {
+	}
+
+	/* Set Unavailability tests */
+	@When("user navigates to Privacy Settings page")
+	public void userNavigatesToPrivacySettingsPage() {
+		System.out.println("user navigates to Privacy Settings page");
+		user_clicks_button("privacy-settings-btn");
+		waitForSeconds(1);
+	}
+
+	@When("user types in {string} in unavailable time box")
+	public void userTypesInInUnavailableTimeBox(String arg0) {
+		WebElement queryBox = driver.findElement(By.id("hours-unavail"));
+		queryBox.sendKeys(arg0);
+		waitForSeconds(1);
+	}
+
+	@When("user clicks Set Unavailable button")
+	public void userClicksSetUnavailableButton() {
+		user_clicks_button("unavail-but");
+		waitForSeconds(1);
+	}
+
+	@When("user clicks Set Available button")
+	public void userClicksSetAvailableButton() {
+		user_clicks_button("avail-but");
+		waitForSeconds(1);
+	}
+
+	@When("user should see themselve unavailable until indefinitely")
+	public void userShouldSeeThemselveUnavailableUntilIndefinitely() {
+		String result = driver.findElement(By.id("avail-status")).getText();
+		assertTrue(result.contains("currently unavailable indefinitely"));
+	}
+
+	@When("user should see themselve unavailable until some time in the future")
+	public void userShouldSeeThemselveUnavailableUntilSomeTimeInTheFuture() {
+		String result = driver.findElement(By.id("avail-status")).getText();
+		assertTrue(result.contains("currently unavailable until"));
+		assertTrue(result.contains("date:"));
+		assertTrue(result.contains("time:"));
+	}
+	@When("user should see themselve available")
+	public void userShouldSeeThemselveAvailable() {
+		String result = driver.findElement(By.id("avail-status")).getText();
+		System.out.println(result);
+		assertTrue(result.contains("currently available indefinitely"));
+	}
+
+	@When("user clicks add users button")
+	public void userClicksAddUsersButton() {
+		user_clicks_button("btn-add-users");
+		waitForSeconds(1);
+	}
+
+	@When ("user types in newUser1 in the invitee search box")
+	public void userTypesInNewUser1InTheInviteeSearchBox() {
+		// waitForSeconds(1);
+		System.out.println("user types in newUser1 in the invitee search box");
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser1);
+		waitForSeconds(1);
+	}
+
+	@When ("user types in newUser2 in the invitee search box")
+	public void userTypesInNewUser2InTheInviteeSearchBox() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser2);
+		waitForSeconds(1);
+	}
+
+	@When ("user types in newUser3 in the invitee search box")
+	public void userTypesInNewUser3InTheInviteeSearchBox() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser3);
+		waitForSeconds(1);
+	}
+
+	@Then("user should see newUser1 unavailable not clickable")
+	public void userShouldSeeNewUser1UnavailableNotClickable() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("user-card"));
+		assertTrue(result.getAttribute("class").contains("unavailable"));
+		assertTrue(result.getText().contains(newUser1.toLowerCase()));
 	}
 
 	@After()
