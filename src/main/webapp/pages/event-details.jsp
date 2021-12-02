@@ -154,9 +154,9 @@
     <p>team 27</p>
   </div>
 
+  <jsp:include page="autologout.jsp"></jsp:include>
   <script src="../scripts/autologout.js"></script>
   <script src="../scripts/event-details.js"></script>
 
 </body>
-  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>

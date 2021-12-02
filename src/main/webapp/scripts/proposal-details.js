@@ -93,8 +93,10 @@ function displayAllProposalInfo() {
 
 // BACK BTN PRESS
 function handleBackBtnClick(event) {
-    cleanSessionStorage()
-    document.location.href = "#"
+    if (sessionStorage.getItem("selectedProposal")) {
+        sessionStorage.removeItem("selectedProposal")
+    }
+    document.location.href = "./view-proposals.jsp"
 }
 
 // TODO: Dynamically fill events with their ids as metadata
@@ -215,5 +217,5 @@ function handleDeleteProposalClick(event) {
 
 // TODO: add autologout
 
-// startAutoLogoutRoutine()
 displayRemoveButtons()
+startAutoLogoutRoutine()

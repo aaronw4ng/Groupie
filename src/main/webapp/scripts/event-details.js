@@ -45,40 +45,9 @@ function fillEventInfo() {
 
 }
 
-// const getUserAvailabilities = id => {
-//     $.ajax({
-//         url : "../getUserAvailability",
-//         method: "POST",
-//         data : {
-//             userId: id
-//         },
-//         success: function(result) {
-//             console.log(result)
-//             return result
-//         }
-//     })
-// }
-
-// const getAllAvailabilities = async () => {
-//     let totalInvitees = proposalJSON.invitees
-//     let inviteeAvailabilities = []
-//     for (var i = 0; i < totalInvitees.length; i++) {
-//         let inviteeID = parseInt(totalInvitees[i].userId)
-//         const userAvailability = await getUserAvailabilities(inviteeID)
-//         console.log("USER SHI " + userAvailability)
-//         let entry = {
-//             id: inviteeID,
-//             available: userAvailability.isAvailable
-//         }
-//         inviteeAvailabilities.push(entry)
-//     }
-//     return inviteeAvailabilities
-// }
-
 let responseContainer = document.querySelector("#responses-container")
 
-async function fillUserInfo() {
-    // let userAvailabilities = await getAllAvailabilities()
+function fillUserInfo() {
     responseContainer.innerHTML = ""
     let userResponses = eventJSON.responses 
     console.log(userResponses)
@@ -127,38 +96,62 @@ async function fillUserInfo() {
 
         }
         else {
-            // Get user availability
-            
-
-            // Get user excitement
-            let userExcitement = parseInt(response.excitement)
-            let excitementString = ``
-            for (var j = 1; j <= 5; j++) {
-                if (j <= userExcitement) {
-                    excitementString += `<i class="fas fa-star other-excitement-star"></i>`
+            // Check if user has filled a response
+            if (response.isFilledOut) {
+                let availability = response.availability
+                let availabilityIcon = ``
+                switch(availability) {
+                    case "yes" :
+                        availabilityIcon = `<i class="fas fa-check-circle response-available"></i>`
+                        break
+                    case "no" :
+                        availabilityIcon = `<i class="fas fa-times-circle response-unavailable"></i>`
+                        break
+                    default :
+                        availabilityIcon = `<i class="fas fa-question-circle response-maybe"></i>`
+                        break
                 }
-                else {
-                    excitementString += `<i class="far fa-star other-excitement-star"></i>`
+                // Get user excitement
+                let userExcitement = parseInt(response.excitement)
+                let excitementString = ``
+                for (var j = 1; j <= 5; j++) {
+                    if (j <= userExcitement) {
+                        excitementString += `<i class="fas fa-star other-excitement-star"></i>`
+                    }
+                    else {
+                        excitementString += `<i class="far fa-star other-excitement-star"></i>`
+                    }
                 }
+                let responseString = `
+                <div class="other-response-card">
+                    <div class="response-card-col">
+                        <h1 class="other-username" id="other-user-1">${response.userName}</h1>
+                    </div>
+                    <div class="response-card-col">
+                        <p class="user-response-prompt">available?</p>
+                        ${availabilityIcon}
+                    </div>
+                    <div class="response-card-col">
+                        <p class="user-response-prompt">excitement?</p>
+                        <div class="excitement-container">
+                            ${excitementString}
+                        </div>
+                    </div>
+                </div>
+                `;
+                responseContainer.innerHTML += responseString
             }
-            let responseString = `
-            <div class="other-response-card">
-                <div class="response-card-col">
-                <h1 class="other-username" id="other-user-1">${response.userName}</h1>
+            else {
+                let responseString = `
+                <div class="other-response-card">
+                    <div class="response-card-col">
+                    <h1 class="other-username" id="other-user-1">${response.userName}</h1>
+                    <p>Awaiting response.</p>
+                    </div>
                 </div>
-                <div class="response-card-col">
-                <p class="user-response-prompt">available?</p>
-                <i class="fas fa-check-circle response-available"></i>
-                </div>
-                <div class="response-card-col">
-                <p class="user-response-prompt">excitement?</p>
-                <div class="excitement-container">
-                    ${excitementString}
-                </div>
-                </div>
-            </div>
-            `;
-            responseContainer.innerHTML += responseString
+                `;
+                responseContainer.innerHTML += responseString
+            }
         }
     }
 }
@@ -259,17 +252,15 @@ function handleSaveUserRespClick(event) {
 
 // BACK BTN PRESS
 function handleBackBtnClick(event) {
-    function cleanSessionStorage() {
-        for (var i = 0; i < sessionStorage.length; i++) {
-            if (sessionStorage.key(i) !== "username" && sessionStorage.key(i) !== "userId") {
-                sessionStorage.removeItem(sessionStorage.key(i))
-            }
-        }
+    if (sessionStorage.getItem("selectedEvent")) {
+        sessionStorage.removeItem("selectedEvent")
     }
-    cleanSessionStorage()
-    document.location.href = "#"
+    document.location.href = "./proposal-details.jsp"
 }
 
-fillEventInfo()
-fillUserInfo()
-// startAutoLogoutRoutine()
+document.addEventListener("DOMContentLoaded", function () {
+    fillEventInfo()
+    fillUserInfo()
+    startAutoLogoutRoutine()
+})
+

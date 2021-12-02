@@ -74,8 +74,8 @@
   <div id="footer">
     <p>team 27</p>
   </div>
+  <jsp:include page="autologout.jsp"></jsp:include>
   <script src="../scripts/autologout.js"></script>
   <script src="../scripts/proposal-details.js"></script>
 </body>
-  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>
