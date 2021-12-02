@@ -18,7 +18,8 @@
         <h1>groupie</h1>
         <div class="header-links">
           <a href="#" class="highlight-link">View Proposals</a>
-          <a href="../index.jsp">Logout</a>
+          <a href="create-proposal.jsp">Create Proposal</a>
+          <a id="logout-btn" href="../index.jsp">Logout</a>
         </div>
       </div>
 
