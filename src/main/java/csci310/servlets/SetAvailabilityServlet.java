@@ -22,12 +22,13 @@ public class SetAvailabilityServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             if (!availability){
                 // only needs until(variable) if setting unavailable
-                int hours = Integer.parseInt(request.getParameter("hours"));
+                float hours = Float.parseFloat(request.getParameter("hours"));
+                long seconds = (long)(hours * 60 * 60);
                 if (hours == -1){
                     until = "INDEFINITE";
                 }
                 else {
-                    Date untilDate = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(hours));
+                    Date untilDate = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(seconds));
                     until = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(untilDate);
                 }
             }
@@ -39,4 +40,5 @@ public class SetAvailabilityServlet extends HttpServlet {
         }
     }
 }
+
 
