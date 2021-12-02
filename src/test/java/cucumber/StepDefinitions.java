@@ -69,13 +69,23 @@ public class StepDefinitions {
 	@Then("the {string} button should be disabled")
 	public void the_button_should_be_disabled(String string) {
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		boolean isEnabled = driver.findElement(By.id(string)).isEnabled();
-		// System.out.println(driver.findElement(By.id(string)).isEnabled());
+		System.out.println(driver.findElement(By.id(string)).isEnabled());
 		assertTrue(isEnabled == false);
+	}
+
+	@When("user waits for login cool down period")
+	public void userWaitsForLoginCoolDownPeriod() {
+		// wait for 60+ seconds to try again
+		try {
+			Thread.sleep(60500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// *** CREATE ACCOUNT PAGE ***
@@ -482,5 +492,4 @@ public class StepDefinitions {
 	public void after() {
 		driver.quit();
 	}
-
 }

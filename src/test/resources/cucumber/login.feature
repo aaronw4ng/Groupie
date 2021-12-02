@@ -37,3 +37,13 @@ Scenario: User login attempts over the limit
     And user clicks "btn-login" button
     Then the "btn-login" button should be disabled
 
+Scenario: User fails to log in for 4 consecutive times, so have to wait 60 seconds again
+    Given user is on the Login page
+    When user inputs in username
+    And user inputs "meatjuice" in password
+    And user clicks "btn-login" button
+    And user clicks "btn-login" button
+    And user clicks "btn-login" button
+    And user waits for login cool down period
+    And user clicks "btn-login" button
+    Then the "btn-login" button should be disabled
