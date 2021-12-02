@@ -30,6 +30,10 @@ body {
     justify-content: flex-start;
     align-items: center;
 }
+.proposal-type-heading {
+    color : var(--details-color);
+    font-weight: 500;
+}
 
 /* #select-proposal {
     width: 30%;

@@ -23,6 +23,27 @@ if (sessionStorage.getItem("selectedProposal")) {
 }
 // ** END GLOBALS **
 
+function cleanSessionStorage() {
+    for (var i = 0; i < sessionStorage.length; i++) {
+        if (sessionStorage.key(i) !== "username" && sessionStorage.key(i) !== "userId") {
+            sessionStorage.removeItem(sessionStorage.key(i))
+        }
+    }
+}
+
+function handleEventCardClick(event) {
+    if (sessionStorage.getItem("selectedEvent")) {
+        sessionStorage.removeItem("selectedEvent")
+    }
+    if (event.srcElement.className === "event-card") {
+        sessionStorage.setItem("selectedEvent", event.srcElement.dataset.event)
+    }
+    else {
+        sessionStorage.setItem("selectedEvent", event.srcElement.parentElement.dataset.event)
+    }
+    document.location.href = "./event-details.jsp"
+}
+
 function displayAllProposalInfo() {
     let proposalTitle = document.querySelector("#proposal-name")
     let eventsContainer = document.querySelector(".events-container")
@@ -36,13 +57,12 @@ function displayAllProposalInfo() {
     for (i in proposalEvents) {
         let event = proposalEvents[i]
         let eventString = `
-        <div data-event-id="${event.eventId}" class="event-card">
+        <div data-event-id="${event.eventId}" data-event='${JSON.stringify(event)}'' class="event-card" onclick="handleEventCardClick(event)">
             <h1>${event.eventName}</h1>
             <button id="btn-delete-event-${i}" class="btn-delete" onclick="handleDeleteClick(event, 'event')">X</button>
         </div>
         `;
         eventsContainer.innerHTML += eventString
-        // TODO: display event title in container
     }
 
     usersContainer.innerHTML = ""
@@ -68,19 +88,15 @@ function displayAllProposalInfo() {
         usersContainer.innerHTML += userString
     }
 
+
 }
 
 // BACK BTN PRESS
 function handleBackBtnClick(event) {
-    function cleanSessionStorage() {
-        for (var i = 0; i < sessionStorage.length; i++) {
-            if (sessionStorage.key(i) !== "username" && sessionStorage.key(i) !== "userId") {
-                sessionStorage.removeItem(sessionStorage.key(i))
-            }
-        }
+    if (sessionStorage.getItem("selectedProposal")) {
+        sessionStorage.removeItem("selectedProposal")
     }
-    cleanSessionStorage()
-    document.location.href = "#"
+    document.location.href = "./view-proposals.jsp"
 }
 
 // TODO: Dynamically fill events with their ids as metadata
@@ -95,10 +111,13 @@ function displayRemoveButtons() {
         for (var i = 0; i < removeButtons.length; i++) {
             removeButtons[i].style.display = "block"
         }
+        let deleteProposalBtn = document.querySelector("#btn-delete-proposal")
+        deleteProposalBtn.style.display = "block"
     }
 }
 
 function handleDeleteClick(event, type) {
+    event.stopPropagation()
     if (confirm("Are you sure you want to delete this " + type + "?")) {
         if (type === "event") {
             console.log("EVENT")
@@ -178,7 +197,25 @@ function handleDeleteClick(event, type) {
     }
 }
 
+function handleDeleteProposalClick(event) {
+    if (confirm("Are you sure you want to delete the proposal? This cannot be undone.")) {
+        $.ajax({
+            method: "POST",
+            url: "../deleteProposal",
+            data: {
+                proposalId: ssProposalID,
+            },
+            success: function (result) {
+                if (result === "true") {
+                    console.log("Proposal Deleted successfully")
+                    document.location.href = "./view-proposals.jsp"
+                }
+            }
+        })
+    }
+}
+
 // TODO: add autologout
 
-// startAutoLogoutRoutine()
 displayRemoveButtons()
+startAutoLogoutRoutine()

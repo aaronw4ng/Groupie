@@ -610,6 +610,8 @@ public class StepDefinitions {
 
 	@Then("user sees their first proposal that they sent out")
 	public void userSeesTheirFirstProposalThatTheySentOut() {
+		WebElement proposal = driver.findElement(By.id("sent-container-1"));
+		assertTrue(proposal != null);
 	}
 
 	@Then("second user sees the proposal from first user")
