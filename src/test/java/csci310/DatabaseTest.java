@@ -1599,7 +1599,6 @@ public class DatabaseTest {
 		testDB.close();
 	}
 
-	// This functionality is all tested in the function above, but must be recreated for testing this helper function in isolation
 	@Test
 	public void testExecuteSQLDelete() throws Exception {
 		Database testDB = new Database("test.db");
@@ -1626,6 +1625,14 @@ public class DatabaseTest {
 		// Create and send proposal
 		int newProposalId = testDB.savesDraftProposal("Test User", title, "descript", invitees, events, true, -1);
 		testDB.sendProposal(newProposalId); // proposalId = 1
+
+		// Test helper function on invalid input
+		int wrong_table = testDB.executeSQLDelete("oops","event_id", 1, 1);
+		assertEquals(-1, wrong_table);
+
+		// Test helper function on invalid input 
+		int wrong_type = testDB.executeSQLDelete("events","oops", 1, 1);
+		assertEquals(-1, wrong_type);
 
 		// Test helper function for main deleteFromSentProposal (would be called there)
 		int status = testDB.executeSQLDelete("events", "event_id", 1, 1);

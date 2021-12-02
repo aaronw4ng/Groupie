@@ -11,12 +11,19 @@
   <div class="header">
     <h1>groupie</h1>
     <div class="header-links">
-      <a id="view-proposals-btn" href="view-proposals.jsp">View Proposals</a>
+      <a id="view-proposals-btn" href="view-proposals.jsp" class="highlight-link">View Proposals</a>
       <a id="create-proposal-btn" href="create-proposal.jsp">Create Proposal</a>
       <a id="privacy-settings-btn" href="privacy-settings.jsp">Privacy Settings</a>
-      <a id="logout-btn" href="../index.jsp">Logout</a>
-    </div>
-  </div>
+      <a id="logout-btn" onclick="leave_site()">Logout</a>
+     </div>
+   </div>
+   <script>
+     function leave_site() {
+         sessionStorage.clear()
+         document.location.href="../index.jsp"
+         console.log("session ended " + sessionStorage.getItem("username"))
+     }
+   </script>
 
   <div id="proposal-details-page">
       <div class="details-row">
@@ -64,6 +71,10 @@
         </div>
 
       </div>
+
+      <div id="delete-container">
+        <button id="btn-delete-proposal" onclick="handleDeleteProposalClick(event)">delete proposal</button>
+      </div>
   </div>
 
   
@@ -71,8 +82,8 @@
   <div id="footer">
     <p>team 27</p>
   </div>
+  <jsp:include page="autologout.jsp"></jsp:include>
   <script src="../scripts/autologout.js"></script>
   <script src="../scripts/proposal-details.js"></script>
 </body>
-  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>

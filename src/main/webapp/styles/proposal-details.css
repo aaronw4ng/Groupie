@@ -102,6 +102,23 @@ body {
     background-color: indianred;
 }
 
+#delete-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+#btn-delete-proposal {
+    display: none;
+    width : 20%;
+    border: 2px indianred solid;
+    background-color: transparent;
+    color : indianred;
+}
+#btn-delete-proposal:hover {
+    background-color: indianred;
+    color : white;
+}
+
 /* Responsiveness */
 @media (max-width : 776px) {
     #proposal-details-page {
@@ -115,5 +132,8 @@ body {
     .btn-back-container {
         width: 100%;
         justify-content: center;
+    }
+    #btn-delete-proposal {
+        width : 40%;
     }
 }
