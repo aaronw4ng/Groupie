@@ -1628,7 +1628,7 @@ public class DatabaseTest {
 		testDB.sendProposal(newProposalId); // proposalId = 1
 
 		// Test helper function for main deleteFromSentProposal (would be called there)
-		int status = testDB.executeSQLDelete("events", "event", 1, 1);
+		int status = testDB.executeSQLDelete("events", "event_id", 1, 1);
 		assertEquals(0, status);
 
 		testDB.dropAllTables();
@@ -1642,13 +1642,29 @@ public class DatabaseTest {
 		testDB.dropAllTables();
 		testDB.createRequiredTables();
 
-		Boolean status = testDB.helperDeleteProposal("invitees");
-		assertEquals(status, true);
+		// Add user, invitee, events to database
+		testDB.register("test", "11111111"); // userId = 1
+		testDB.register("test1", "111111111");
+
+		List<String> invitees = new ArrayList<>();
+		invitees.add("Invitee 1");
+
+		// Pass events to proposal
+		List<Venue> venues1 = new ArrayList<>();
+		venues1.add(new Venue("birthdayVenue", "VenueAddress", "VenueCity", "VenueState", "VenueCountry"));
+		List<Event> events = new ArrayList<>();
+		events.add(new Event("Birthday", "TestURL", "TestStartDate", venues1)); // eventId = 1
+
+		// Create and send proposal
+		int newProposalId = testDB.savesDraftProposal("Test User", "title", "descript", invitees, events, true, -1);
+		testDB.sendProposal(newProposalId); // proposalId = 1
+
+		// Test helper function
+		int status = testDB.helperDeleteProposal("invitees", 1);
+		assertEquals(0, status);
 
 		testDB.dropAllTables();
 		testDB.close();
-
 	}
-
 
 }

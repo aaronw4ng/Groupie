@@ -359,24 +359,16 @@ public class Database {
 	public Boolean deleteProposal(int proposalId) throws Exception {
 		System.out.println("Deleting proposal: " + proposalId);
 		// Delete invitees
-		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ?");
-		inviteesStmt.setInt(1, proposalId);
-		inviteesStmt.executeUpdate();
+		helperDeleteProposal("invitees", proposalId);
 
 		// Delete events
-		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ?");
-		eventsStmt.setInt(1, proposalId);
-		eventsStmt.executeUpdate();
+		helperDeleteProposal("events", proposalId);
 
 		// Delete responses if not draft; note that this is ok to do even if no responses for proposal exists
-		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ?");
-		responsesStmt.setInt(1, proposalId);
-		responsesStmt.executeUpdate();
+		helperDeleteProposal("responses", proposalId);
 
 		// Delete proposals
-		PreparedStatement proposalsStmt = connection.prepareStatement("DELETE FROM proposals WHERE proposal_id = ?");
-		proposalsStmt.setInt(1, proposalId);
-		int rowsAffected = proposalsStmt.executeUpdate();
+		int rowsAffected = helperDeleteProposal("proposals", proposalId);
 		// Check that one proposal was deleted from the database
 		if (rowsAffected == 1) {
 			return true;
@@ -385,8 +377,12 @@ public class Database {
 		return false;
 	}
 
-	public boolean helperDeleteProposal(String table) {
-		return true;
+	// Helper function for readability and to prevent SQL attack
+	public int helperDeleteProposal(String column, int proposalId) throws SQLException {
+		String sql = "DELETE FROM " + column + " WHERE proposal_id = ?";
+		PreparedStatement stmt = connection.prepareStatement(sql);
+		stmt.setInt(1, proposalId);
+		return stmt.executeUpdate();
 	}
 
 	// Returns a list of events associated with the proposalId
@@ -929,7 +925,7 @@ public class Database {
 	public Boolean removeInviteeFromSentProposal(int proposalId, int userId) throws Exception {
 		System.out.println("Trying to remove " + userId + " from proposal id " + proposalId);
 		// Remove user ID from invitee list using helper function
-		int inviteesRowsAffected = executeSQLDelete("invitees", "invitee", proposalId, userId);
+		int inviteesRowsAffected = executeSQLDelete("invitees", "invitee_id", proposalId, userId);
 		System.out.println("Rows affected from removing invitee from invitees: " + inviteesRowsAffected);
 
 		// Check that only one invitee was deleted from the database
@@ -937,7 +933,7 @@ public class Database {
 			return false;
 		}
 		// Remove user responses that correspond to that proposal ID and user ID
-		int rows = executeSQLDelete("responses", "user", proposalId, userId);
+		int rows = executeSQLDelete("responses", "user_id", proposalId, userId);
 		System.out.println("Rows affected from removing responses: " + rows);
 
 		return true;
@@ -947,11 +943,11 @@ public class Database {
 	public Boolean removeEventFromSentProposal(int proposalId, int eventId) throws Exception {
 		System.out.println("Trying to remove event " + eventId + " from proposal id " + proposalId);
 		// Remove all responses related to event ID using helper
-		int rows = executeSQLDelete("responses", "event", proposalId, eventId);
+		int rows = executeSQLDelete("responses", "event_id", proposalId, eventId);
 		System.out.println("Rows affected from removing item: " + rows);
 
 		// Remove event ID from events list using helper
-		int eventsRowsAffected = executeSQLDelete("events", "event", proposalId, eventId);
+		int eventsRowsAffected = executeSQLDelete("events", "event_id", proposalId, eventId);
 		System.out.println("Rows affected from removing event from events: " + eventsRowsAffected);
 
 		// Check that only one event was deleted from the database
@@ -963,20 +959,15 @@ public class Database {
 
 	// Helper function for executing SQL delete statements
 	// Maintains protection against SQL injection attacks through the use of prepared statement
-	// Although the table name is chosen dynamically, this function is a helper and will never be called by the user (still safe)
+	// Although the table name is chosen dynamically, there is an input validation check to ensure the inputs are valid
 	public int executeSQLDelete(String table, String typeId, int proposalId, int eventId) throws Exception {
-		// Establish the table and columns to update
-		String type = "";
-		switch (typeId) {
-			case "event": type = "event_id";
-				break;
-			case "user": type = "user_id";
-				break;
-			case "invitee": type = "invitee_id";
-				break;
-		}
-		// Execute prepared statement
-		String sql = "DELETE FROM " + table + " WHERE proposal_id = ? AND " + type + " = ?";
+		// Ensure we only receive expected input (to protect against SQL attack)
+		ArrayList<String> allowed_input = new ArrayList<>(
+				Arrays.asList("event_id", "events", "user_id", "responses", "invitee_id", "invitees"));
+		if (!allowed_input.contains(table) || !allowed_input.contains(typeId)) return -1;
+
+		// Execute prepared statement based on input from main function
+		String sql = "DELETE FROM " + table + " WHERE proposal_id = ? AND " + typeId + " = ?";
 		PreparedStatement stmt = connection.prepareStatement(sql);
 		stmt.setInt(1, proposalId);
 		stmt.setInt(2, eventId);
