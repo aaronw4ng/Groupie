@@ -12,5 +12,4 @@ public class UserAvailability {
         this.isAvailable = isAvailable;
         this.didIBlock = didIBlock;
     }
-    UserAvailability(){}
 }
