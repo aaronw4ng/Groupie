@@ -536,11 +536,7 @@ public class StepDefinitions {
 	public void user_navigates_to_View_Proposals_page() {
 		driver.findElement(By.id("view-proposals-btn")).click();
 		// give buffer time for proposals to show up
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForSeconds(2);
 	}
 
 	@When("user clicks the first owned proposal")
@@ -614,8 +610,10 @@ public class StepDefinitions {
 		assertTrue(proposal != null);
 	}
 
-	@Then("second user sees the proposal from first user")
+	@Then("user sees the proposal from first user")
 	public void secondUserSeesTheProposalFromFirstUser() {
+		WebElement proposal = driver.findElement(By.id("received-container-1"));
+		assertTrue(proposal != null);
 	}
 
 	/* Delete event from proposal at any time */
@@ -892,6 +890,39 @@ public class StepDefinitions {
 		assertEquals(newUser1.toLowerCase(),result.getText());
 	}
 
+	/* view sent proposals tests */
+	@When("user navigates to Create Proposal page")
+	public void userNavigatesToCreateProposalPage() {
+		user_clicks_button("create-proposal-btn");
+		waitForSeconds(1);
+	}
+
+	@When("user adds newUser1 to the proposal")
+	public void userAddsNewUser1ToTheProposal() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser1);
+		waitForSeconds(1);
+		driver.findElement(By.id("user-card-1")).click();
+	}
+
+	@When("user adds newUser2 to the proposal")
+	public void userAddsNewUser2ToTheProposal() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser2);
+		waitForSeconds(1);
+		driver.findElement(By.id("user-card-1")).click();
+	}
+
+	@When("user adds newUser3 to the proposal")
+	public void userAddsNewUser3ToTheProposal() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser3);
+		waitForSeconds(1);
+		driver.findElement(By.id("user-card-1")).click();
+	}
 
 	@After()
 	public void after() {
