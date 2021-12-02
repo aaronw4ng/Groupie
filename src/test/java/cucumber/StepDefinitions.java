@@ -560,6 +560,11 @@ public class StepDefinitions {
 	public void userAcceptsRemovingInviteeWillDeleteProposalAlert() {
 	}
 
+	/* View Draft Proposals */
+	@Then("user sees {string} proposal")
+	public void userSeesProposal(String arg0) {
+	}
+
 	/* Set Unavailability tests */
 	@When("user navigates to Privacy Settings page")
 	public void userNavigatesToPrivacySettingsPage() {
@@ -578,4 +583,5 @@ public class StepDefinitions {
 	public void after() {
 		driver.quit();
 	}
+
 }
