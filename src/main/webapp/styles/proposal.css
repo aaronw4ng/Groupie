@@ -1,164 +1,200 @@
 body {
   min-height: 100vh;
   position: relative;
+  font-family: 'Open Sans', sans-serif;
 }
 
-  h2 {
-    margin-bottom: 1rem;
-    font-weight: 300;
-  }
-  #create-proposal-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 2.5rem;
+h2 {
+margin-bottom: 1rem;
+font-weight: 300;
+}
 
-  }
-  .form-col {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .title {
-    font-weight: 500;
-  }
-  #input-proposal-name {
-    font-size: 2rem;
-    border: none;
-    width : 95%;
-  }
-  #input-proposal-name:focus {
-    outline : none;
-  }
-  #input-proposal-name + i {
-    margin-right : 0;
-    margin-left : 0;
-  }
-  .input-header {
-    font-size: 1.5rem;
-    --secondary-color: #D2D1D1;
-    color : var(--secondary-color);
-  }
-  .btn-row {
-    margin-top: 2rem;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .principal {
-    margin-right : 1rem;
-  }
+h3 {
+ font-size: 1.5em;
+  margin: 1px;
+}
 
-  /* Event search selection */
-  .events-container {
-    padding: 1rem 0;
-    width: 100%;
-  }
-  .event-card {
-    width : 70%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    padding: 0 1rem;
-    border-radius: 10px;
-  }
-  .event-card > div > h1 {
-    font-size: 1rem;
-  }
-  .event-card > div {
-    max-width: 70%;
-  }
-  .remove-btn {
-    max-width: 15%;
-    background: none;
-    color : indianred;
-    border : 2px solid indianred;
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 1rem;
-    height: 1rem;
-    font-size: 0.6rem;
-    margin : 0.5rem;
-  } 
-  .remove-btn:hover {
-    background: indianred;
-    color : white
-  }
+h4 {
+  font-size: 1.75em;
+  margin-bottom: .5em;
+  margin-top: .5em;
+}
 
-  /* User Selection */
-  #added-user-container {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 1rem 0;
-  }
-  #user-results-container {
-    width: 100%;
-    padding-bottom: 1rem;
-  }
-  .user-card {
-    background: #FBFBFB;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    box-sizing: border-box;
-    width: 50%;
-    border-radius: 10px;
-  }
-  .user-card.unavailable {
-    color : #D2D1D1;
-    cursor: default;
-    border-radius: 10px;
-  }
-  .added-user {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin : 1% 1%;
-    width: 48%;
-    padding: 0 0.5rem;
-    box-sizing: border-box;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-  }
-  #user-search-input {
-    border: 2px #D2D1D1 solid;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    padding: 0.5rem;
-    width: 50%;
-    box-sizing: border-box;
-    display: none;
-  }
+h6 {
+ font-size: 3em;
+ margin: 1px;
+ padding: .75em;
+}
+
+#create-proposal-page {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding-bottom: 2.5rem;
+}
+
+.form-col {
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+.title {
+  font-weight: 500;
+}
+
+#border {
+  border: 5px solid #9762a5;
+  border-radius: 30px;
+  padding: 20px;
+  width:45%;
+  display: inline-block;
+}
+
+#border:hover {
+  color: white !important;
+  background-color: #9762a5;
+  cursor: pointer;
+}
+
+#input-proposal-name {
+font-size: 2rem;
+border: none;
+width : 95%;
+}
+
+#input-proposal-name:focus {
+outline : none;
+}
+#input-proposal-name + i {
+margin-right : 0;
+margin-left : 0;
+}
+.input-header {
+font-size: 1.5rem;
+--secondary-color: #D2D1D1;
+color : var(--secondary-color);
+}
+.btn-row {
+margin-top: 2rem;
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.principal {
+margin-right : 1rem;
+}
+
+/* Event search selection */
+.events-container {
+padding: 1rem 0;
+width: 100%;
+}
+.event-card {
+width : 70%;
+position: relative;
+display: flex;
+align-items: center;
+justify-content: space-between;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+padding: 0 1rem;
+border-radius: 10px;
+}
+.event-card > div > h1 {
+font-size: 1rem;
+}
+.event-card > div {
+max-width: 70%;
+}
+.remove-btn {
+max-width: 15%;
+background: none;
+color : indianred;
+border : 2px solid indianred;
+position: absolute;
+top: 0;
+right: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+width: 1rem;
+height: 1rem;
+font-size: 0.6rem;
+margin : 0.5rem;
+}
+.remove-btn:hover {
+background: indianred;
+color : white
+}
+
+/* User Selection */
+#added-user-container {
+width: 100%;
+display: flex;
+flex-wrap: wrap;
+justify-content: flex-start;
+align-items: center;
+padding: 1rem 0;
+}
+#user-results-container {
+width: 100%;
+padding-bottom: 1rem;
+}
+.user-card {
+background: #FBFBFB;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+cursor: pointer;
+margin: 0.5rem 0;
+padding: 0.5rem;
+box-sizing: border-box;
+width: 50%;
+border-radius: 10px;
+}
+.user-card.unavailable {
+color : #D2D1D1;
+cursor: default;
+border-radius: 10px;
+}
+.added-user {
+position: relative;
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin : 1% 1%;
+width: 48%;
+padding: 0 0.5rem;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 10px;
+}
+#user-search-input {
+border: 2px #D2D1D1 solid;
+border-radius: 0.5rem;
+font-size: 1rem;
+padding: 0.5rem;
+width: 50%;
+box-sizing: border-box;
+display: none;
+}
 
 
-  @media (max-width : 776px) {
-    #input-proposal-name {
-      width: 88%;
-    }
-    .btn-row {
-      flex-direction: column;
-    }
-    .principal {
-      width: 100%;
-      margin-right: 0;
-    }
-    .added-user {
-      width: 100%;
-      margin: 0;
-    }
-    #user-search-input, .user-card {
-      width : 100%;
-    }
-  }
+@media (max-width : 776px) {
+#input-proposal-name {
+  width: 88%;
+}
+.btn-row {
+  flex-direction: column;
+}
+.principal {
+  width: 100%;
+  margin-right: 0;
+}
+.added-user {
+  width: 100%;
+  margin: 0;
+}
+#user-search-input, .user-card {
+  width : 100%;
+}
+}

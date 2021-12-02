@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Open Sans', sans-serif;
   padding: 10rem;
   position: relative;
 }
@@ -9,6 +9,7 @@ body {
 button {
   width: 15rem;
   height: 3rem;
+  font-family : inherit;
   color: white;
   border: none;
   border-radius: 3px;
@@ -16,6 +17,19 @@ button {
   transition: 0.3s all;
   margin-bottom: 3rem;
   margin-top: 1.5rem;
+}
+
+button.on {
+    margin:1px;
+    background-color: white;
+    color: #9762A5;
+    border: 3px solid #9762A5;
+}
+
+button.off {
+    margin:1px;
+    background-color: #9762A5;
+    color: white;
 }
 
 button:hover {
@@ -31,6 +45,10 @@ button[disabled]:hover {
 button:disabled {
     background-color: gray;
     cursor: not-allowed;
+}
+
+h2#events-filters {
+    cursor: pointer;
 }
 
 .field {
@@ -130,4 +148,20 @@ button:hover {
   color : indianred;
   font-size: small;
   width : 15rem;
+}
+
+.title {
+   font-weight: 500;
+}
+
+.border {
+  border: 5px solid #9762a5;
+  border-radius: 30px;
+  padding: 20px;
+  width:45%;
+  display: inline-block;
+}
+
+.strong-result {
+  font-weight: bold;
 }
