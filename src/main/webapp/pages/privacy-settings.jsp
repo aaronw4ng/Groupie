@@ -17,10 +17,10 @@
     <div class="header">
       <h1>groupie</h1>
       <div class="header-links">
-        <a href="view-proposals.jsp">View Proposals</a>
-        <a href="view-proposals.jsp">Create Proposal</a>
-        <a href="#" class="highlight-link">Privacy</a>
-        <a href="create-proposal.jsp">Logout</a>
+      <a id="view-proposals-btn" href="view-proposals.jsp">View Proposals</a>
+      <a id="create-proposal-btn" href="create-proposal.jsp">Create Proposal</a>
+      <a id="privacy-settings-btn" href="#"  class="highlight-link">Privacy Settings</a>
+      <a id="logout-btn" href="../index.jsp">Logout</a>
       </div>
     </div>
 
