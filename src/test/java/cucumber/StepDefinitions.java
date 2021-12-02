@@ -560,6 +560,20 @@ public class StepDefinitions {
 	public void userAcceptsRemovingInviteeWillDeleteProposalAlert() {
 	}
 
+	/* Set Unavailability tests */
+	@When("user navigates to Privacy Settings page")
+	public void userNavigatesToPrivacySettingsPage() {
+		user_clicks_button("settings-btn");
+	}
+
+	@When("user types in {string} in unavailable time box")
+	public void userTypesInInUnavailableTimeBox(String arg0) {
+	}
+
+	@When("user should see themselve unavailable until indefinitely")
+	public void userShouldSeeThemselveUnavailableUntilIndefinitely() {
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
