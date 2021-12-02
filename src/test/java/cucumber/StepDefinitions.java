@@ -488,6 +488,31 @@ public class StepDefinitions {
 		assertEquals(generatedUsername2.toLowerCase(), driver.findElement(By.id("user-card-1")).getText());
 	}
 
+	/* View Sent Proposals */
+	@When("user logs out")
+	public void userLogsOut() {
+		user_clicks_button("logout-btn");
+	}
+
+	@When("second user logs in")
+	public void secondUserLogsIn() {
+		userInputsInSecondUsername();
+		user_inputs_password("password1");
+	}
+
+	@When("second user navigates to View Proposals page")
+	public void secondUserNavigatesToViewProposalsPage() {
+		user_navigates_to_View_Proposals_page();
+	}
+
+	@Then("user sees their first proposal that they sent out")
+	public void userSeesTheirFirstProposalThatTheySentOut() {
+	}
+
+	@Then("second user sees the proposal from first user")
+	public void secondUserSeesTheProposalFromFirstUser() {
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
