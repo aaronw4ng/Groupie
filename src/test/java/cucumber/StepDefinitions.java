@@ -30,7 +30,7 @@ public class StepDefinitions {
 	// !Remember to use https for all url
 	private static final String ROOT_URL = "https://localhost:8080/";
 
-	private int USERNAME_LENGTH = 10;
+	private int USERNAME_LENGTH = 20;
 	private String USERNAME_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	private static String generatedUsername = null;
@@ -706,7 +706,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser1);
-		waitForSeconds(3);
+		waitForSeconds(1);
 	}
 
 	@When ("user types in newUser2 in the invitee search box")
@@ -714,7 +714,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser2);
-		waitForSeconds(3);
+		waitForSeconds(1);
 	}
 
 	@When ("user types in newUser3 in the invitee search box")
@@ -722,17 +722,15 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser3);
-		waitForSeconds(3);
+		waitForSeconds(1);
 	}
 
 	@Then("user should see newUser1 unavailable not clickable")
 	public void userShouldSeeNewUser1UnavailableNotClickable() {
-		waitForSeconds(100);
-		WebElement result = driver.findElement(By.id("user-card-1"));
-		System.out.println(result.getText());
-		assertTrue(result.getText().contains(newUser1));
-		assertTrue(result.getText().contains("unavailable"));
-		assertFalse(result.getText().contains("clickable"));
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("user-card"));
+		assertTrue(result.getAttribute("class").contains("unavailable"));
+		assertTrue(result.getText().contains(newUser1.toLowerCase()));
 	}
 
 	@After()
