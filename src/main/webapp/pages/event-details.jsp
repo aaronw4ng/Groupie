@@ -14,10 +14,16 @@
       <a id="view-proposals-btn" href="view-proposals.jsp">View Proposals</a>
       <a id="create-proposal-btn" href="create-proposal.jsp">Create Proposal</a>
       <a id="privacy-settings-btn" href="privacy-settings.jsp">Privacy Settings</a>
-      <a id="logout-btn" href="../index.jsp">Logout</a>
-    </div>
-  </div>
-
+      <a id="logout-btn" onclick="leave_site()">Logout</a>
+     </div>
+   </div>
+   <script>
+     function leave_site() {
+         sessionStorage.clear()
+         document.location.href="../index.jsp"
+         console.log("session ended " + sessionStorage.getItem("username"))
+     }
+   </script>
   <div id="event-details-page">
     <div class="details-row">
         <h1 id="event-name-header">event name</h1>
