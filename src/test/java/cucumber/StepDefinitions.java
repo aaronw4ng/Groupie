@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+// import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -535,6 +535,8 @@ public class StepDefinitions {
 	@When("user navigates to View Proposals page")
 	public void user_navigates_to_View_Proposals_page() {
 		driver.findElement(By.id("view-proposals-btn")).click();
+		// give buffer time for proposals to show up
+		waitForSeconds(2);
 	}
 
 	@When("user clicks the first owned proposal")
@@ -604,10 +606,14 @@ public class StepDefinitions {
 
 	@Then("user sees their first proposal that they sent out")
 	public void userSeesTheirFirstProposalThatTheySentOut() {
+		WebElement proposal = driver.findElement(By.id("sent-container-1"));
+		assertTrue(proposal != null);
 	}
 
-	@Then("second user sees the proposal from first user")
+	@Then("user sees the proposal from first user")
 	public void secondUserSeesTheProposalFromFirstUser() {
+		WebElement proposal = driver.findElement(By.id("received-container-1"));
+		assertTrue(proposal != null);
 	}
 
 	/* Delete event from proposal at any time */
@@ -802,6 +808,132 @@ public class StepDefinitions {
 		WebElement result = driver.findElement(By.className("user-card"));
 		assertTrue(result.getAttribute("class").contains("unavailable"));
 		assertTrue(result.getText().contains(newUser1.toLowerCase()));
+	}
+
+	@Then("user should see newUser2 unavailable not clickable")
+	public void userShouldSeeNewUser2UnavailableNotClickable() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("user-card"));
+		assertTrue(result.getAttribute("class").contains("unavailable"));
+		assertTrue(result.getText().contains(newUser2.toLowerCase()));
+	}
+
+	@Then("user should see newUser3 unavailable not clickable")
+	public void userShouldSeeNewUser3UnavailableNotClickable() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("user-card"));
+		assertTrue(result.getAttribute("class").contains("unavailable"));
+		assertTrue(result.getText().contains(newUser3.toLowerCase()));
+	}
+
+	/* Set Block tests */
+	@When("user types in newUser1 in the block search box")
+	public void userTypesInNewUser1InTheBlockSearchBox() {
+		// waitForSeconds(1);
+		WebElement queryBox = driver.findElement(By.id("block-users-field"));
+		queryBox.click();
+		queryBox.sendKeys(newUser1);
+		waitForSeconds(1);
+	}
+
+	@When("user types in newUser2 in the block search box")
+	public void userTypesInNewUser2InTheBlockSearchBox() {
+		WebElement queryBox = driver.findElement(By.id("block-users-field"));
+		queryBox.click();
+		queryBox.sendKeys(newUser2);
+		waitForSeconds(1);
+	}
+
+	@When("user types in newUser3 in the block search box")
+	public void userTypesInNewUser3InTheBlockSearchBox() {
+		WebElement queryBox = driver.findElement(By.id("block-users-field"));
+		queryBox.click();
+		queryBox.sendKeys(newUser3);
+		waitForSeconds(1);
+	}
+
+	@When("user clicks block button")
+	public void userClicksBlockButton() {
+		user_clicks_button("block-but");
+		waitForSeconds(1);
+	}
+
+	@When("user should see newUser1 on the block list")
+	public void userShouldSeeNewUser1OnTheBlockList() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("strong-result"));
+		assertTrue(result.getText().contains(newUser1.toLowerCase()));
+	}
+
+	@When("user should see newUser2 on the block list")
+	public void userShouldSeeNewUser2OnTheBlockList() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("strong-result"));
+		assertTrue(result.getText().contains(newUser2.toLowerCase()));
+	}
+
+	@When("user should see newUser3 on the block list")
+	public void userShouldSeeNewUser3OnTheBlockList() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("strong-result"));
+		assertTrue(result.getText().contains(newUser3.toLowerCase()));
+	}
+
+	@When("user clicks newUser1 in the block list")
+	public void userCliksNewUser1InTheBlockList() {
+		System.out.println("It tries to click");
+		WebElement result = driver.findElement(By.className("strong-result"));
+		result.click();
+		System.out.println("It clicked");
+		waitForSeconds(1);
+	}
+
+	@When("user clicks unblock button")
+	public void userClicksUnblockButton() {
+		user_clicks_button("unblock-but");
+		waitForSeconds(1);
+	}
+
+	@Then("user should see newUser1 available and clickable")
+	public void userShouldSeeNewUser1AvailableAndClickable() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("user-card"));
+		System.out.println(result.getText());
+		assertEquals(newUser1.toLowerCase(),result.getText());
+	}
+
+	/* view sent proposals tests */
+	@When("user navigates to Create Proposal page")
+	public void userNavigatesToCreateProposalPage() {
+		user_clicks_button("create-proposal-btn");
+		waitForSeconds(1);
+	}
+
+	@When("user adds newUser1 to the proposal")
+	public void userAddsNewUser1ToTheProposal() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser1);
+		waitForSeconds(1);
+		driver.findElement(By.id("user-card-1")).click();
+	}
+
+	@When("user adds newUser2 to the proposal")
+	public void userAddsNewUser2ToTheProposal() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser2);
+		waitForSeconds(1);
+		driver.findElement(By.id("user-card-1")).click();
+	}
+
+	@When("user adds newUser3 to the proposal")
+	public void userAddsNewUser3ToTheProposal() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		queryBox.sendKeys(newUser3);
+		waitForSeconds(1);
+		driver.findElement(By.id("user-card-1")).click();
 	}
 
 	@After()

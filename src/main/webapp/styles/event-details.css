@@ -187,6 +187,10 @@ body {
     color : #F94144;
     font-size: 2rem;
 }
+.response-maybe {
+    color : var(--details-color);
+    font-size: 2rem;
+}
 .other-excitement-star {
     color : #9762A5;
     font-size: 2rem;

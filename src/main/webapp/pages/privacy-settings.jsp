@@ -38,7 +38,7 @@
         <h2>blocked users</h2>
         <p> select a user in the list to unblock them. </p>
         <div id="blocked-users-container"></div>
-       <button onclick="handleUnblock()">unblock</button>
+       <button id="unblock-but" onclick="handleUnblock()">unblock</button>
       </div>
 
       <div class="border">
@@ -47,7 +47,7 @@
         <div id="block-users-container">
             <input id="block-users-field" type="text" onKeyPress="setBlockOption(event)" onKeyUp="setBlockOption(event)"></input>
         </div>
-       <button onclick="handleBlock()">block</button>
+       <button id="block-but" onclick="handleBlock()">block</button>
       </div>
 
     <!-- Availability Container -->
