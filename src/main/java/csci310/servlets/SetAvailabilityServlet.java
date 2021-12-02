@@ -28,7 +28,7 @@ public class SetAvailabilityServlet extends HttpServlet {
                     until = "INDEFINITE";
                 }
                 else {
-                    Date untilDate = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(seconds));
+                    Date untilDate = new Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(seconds));
                     until = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(untilDate);
                 }
             }
