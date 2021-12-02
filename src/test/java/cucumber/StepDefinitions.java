@@ -2,7 +2,6 @@ package cucumber;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -35,6 +34,7 @@ public class StepDefinitions {
 
 	private static String generatedUsername = null;
 	private static String generatedUsername2 = null;
+	private static String generatedUsername3 = null;
 
 	private ChromeOptions handlingSSL = new ChromeOptions();
 	private WebDriver driver;
@@ -48,6 +48,9 @@ public class StepDefinitions {
 		}
 		if (generatedUsername2 == null) {
 			generatedUsername2 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		}
+		if (generatedUsername3 == null) {
+			generatedUsername3 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
 		}
 	}
 
@@ -120,6 +123,11 @@ public class StepDefinitions {
 	@When("user inputs in second username")
 	public void userInputsInSecondUsername() {
 		driver.findElement(By.id("input-username")).sendKeys(generatedUsername2);
+	}
+
+	@When("user inputs in third username")
+	public void userInputsInThirdUsername() {
+		driver.findElement(By.id("input-username")).sendKeys(generatedUsername3);
 	}
 
 	@When("user inputs {string} in password")
@@ -535,9 +543,25 @@ public class StepDefinitions {
 	public void userShouldSeeAnAlertMessage(String arg0) {
 	}
 
+	/* Remove invitee from proposal */
+	@When("user adds second user result")
+	public void userAddsSecondUserResult() {
+	}
+
+	@When("user presses button to remove the first invitee")
+	public void userPressesButtonToRemoveTheFirstInvitee() {
+	}
+
+	@When("user accepts remove invitee alert")
+	public void userAcceptsRemoveInviteeAlert() {
+	}
+
+	@When("user accepts removing invitee will delete proposal alert")
+	public void userAcceptsRemovingInviteeWillDeleteProposalAlert() {
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
 	}
-
 }

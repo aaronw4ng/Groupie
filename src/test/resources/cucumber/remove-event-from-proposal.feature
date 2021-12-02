@@ -84,7 +84,7 @@ Scenario: Owner removes the last event from sent proposal
   And user adds first event result
   And user clicks "btn-send-proposal" button
   And user navigates to View Proposals page
-  And user clicks on "Remove An Event From Sent Proposal" proposal
+  And user clicks on "Remove Last Event From Sent Proposal" proposal
   And user presses button to remove the "Eric Nam" event
   And user accepts event delete alert
   And user accepts deleting event will delete proposal alert
