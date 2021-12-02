@@ -16,14 +16,14 @@ public class Database {
 	private String dbConfigFilename;
 	private String dbKey;
 	private Ini config;
-	
+
 	// input: database_name, configfile_name
-	public Database(String a, String b, String k) throws Exception{
+	public Database(String a, String b, String k) throws Exception {
 		dbName = a;
 		dbConfigFilename = b;
 		dbKey = k;
 		// create connection
-		connection = DriverManager.getConnection("jdbc:sqlite:" + dbName, 
+		connection = DriverManager.getConnection("jdbc:sqlite:" + dbName,
 				SQLiteMCChacha20Config.getDefault().withKey(dbKey).toProperties());
 		// load configuration
 		String filename = "config/" + dbConfigFilename;
@@ -32,12 +32,12 @@ public class Database {
 	}
 
 	// input: database_name
-	public Database(String a) throws Exception{
+	public Database(String a) throws Exception {
 		this(a, "db_config.ini", "ThisProjectIsSoMuchFun");
 	}
 
 	// no input, default initialization for actual implementation
-	public Database() throws Exception{
+	public Database() throws Exception {
 		this("project27.db", "db_config.ini", "ThisProjectIsSoMuchFun");
 	}
 
@@ -49,7 +49,7 @@ public class Database {
 	}
 
 	// check if a particular table exists in the database
-	public Boolean checkTableExists(String tableName) throws Exception{
+	public Boolean checkTableExists(String tableName) throws Exception {
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, tableName, null);
 		if (rs.next()) {
@@ -61,18 +61,18 @@ public class Database {
 	}
 
 	// initialize all required tables in the database
-	public void createRequiredTables() throws Exception{
+	public void createRequiredTables() throws Exception {
 		Statement stmt = connection.createStatement();
 		StringBuilder sql = new StringBuilder();
-		for (String tableName: config.keySet()){
+		for (String tableName : config.keySet()) {
 			sql.append("CREATE TABLE IF NOT EXISTS " + tableName + " (\n");
 			Map<String, String> tableDef = config.get(tableName);
 			int count = 0;
-			for (String columnName: tableDef.keySet()){
+			for (String columnName : tableDef.keySet()) {
 				String columnSpec = tableDef.get(columnName);
 				sql.append(columnName + " " + columnSpec);
 				count++;
-				if (count < tableDef.keySet().size()){
+				if (count < tableDef.keySet().size()) {
 					sql.append(",\n");
 				}
 			}
@@ -84,17 +84,17 @@ public class Database {
 	}
 
 	// drop all tables
-	public void dropAllTables() throws Exception{
+	public void dropAllTables() throws Exception {
 		Statement stmt = connection.createStatement();
-		for (String tableName : config.keySet()){
+		for (String tableName : config.keySet()) {
 			stmt.executeUpdate("DROP TABLE IF EXISTS '" + tableName + "'");
 		}
 		stmt.close();
 	}
 
 	// check if user exists in the database
-	public Boolean checkUserExists(String _us) throws Exception{
-		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?" );
+	public Boolean checkUserExists(String _us) throws Exception {
+		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?");
 		stmt.setString(1, _us.toLowerCase());
 		ResultSet rs = stmt.executeQuery();
 		if (rs.next()) {
@@ -106,9 +106,9 @@ public class Database {
 		rs.close();
 		return false;
 	}
-	
+
 	// add user and hashed password to the table
-	public Boolean register(String _us, String _pd) throws Exception{
+	public Boolean register(String _us, String _pd) throws Exception {
 		String hashed = BCrypt.hashpw(_pd, BCrypt.gensalt());
 		PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, availability, until) VALUES(?, ?, ?, ?)");
 		stmt.setString(1, _us.toLowerCase());
@@ -118,18 +118,18 @@ public class Database {
 		try {
 			stmt.executeUpdate();
 			stmt.close();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	// check if hashed password matches with stored hashed password in the DB
-	public Boolean login(String _us, String _pd) throws Exception{
+	public Boolean login(String _us, String _pd) throws Exception {
 		PreparedStatement stmt = connection.prepareStatement("SELECT password FROM users where username = ?");
 		stmt.setString(1, _us.toLowerCase());
 		ResultSet rs = stmt.executeQuery();
-		if (rs.next()){
+		if (rs.next()) {
 			String rs_password = rs.getString("password");
 			stmt.close();
 			rs.close();
@@ -139,10 +139,10 @@ public class Database {
 		rs.close();
 		return false;
 	}
-	
+
 	// remove the according user from table
-	public Boolean deactivate(String _us, String _pd) throws Exception{
-		if (login(_us, _pd)){
+	public Boolean deactivate(String _us, String _pd) throws Exception {
+		if (login(_us, _pd)) {
 			PreparedStatement stmt = connection.prepareStatement("DELETE FROM users WHERE username = ?");
 			stmt.setString(1, _us.toLowerCase());
 			stmt.executeUpdate();
@@ -152,17 +152,16 @@ public class Database {
 		return false;
 	}
 
-	public int queryUserID(String owner) throws Exception{
+	public int queryUserID(String owner) throws Exception {
 		PreparedStatement stmt = connection.prepareStatement("SELECT user_id FROM users where username = ?");
 		stmt.setString(1, owner.toLowerCase());
 		ResultSet rs = stmt.executeQuery();
-		if (rs.next()){
+		if (rs.next()) {
 			int userID = rs.getInt("user_id");
 			rs.close();
 			stmt.close();
 			return userID;
-		}
-		else{
+		} else {
 			rs.close();
 			stmt.close();
 			throw new Exception("User not found!");
@@ -175,13 +174,12 @@ public class Database {
 		stmt.setInt(1, userID);
 		stmt.setString(2, title);
 		ResultSet rs = stmt.executeQuery();
-		if (rs.next()){
+		if (rs.next()) {
 			int proposalID = rs.getInt("proposal_id");
 			rs.close();
 			stmt.close();
 			return proposalID;
-		}
-		else{
+		} else {
 			rs.close();
 			stmt.close();
 			throw new Exception("Proposal not found!");
@@ -198,10 +196,9 @@ public class Database {
 		}
 		int userID;
 		// if the owner exists, then try to create a proposal by using owner's user_id
-		try{
+		try {
 			userID = queryUserID(owner);
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			// else owner does not exist, then cannot create a proposal
 			System.out.println("Unable to add following proposal: " + owner + " " + title + " " + descript);
 			return -1;
@@ -240,7 +237,7 @@ public class Database {
 			return false;
 		}
 		// Add list of events associated with this proposal to the events table
-		for (Event e: events) {
+		for (Event e : events) {
 			String query = "INSERT INTO events (proposal_id, event_name, event_link, start_date_time, venue_name, venue_address, venue_city, venue_state, venue_country) VALUES (?,?,?,?,?,?,?,?,?)";
 			PreparedStatement pst = connection.prepareStatement(query);
 			pst.setInt(1, proposalId);
@@ -270,7 +267,7 @@ public class Database {
 		}
 
 		// find the invitee's user id and then insert the invitee into table
-		for (String invitee: invited) {
+		for (String invitee : invited) {
 			int inviteeID = queryUserID(invitee);
 			String insert = "INSERT INTO invitees (proposal_id, invitee_id) VALUES(?,?)";
 			PreparedStatement pst2 = connection.prepareStatement(insert);
@@ -289,7 +286,8 @@ public class Database {
 	public Boolean sendProposal(int proposalId) throws Exception {
 		// update is draft attribute to false
 		PreparedStatement stmt1 = connection.prepareStatement("UPDATE proposals SET is_draft = 0 where proposal_id = ?");
-		stmt1.setInt(1, proposalId);;
+		stmt1.setInt(1, proposalId);
+		;
 		int rowsAffected = stmt1.executeUpdate();
 		stmt1.close();
 		// should only affect one row; otherwise, did not successfully send proposal
@@ -298,7 +296,8 @@ public class Database {
 		}
 		// Get all the events associated with this proposal
 		PreparedStatement stmt2 = connection.prepareStatement("SELECT event_id FROM events WHERE proposal_id = ?");
-		stmt2.setInt(1, proposalId);;
+		stmt2.setInt(1, proposalId);
+		;
 		ResultSet eventsRS = stmt2.executeQuery();
 		List<Integer> eventIDs = new ArrayList<>();
 		// Get list of event ids
@@ -320,8 +319,8 @@ public class Database {
 		stmt3.close();
 		// initialize a response for each event, invitee combination in the responses table
 		// Note: availability and excitement will be NULL
-		for (int event: eventIDs) {
-			for (int invitee: inviteesIDs) {
+		for (int event : eventIDs) {
+			for (int invitee : inviteesIDs) {
 				PreparedStatement stmt4 = connection.prepareStatement("INSERT INTO responses (proposal_id, event_id, user_id, is_filled_out) VALUES(?, ?, ?, ?)");
 				stmt4.setInt(1, proposalId);
 				stmt4.setInt(2, event);
@@ -341,13 +340,12 @@ public class Database {
 		PreparedStatement stmt = connection.prepareStatement("SELECT is_draft FROM proposals where proposal_id = ?");
 		stmt.setInt(1, proposalId);
 		ResultSet rs = stmt.executeQuery();
-		if (rs.next()){
+		if (rs.next()) {
 			Boolean isDraft = rs.getBoolean("is_draft");
 			rs.close();
 			stmt.close();
 			return isDraft;
-		}
-		else {
+		} else {
 			rs.close();
 			stmt.close();
 			System.out.println("isDraft failed");
@@ -361,30 +359,30 @@ public class Database {
 	public Boolean deleteProposal(int proposalId) throws Exception {
 		System.out.println("Deleting proposal: " + proposalId);
 		// Delete invitees
-		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ?");
-		inviteesStmt.setInt(1, proposalId);
-		inviteesStmt.executeUpdate();
+		helperDeleteProposal("invitees", proposalId);
 
 		// Delete events
-		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ?");
-		eventsStmt.setInt(1, proposalId);
-		eventsStmt.executeUpdate();
+		helperDeleteProposal("events", proposalId);
 
 		// Delete responses if not draft; note that this is ok to do even if no responses for proposal exists
-		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ?");
-		responsesStmt.setInt(1, proposalId);
-		responsesStmt.executeUpdate();
+		helperDeleteProposal("responses", proposalId);
 
 		// Delete proposals
-		PreparedStatement proposalsStmt = connection.prepareStatement("DELETE FROM proposals WHERE proposal_id = ?");
-		proposalsStmt.setInt(1, proposalId);
-		int rowsAffected = proposalsStmt.executeUpdate();
+		int rowsAffected = helperDeleteProposal("proposals", proposalId);
 		// Check that one proposal was deleted from the database
 		if (rowsAffected == 1) {
 			return true;
 		}
 		// Otherwise, something went wrong (e.g. none were deleted, more than one proposal deleted)
 		return false;
+	}
+
+	// Helper function for readability and to prevent SQL attack
+	public int helperDeleteProposal(String column, int proposalId) throws SQLException {
+		String sql = "DELETE FROM " + column + " WHERE proposal_id = ?";
+		PreparedStatement stmt = connection.prepareStatement(sql);
+		stmt.setInt(1, proposalId);
+		return stmt.executeUpdate();
 	}
 
 	// Returns a list of events associated with the proposalId
@@ -868,6 +866,7 @@ public class Database {
 		// refresh users' availability before getting all users
 		refreshUsersAvailability();
 
+		// execute SQL query
 		List<UserAvailability> users = new ArrayList<UserAvailability>();
 		PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
 		ResultSet rs = stmt.executeQuery();
@@ -925,48 +924,54 @@ public class Database {
 	// Removes an invitee from a sent proposal
 	public Boolean removeInviteeFromSentProposal(int proposalId, int userId) throws Exception {
 		System.out.println("Trying to remove " + userId + " from proposal id " + proposalId);
-		// Remove user ID from invitee list
-		PreparedStatement inviteesStmt = connection.prepareStatement("DELETE FROM invitees WHERE proposal_id = ? AND invitee_id = ?");
-		inviteesStmt.setInt(1, proposalId);
-		inviteesStmt.setInt(2, userId);
-		int inviteesRowsAffected = inviteesStmt.executeUpdate();
+		// Remove user ID from invitee list using helper function
+		int inviteesRowsAffected = executeSQLDelete("invitees", "invitee_id", proposalId, userId);
 		System.out.println("Rows affected from removing invitee from invitees: " + inviteesRowsAffected);
+
 		// Check that only one invitee was deleted from the database
 		if (inviteesRowsAffected != 1) {
 			return false;
 		}
-
 		// Remove user responses that correspond to that proposal ID and user ID
-		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND user_id = ?");
-		responsesStmt.setInt(1, proposalId);
-		responsesStmt.setInt(2, userId);
-		int rows = responsesStmt.executeUpdate();
+		int rows = executeSQLDelete("responses", "user_id", proposalId, userId);
 		System.out.println("Rows affected from removing responses: " + rows);
 
 		return true;
 	}
 
-	// Removes an event from a sent proposal
+	// Removes an event and associated responses from a sent proposal
 	public Boolean removeEventFromSentProposal(int proposalId, int eventId) throws Exception {
 		System.out.println("Trying to remove event " + eventId + " from proposal id " + proposalId);
-		// Remove all responses related to event ID
-		PreparedStatement responsesStmt = connection.prepareStatement("DELETE FROM responses WHERE proposal_id = ? AND event_id = ?");
-		responsesStmt.setInt(1, proposalId);
-		responsesStmt.setInt(2, eventId);
-		int rows = responsesStmt.executeUpdate();
-		System.out.println("Rows affected from removing responses: " + rows);
+		// Remove all responses related to event ID using helper
+		int rows = executeSQLDelete("responses", "event_id", proposalId, eventId);
+		System.out.println("Rows affected from removing item: " + rows);
 
-		// Remove event ID from events list
-		PreparedStatement eventsStmt = connection.prepareStatement("DELETE FROM events WHERE proposal_id = ? AND event_id = ?");
-		eventsStmt.setInt(1, proposalId);
-		eventsStmt.setInt(2, eventId);
-		int eventsRowsAffected = eventsStmt.executeUpdate();
+		// Remove event ID from events list using helper
+		int eventsRowsAffected = executeSQLDelete("events", "event_id", proposalId, eventId);
 		System.out.println("Rows affected from removing event from events: " + eventsRowsAffected);
+
 		// Check that only one event was deleted from the database
 		if (eventsRowsAffected != 1) {
 			return false;
 		}
-
 		return true;
+	}
+
+	// Helper function for executing SQL delete statements
+	// Maintains protection against SQL injection attacks through the use of prepared statement
+	// Although the table name is chosen dynamically, there is an input validation check to ensure the inputs are valid
+	public int executeSQLDelete(String table, String typeId, int proposalId, int eventId) throws Exception {
+		// Ensure we only receive expected input (to protect against SQL attack)
+		ArrayList<String> allowed_input = new ArrayList<>(
+				Arrays.asList("event_id", "events", "user_id", "responses", "invitee_id", "invitees"));
+		if (!allowed_input.contains(table) || !allowed_input.contains(typeId)) return -1;
+
+		// Execute prepared statement based on input from main function
+		String sql = "DELETE FROM " + table + " WHERE proposal_id = ? AND " + typeId + " = ?";
+		PreparedStatement stmt = connection.prepareStatement(sql);
+		stmt.setInt(1, proposalId);
+		stmt.setInt(2, eventId);
+
+		return stmt.executeUpdate();
 	}
 }
