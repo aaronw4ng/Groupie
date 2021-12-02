@@ -12,7 +12,7 @@
     <h1>groupie</h1>
     <div class="header-links">
       <a href="#" class="highlight-link">Proposals</a>
-      <a href="../index.jsp">Logout</a>
+      <a id="logout-btn" href="../index.jsp">Logout</a>
 
     </div>
   </div>
@@ -22,8 +22,8 @@
 
     <form id="proposal-form">
       <!-- Proposal Name -->
-      <p class="input-header">proposal name</p>
-      <input class="field-input" type="text" id="input-proposal-name" value="new proposal">
+      <p class="input-header" id="proposal-name-header">proposal name</p>
+      <input class="field-input" type="text" id="input-proposal-name" value="new proposal" onblur="handleProposalNameBlur(event)">
       <i class="fas fa-pen"></i>
       <hr>
 
@@ -43,7 +43,7 @@
       </div>
       <div class="form-col">
         <button id="btn-add-users" onclick="handleAddUsersClick(event)">+ add users</button>
-        <input class="field-input" id="user-search-input" placeholder="search username" onkeyup="handleInputChange(event)">
+        <input class="field-input" id="user-search-input" placeholder="search username" onkeyup="handleInputChange(event)" onfocus="handleUserInputFocus(event)">
       </div>
       <div id="user-results-container">
         
@@ -53,8 +53,8 @@
 
       <!-- PROPOSAL BUTTONS -->
       <div class="btn-row">
-        <button onclick="handleCreateProposalClick(event)" id="btn-send-proposal">send proposal</button>
-        <button onclick="handleSaveDraftClick(event)" id="btn-save-draft">save draft</button>
+        <button onclick="handleCreateProposalClick(event)" id="btn-send-proposal" class="principal">send proposal</button>
+        <button onclick="handleSaveDraftClick(event)" id="btn-save-draft" class="principal">save draft</button>
       </div>
     </form>
   </div>
@@ -62,9 +62,9 @@
   <div id="footer">
     <p>team 27</p>
   </div>
-
+  <jsp:include page="autologout.jsp"></jsp:include>
+  <script src="../scripts/autologout.js"></script>
   <script src="../scripts/create-proposal.js"></script>
   <script src="../scripts/user-search.js"></script>
 </body>
-  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>

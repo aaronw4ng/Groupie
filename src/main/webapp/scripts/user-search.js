@@ -1,8 +1,13 @@
 // GET ALL USERS
 
 // TODO: Implement userID in login/create account
+let currentUserId = ""
+
 if (sessionStorage.getItem("username")) {
     const currentUsername = sessionStorage.getItem("username")
+}
+if (sessionStorage.getItem("userId")) {
+    currentUserId = sessionStorage.getItem("userId")
 }
 else {
     document.location.href = "../index.jsp"
@@ -16,7 +21,7 @@ window.onload = function() {
         method: "POST",
         url: "../GetAllUsersServlet",
         data: {
-            userId: 4
+            userId: currentUserId
         },
         success: function(result) {
             if (result) {
@@ -32,7 +37,7 @@ window.onload = function() {
 }
 
 // TEST INPUT
-const testUsers = [{username: "Gary", id: 1, isAvailable: false }, {username: "HairyGary", id: 2, isAvailable: true }, {username: "urCuteKnees", id: 3, isAvailable: true }, {username: "urMom33", id: 4, isAvailable: true }, {username: "yewwww", id: 5, isAvailable: true }, {username: "bingBONG", id: 6, isAvailable: false }, {username: "Matthew1", id: 7, isAvailable: false }, {username: "Matt1", id: 8, isAvailable: true }, {username: "username1", id: 9, isAvailable: true }]
+// const testUsers = [{username: "Gary", id: 1, isAvailable: false }, {username: "HairyGary", id: 2, isAvailable: true }, {username: "urCuteKnees", id: 3, isAvailable: true }, {username: "urMom33", id: 4, isAvailable: true }, {username: "yewwww", id: 5, isAvailable: true }, {username: "bingBONG", id: 6, isAvailable: false }, {username: "Matthew1", id: 7, isAvailable: false }, {username: "Matt1", id: 8, isAvailable: true }, {username: "username1", id: 9, isAvailable: true }]
 let userResultsContainer = document.querySelector("#user-results-container")
 let addedUserContainer = document.querySelector("#added-user-container")
 
@@ -54,20 +59,15 @@ function handleInputChange(event) {
     
 }
 
-function searchUsers(target) {
-    // Filter users array for users that contain target string
-    // TODO: change testUsers to usersList when implementation allows for it
-    let filteredUsers = USERS_LIST.filter( (user) => {
-        return user.userName.toLowerCase().includes(target.toLowerCase())
-    })
-    console.log(filteredUsers)
-
+function displayUsers(userList) {
+    userResultsContainer.innerHTML = ""
     // Display Filtered Users Cards
-    filteredUsers.forEach(user => {
+    let i = 1
+    userList.forEach(user => {
         let cardString = ``
         if (user.isAvailable) {
             cardString = `
-            <div class="user-card" data-user="${user.userName}" data-id="${user.userId}" onclick="handleSelectUser(event)">
+            <div id="user-card-${i}" class="user-card" data-user="${user.userName}" data-id="${user.userId}" onclick="handleSelectUser(event)">
                 <p><i class="fas fa-users"></i> ${user.userName}</p>
             </div>
             `;
@@ -80,8 +80,23 @@ function searchUsers(target) {
             `;
         }
         userResultsContainer.innerHTML += cardString
+        i++
     })
+}
 
+// Display all existing users upon first click
+function handleUserInputFocus(event) {
+    displayUsers(USERS_LIST)
+}
+
+function searchUsers(target) {
+    // Filter users array for users that contain target string
+    // TODO: change testUsers to usersList when implementation allows for it
+    let filteredUsers = USERS_LIST.filter( (user) => {
+        return user.userName.toLowerCase().includes(target.toLowerCase())
+    })
+    // console.log(filteredUsers)
+    displayUsers(filteredUsers)
 }
 
 // Get Users list from session storage
@@ -96,7 +111,7 @@ function userInSelected(username) {
     // Check if user in users list
     usersList.forEach(user => {
         if (user == username) {
-            console.log("SAME")
+            // console.log("SAME")
             count++
         }
     })
@@ -155,7 +170,7 @@ function handleUserRemoval(event) {
         let userCard = event.srcElement.parentElement
         console.log("DATASET: " + userCard.dataset.username)
         userCard.remove()
-        console.log("USERS: " + users)
+        // console.log("USERS: " + users)
         // Remove user from user lists
         users = users.filter(user => {
             return user !== userCard.dataset.username

@@ -26,6 +26,9 @@ function handleLoginClick(event) {
                     if (!sessionStorage.getItem("username")) {
                         sessionStorage.setItem("username", usernameInput)
                     }
+                    if (!sessionStorage.getItem("userId")) {
+                        sessionStorage.setItem("userId", result)
+                    }
                     document.location.href = "./pages/create-proposal.jsp"
                 }
                 else {
@@ -36,9 +39,8 @@ function handleLoginClick(event) {
                     warningMessageContainer.innerHTML = "Attempt: " + attempt + message
                     warningMessageContainer.style.display = "block"
 
-                    if (attempt == 3) {
+                    if (attempt >= 3) {
                         manageLoginAttempts()
-                        attempt = 0;
                     }
                 }
             }

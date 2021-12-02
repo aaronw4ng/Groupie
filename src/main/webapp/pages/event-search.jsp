@@ -20,6 +20,10 @@
     </div>
 
     <!-- Search Container -->
+    <!-- <div class="btn-back-container">
+      <p>back to your proposal</p>
+      <button id="btn-back"><i class="fas fa-undo-alt"></i></button>
+    </div> -->
     <div class="event-search-container">
       <form id="event-search-form">
         <div class="search-row">
@@ -33,7 +37,7 @@
 
             <div id="start-date">
               <label for="start" id="datelabel">start date</label>
-              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03" />
+              <input type="date" id="start" name="date-start" value="" min="2021-11-03" max="2100-11-03"/>
             </div>
           </div>
           <div class="search-item">

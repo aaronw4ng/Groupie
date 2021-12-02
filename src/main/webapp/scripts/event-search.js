@@ -16,6 +16,12 @@ function handleSubmit(event) {
     let startDateInput = document.querySelector("#start").value
     let endDateInput = document.querySelector("#end").value
 
+    if (keywordInput === "" && zipcodeInput === "" && cityInput === "" && genreInput === "" && startDateInput === "" && endDateInput === "") {
+        console.log("EMPTY")
+        alert("Empty input fields! Please try again.")
+        return
+    }
+
     console.log("KEYWORD:", keywordInput, "ZIPCODE:", zipcodeInput, "CITY:", cityInput, "START:", startDateInput, "END:", endDateInput)
     
     // Date Formatting for Servlet
@@ -67,28 +73,40 @@ function handleSubmit(event) {
                 resultsCount.innerHTML = countString
                 // Parse JSON & add results cards to Container
                 for (let i = 0; i < json.length; i++) {
-                    console.log(json[i].url)
+                    console.log(json[i])
                     let resultCardString = `
                     <div class="event-result-card">
-                        <p class="result-title">${json[i].eventName}</p>
+                        <p class="result-title" id="result-title-id-${i}">${json[i].eventName}</p>
                         <hr>
-                        <p class="event-info-title"><i class="fas fa-info-circle"></i> event info</p>
+                        <p class="event-info-title" id="event-info-title-id-${i}"><i class="fas fa-info-circle"></i> event info</p>
                         <div class="event-info">   
                             <div>
                                 <p class="result-header">start date</p>
-                                <p class="result-date-range">${json[i].startDateTime}</p>
+                                <p class="result-date-range" id="start-date-id-${i}">${json[i].startDateTime.substring(0,10)}</p>
                             </div>
                             <div>
                                 <p class="result-header">event link</p>
-                                <a class="result-url" href="${json[i].url}" target="_blank">ticketmaster page</a>
+                                <a class="result-url" id="event-link-${i}" href="${json[i].url}" target="_blank">ticketmaster page</a>
                             </div>
                             <div>
                                 <p class="result-header">venue</p>
-                                <p class="result-venue">${json[i].venues[0].name}</p>
+                                <p class="result-venue" id="venue-id-${i}">${json[i].venues[0].name}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">city</p>
+                                <p class="result-city" id="city-id-${i}">${json[i].venues[0].city}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">genre</p>
+                                <p class="result-genre" id="genre-id-${i}">${json[i].genre}</p>
+                            </div>
+                            <div>
+                                <p class="result-header">zipcode</p>
+                                <p class="result-zipcode" id="zipcode-id-${i}">${json[i].venues[0].zipcode}</p>
                             </div>
                             <hr>
                         </div>
-                        <button class="btn-add-result" onclick="handleResultSelection(${i})">add event</button>
+                        <button class="btn-add-result" id="btn-add-result-id-${i}" onclick="handleResultSelection(${i})">add event</button>
                     </div>
                     `;
                     resultsContainer.innerHTML += resultCardString
@@ -104,7 +122,7 @@ function formatInputDate(dateInput) {
     if (dateInput != "") {
         let dateArr = dateInput.split("-")
         let yearString = dateArr[0]
-        dateInput = yearString + "-" + startDateArr[1] + "-" + startDateArr[2] + "T00:00:00Z"
+        dateInput = yearString + "-" + dateArr[1] + "-" + dateArr[2] + "T00:00:00Z"
     }
     return dateInput;
 }
@@ -149,3 +167,28 @@ function setFilters() {
     var div = document.getElementById('search-filters');
     div.style.display = 'none'
 }
+
+function setMaxEndDate() {
+    // let currDate = new Date(event.target.value)
+
+    var currDate = new Date();
+    // var dd = String(today.getDate()).padStart(2, '0');
+    // var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    // var yyyy = today.getFullYear();
+
+    // today = mm + '/' + dd + '/' + yyyy;
+    console.log("TODAY: " + currDate)
+
+    var newDate = new Date();
+    newDate.setMonth(currDate.getMonth()+6)
+    newDate = newDate.toISOString().substr(0,10)
+    currDate = currDate.toISOString().substr(0,10)
+    console.log(newDate + "CURR" + currDate)
+    document.querySelector("#start").setAttribute("min", currDate)
+    document.querySelector("#start").setAttribute("max", newDate)
+    document.querySelector("#end").setAttribute("max", newDate)
+
+}
+
+setMaxEndDate()
+setFilters()
