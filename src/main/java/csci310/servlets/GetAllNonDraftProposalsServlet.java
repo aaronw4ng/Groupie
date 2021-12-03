@@ -21,13 +21,16 @@ public class GetAllNonDraftProposalsServlet extends HttpServlet{
             PrintWriter out = response.getWriter();
             int userId = Integer.parseInt(request.getParameter("userId"));
             Boolean isOwner = Boolean.parseBoolean(request.getParameter("isOwner"));
-            System.out.println("0");
+            // System.out.println("0");
             List<Proposal> proposals = database.getAllNonDraftProposals(userId, isOwner);
-            System.out.println("1");
+            // System.out.println("1");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            System.out.println("2");
+            // System.out.println("2");
             out.print(gson.toJson(proposals));
-            System.out.println("3");
+            // System.out.println("3");
+            System.out.println("-------START------");
+            System.out.println(gson.toJson(proposals));
+            System.out.println("-------END-------");
         }
         catch(Exception e){
             System.out.println(e.getMessage());
