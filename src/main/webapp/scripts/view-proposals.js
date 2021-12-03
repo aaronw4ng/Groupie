@@ -141,7 +141,7 @@ const getDraftProposals = userId => {
     url: "../getAllDraftProposals",
     success: function (result) {
       draftProposals = result
-      console.log(draftProposals)
+      // console.log(draftProposals)
       displayResults(JSON.parse(draftProposals), draftProposalResultsContainer, "draft")
     },
   })
@@ -159,7 +159,7 @@ const getFinalizedOwnedProposals = userId => {
     url: "../getAllNonDraftProposals",
     success: function (result) {
       finalizedOwnedProposals = result
-      console.log(finalizedOwnedProposals)
+      // console.log(finalizedOwnedProposals)
       displayResults(JSON.parse(finalizedOwnedProposals), sentProposalResultsContainer, "sent")
     },
   })
@@ -177,7 +177,7 @@ const getFinalizedInvitedProposals = userId => {
     url: "../getAllNonDraftProposals",
     success: function (result) {
       finalizedInvitedProposals = result
-      console.log(finalizedInvitedProposals)
+      console.log("Nonowned Proposals:" + finalizedInvitedProposals)
       displayResults(JSON.parse(finalizedInvitedProposals), receivedProposalResultsContainer, "received")
     },
   })
@@ -216,9 +216,13 @@ function filterResults(type, proposalId) {
 
 
 function displayResults(filteredResults, container, proposalType) {
+  container.innerHTML = ""
   var i = 1
   filteredResults.forEach(result => {
     console.log(JSON.stringify(result))
+    if (proposalType === "received" && result.isDraft) {
+      return
+    }
     let resultsCard = `
         <div id="${proposalType}-container-${i}" data-json='${JSON.stringify(
           result

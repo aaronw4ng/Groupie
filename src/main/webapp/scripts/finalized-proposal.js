@@ -7,6 +7,11 @@ else {
     currUsername = sessionStorage.getItem("username")
 }
 
+let ssUserID
+if (sessionStorage.getItem("userId")) {
+    ssUserID = sessionStorage.getItem("userId")
+}
+
 // ** GLOBALS **
 // Get selected proposal from session storage
 
@@ -27,21 +32,19 @@ function displayAllProposalInfo() {
     let proposalTitle = document.querySelector("#proposal-name")
     let eventsContainer = document.querySelector(".events-container")
     let usersContainer = document.querySelector(".users-container")
-    const proposalEvents = proposalJSON.events
+    const event = proposalJSON.bestEvent
+    console.log("HERE")
     const proposalUsers = proposalJSON.invitees
 
     proposalTitle.innerHTML = proposalJSON.title
 
     eventsContainer.innerHTML = ""
-    for (i in proposalEvents) {
-        let event = proposalEvents[i]
-        let eventString = `
-        <div data-event-id="${event.eventId}" data-event='${JSON.stringify(event)}'' class="event-card">
-            <h1>${event.eventName}</h1>
-        </div>
-        `;
-        eventsContainer.innerHTML += eventString
-    }
+    let eventString = `
+    <div data-event-id="${event.eventId}" data-event='${JSON.stringify(event)}'' class="event-card">
+        <h1>${event.eventName}</h1>
+    </div>
+    `;
+    eventsContainer.innerHTML += eventString
 
     usersContainer.innerHTML = ""
     for (i in proposalUsers) {
@@ -75,6 +78,24 @@ function handleBackBtnClick(event) {
         sessionStorage.removeItem("selectedProposal")
     }
     document.location.href = "./view-proposals.jsp"
+}
+
+function handleProposalActionClick(event, decision) {
+    $.ajax({
+        method: "POST",
+        url : "../setFinalDecision",
+        data : {
+            proposalId : ssProposalID,
+            userId : ssUserID,
+            accept : decision
+        },
+        success : function(result) {
+            if (result === "true") {
+                alert("Decision successfully sent!")
+                document.location.href = "./view-proposals.jsp"
+            }
+        }
+    })
 }
 
 startAutoLogoutRoutine()

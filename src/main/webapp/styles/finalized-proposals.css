@@ -1,0 +1,14 @@
+#action-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#btn-accept-proposal, #btn-decline-proposal {
+    margin : 1rem
+}
+
+@media (max-width : 991px) {
+    #action-container {
+        flex-direction: column;
+    }
+}
