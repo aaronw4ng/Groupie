@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/proposal-details.css" />
+    <link rel="stylesheet" href="../styles/finalized-proposals.css" />
     <script src="https://kit.fontawesome.com/d4a13a138b.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>groupie | finalized proposal</title>
@@ -40,7 +41,7 @@
       <!-- EVENTS -->
       <div class="page-section">
         <h1 class="section-title">event</h1>
-        <p class="section-description">finalized groupie event</p>
+        <p class="section-description">system finalized groupie event</p>
         <div class="events-container">
           <div data-event-id="1" class="event-card">
             <h1>event one</h1>
@@ -72,8 +73,11 @@
 
       </div>
 
-      <div id="delete-container">
-        <button id="btn-delete-proposal" onclick="handleDeleteProposalClick(event)">delete proposal</button>
+      <hr>
+
+      <div id="action-container">
+        <button id="btn-accept-proposal" onclick="handleProposalActionClick(event, true)">accept invitation</button>
+        <button id="btn-decline-proposal" onclick="handleProposalActionClick(event, false)">decline invitation</button>
       </div>
   </div>
 
