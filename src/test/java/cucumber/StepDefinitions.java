@@ -936,6 +936,20 @@ public class StepDefinitions {
 		driver.findElement(By.id("user-card-1")).click();
 	}
 
+	@Then("user sees the proposal from first user on calendar")
+	public void userSeesTheProposalFromFirstUserOnCalendar() {
+		waitForSeconds(1);
+		// TODO: check calendar
+		// WebElement result = driver.findElement(By.className("proposal-card"));
+		// assertTrue(result.getText().contains(newUser1.toLowerCase()));
+	}
+
+	@Then("user sees their first proposal that they sent out on the calendar")
+	public void userSeesTheirFirstProposalThatTheySentOutOnTheCalendar() {
+		waitForSeconds(1);
+		// TODO: check calendar
+	}
+
 	@After()
 	public void after() {
 		driver.quit();
