@@ -124,6 +124,7 @@ function handleCreateProposalClick(event) {
             if (result) {
                 cleanUpSessionStorage()
                 alert("Proposal sent successfully!")
+                document.location.href = "./view-proposals.jsp"
             }
             else {
                 alert("Proposal failed to send.")
@@ -160,6 +161,8 @@ function handleSaveDraftClick(event) {
             console.log(result)
             if (result === "true") {
                 alert("Draft successfully saved!")
+                cleanUpSessionStorage()
+                document.location.href = "./view-proposals.jsp"
             }
             else {
                 alert("Unable to save draft.")
