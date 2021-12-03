@@ -751,17 +751,18 @@ public class StepDefinitions {
 	@When("user clicks Set Unavailable button")
 	public void userClicksSetUnavailableButton() {
 		user_clicks_button("unavail-but");
-		waitForSeconds(1);
+		waitForSeconds(3);
 	}
 
 	@When("user clicks Set Available button")
 	public void userClicksSetAvailableButton() {
 		user_clicks_button("avail-but");
-		waitForSeconds(1);
+		waitForSeconds(3);
 	}
 
 	@When("user should see themselve unavailable until indefinitely")
 	public void userShouldSeeThemselveUnavailableUntilIndefinitely() {
+		waitForSeconds(1);
 		String result = driver.findElement(By.id("avail-status")).getText();
 		assertTrue(result.contains("currently unavailable indefinitely"));
 	}
