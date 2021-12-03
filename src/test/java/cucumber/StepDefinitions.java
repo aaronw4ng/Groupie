@@ -793,7 +793,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser1);
-		waitForSeconds(1);
+		waitForSeconds(2);
 	}
 
 	@When ("user types in newUser2 in the invitee search box")
@@ -801,7 +801,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser2);
-		waitForSeconds(1);
+		waitForSeconds(2);
 	}
 
 	@When ("user types in newUser3 in the invitee search box")
@@ -809,7 +809,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser3);
-		waitForSeconds(1);
+		waitForSeconds(2);
 	}
 
 	@Then("user should see newUser1 unavailable not clickable")
