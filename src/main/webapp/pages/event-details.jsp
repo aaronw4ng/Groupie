@@ -11,7 +11,7 @@
   <div class="header">
     <h1>groupie</h1>
     <div class="header-links">
-      <a id="view-proposals-btn" href="view-proposals.jsp">View Proposals</a>
+      <a id="view-proposals-btn" href="view-proposals.jsp" class="highlight-link">View Proposals</a>
       <a id="create-proposal-btn" href="create-proposal.jsp">Create Proposal</a>
       <a id="privacy-settings-btn" href="privacy-settings.jsp">Privacy Settings</a>
       <a id="logout-btn" onclick="leave_site()">Logout</a>
@@ -50,8 +50,8 @@
             <p id="city" class="section-info">Los Angeles</p>
         </div>
         <div class="details-section">
-            <p class="section-title">zipcode</p>
-            <p id="zipcode" class="section-info">90007</p>
+            <p class="section-title">address</p>
+            <p id="address" class="section-info">Hellman Way</p>
         </div>
         <div class="details-section">
             <p class="section-title">venue</p>
@@ -161,9 +161,9 @@
     <p>team 27</p>
   </div>
 
+  <jsp:include page="autologout.jsp"></jsp:include>
   <script src="../scripts/autologout.js"></script>
   <script src="../scripts/event-details.js"></script>
 
 </body>
-  <!-- <jsp:include page="autologout.jsp"></jsp:include> -->
 </html>

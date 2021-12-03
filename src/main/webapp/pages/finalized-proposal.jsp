@@ -3,9 +3,10 @@
 <head>
     <link rel="stylesheet" href="../styles/index.css" />
     <link rel="stylesheet" href="../styles/proposal-details.css" />
+    <link rel="stylesheet" href="../styles/finalized-proposals.css" />
     <script src="https://kit.fontawesome.com/d4a13a138b.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <title>groupie | proposal details</title>
+    <title>groupie | finalized proposal</title>
 </head>
 <body>
   <div class="header">
@@ -27,7 +28,7 @@
 
   <div id="proposal-details-page">
       <div class="details-row">
-          <h1 id="page-title"><i class="fas fa-info-circle"></i> proposal details</h1>
+          <h1 id="page-title"><i class="fas fa-info-circle"></i> finalized proposal details</h1>
           <div class="btn-back-container">
               <p>back to your groupies</p>
               <button id="btn-back" onclick="handleBackBtnClick(event)"><i class="fas fa-undo-alt"></i></button>
@@ -39,8 +40,8 @@
       <hr>
       <!-- EVENTS -->
       <div class="page-section">
-        <h1 class="section-title">events</h1>
-        <p class="section-description">click to view event details</p>
+        <h1 class="section-title">event</h1>
+        <p class="section-description">system finalized groupie event</p>
         <div class="events-container">
           <div data-event-id="1" class="event-card">
             <h1>event one</h1>
@@ -72,8 +73,11 @@
 
       </div>
 
-      <div id="delete-container">
-        <button id="btn-delete-proposal" onclick="handleDeleteProposalClick(event)">delete proposal</button>
+      <hr>
+
+      <div id="action-container">
+        <button id="btn-accept-proposal" onclick="handleProposalActionClick(event, true)">accept invitation</button>
+        <button id="btn-decline-proposal" onclick="handleProposalActionClick(event, false)">decline invitation</button>
       </div>
   </div>
 
@@ -84,6 +88,6 @@
   </div>
   <jsp:include page="autologout.jsp"></jsp:include>
   <script src="../scripts/autologout.js"></script>
-  <script src="../scripts/proposal-details.js"></script>
+  <script src="../scripts/finalized-proposal.js"></script>
 </body>
 </html>

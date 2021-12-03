@@ -124,7 +124,9 @@ button:hover {
   text-decoration: none;
   padding: 1rem;
 }
-
+#logout-btn:hover {
+  cursor: pointer;
+}
 .highlight-link {
   border : 1px solid white;
   border-radius: 1rem;
