@@ -192,7 +192,7 @@ function populateEventsContainer(proposedEvents) {
             <div>
                 <h1>${proposedJson.eventName}</h1>
             </div>
-            <button onclick="handleDeleteEvent(event)" class="remove-btn event-remove">X</button>
+            <button onclick="handleDeleteEvent(event)" class="remove-btn event-remove" id="remove-draft-event-${i}">X</button>
         </div>
         `;
         eventsContainer.innerHTML += cardString
