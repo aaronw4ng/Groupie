@@ -529,28 +529,46 @@ public class Database {
 			stmt.close();
 		}
 		else{
-			// get all proposals that the user is invited to
-			PreparedStatement stmt = connection.prepareStatement(
-				"SELECT owner_id,i.proposal_id,i.invitee_id,title,description,is_draft,is_finalized,best_event_id FROM invitees i INNER JOIN proposals p WHERE i.invitee_id = ? AND i.invitee_id != p.owner_id");
-			stmt.setInt(1, userId);
+			// initialize all proposals invited to
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM invitees WHERE invitee_id = ?");
+			stmt.setString(1, String.valueOf(userId));
 			ResultSet rs = stmt.executeQuery();
+			List<Integer> proposalIds = new ArrayList<>();
 			while (rs.next()) {
-				Proposal proposal = new Proposal(new User(""));
-				proposal.proposalId = rs.getInt("proposal_id");
-				proposal.title = rs.getString("title");
-				proposal.description = rs.getString("description");
-				proposal.isDraft = rs.getBoolean("is_draft");
-				proposal.isFinalized = rs.getBoolean("is_finalized");
-				proposal.bestEventId = rs.getInt("best_event_id");
-				proposal.user = new User();
-				proposal.user.userId = rs.getInt("owner_id");
-				proposals.add(proposal);
-
-				System.out.println("Proposal ID: " + proposal.proposalId);
-				System.out.println("Proposal Title: " + proposal.title);
+				proposalIds.add(rs.getInt("proposal_id"));
 			}
 			rs.close();
 			stmt.close();
+
+			for (int Id: proposalIds) {
+				// get all proposals that the user is invited to
+				stmt = connection.prepareStatement(
+					"SELECT title,description,is_draft,is_finalized,best_event_id,owner_id FROM proposals WHERE proposal_id = ?");
+				stmt.setInt(1, Id);
+				rs = stmt.executeQuery();
+				while (rs.next()) {
+					Proposal proposal = new Proposal(new User(""));
+					proposal.proposalId = Id;
+					proposal.title = rs.getString("title");
+					proposal.description = rs.getString("description");
+					proposal.isDraft = rs.getBoolean("is_draft");
+					proposal.isFinalized = rs.getBoolean("is_finalized");
+					proposal.bestEventId = rs.getInt("best_event_id");
+					proposal.user = new User();
+					proposal.user.userId = rs.getInt("owner_id");
+					if (proposal.user.userId == userId) {
+						continue;
+					}
+					proposals.add(proposal);
+					
+					System.out.println("-----------------");
+					System.out.println("Proposal ID: " + proposal.proposalId);
+					System.out.println("Proposal Title: " + proposal.title);
+					System.out.println("-----------------");
+				}
+				rs.close();
+				stmt.close();
+			}
 		}
 
 		for (Proposal proposal: proposals) {

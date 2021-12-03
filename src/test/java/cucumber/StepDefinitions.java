@@ -133,8 +133,8 @@ public class StepDefinitions {
 		newUserLogsIn(newUser3);
 	}
 
-	@When ("wait for {float} seconds")
-	public void waitForSeconds(float seconds) {
+	@When ("wait for {double} seconds")
+	public void waitForSeconds(double seconds) {
 		try {
 			Thread.sleep((long)(seconds * 1000));
 		} catch (InterruptedException e) {
@@ -297,7 +297,7 @@ public class StepDefinitions {
 
 	@When("user adds first event result")
 	public void user_adds_first_event_result() {
-		waitForSeconds(4);
+		waitForSeconds(8);
 		driver.findElement(By.id("btn-add-result-id-0")).click();
 	}
 
@@ -813,17 +813,18 @@ public class StepDefinitions {
 	@When("user clicks Set Unavailable button")
 	public void userClicksSetUnavailableButton() {
 		user_clicks_button("unavail-but");
-		waitForSeconds(1);
+		waitForSeconds(3);
 	}
 
 	@When("user clicks Set Available button")
 	public void userClicksSetAvailableButton() {
 		user_clicks_button("avail-but");
-		waitForSeconds(1);
+		waitForSeconds(3);
 	}
 
 	@When("user should see themselve unavailable until indefinitely")
 	public void userShouldSeeThemselveUnavailableUntilIndefinitely() {
+		waitForSeconds(1);
 		String result = driver.findElement(By.id("avail-status")).getText();
 		assertTrue(result.contains("currently unavailable indefinitely"));
 	}
@@ -855,7 +856,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser1);
-		waitForSeconds(1);
+		waitForSeconds(2);
 	}
 
 	@When ("user types in newUser2 in the invitee search box")
@@ -863,7 +864,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser2);
-		waitForSeconds(1);
+		waitForSeconds(2);
 	}
 
 	@When ("user types in newUser3 in the invitee search box")
@@ -871,7 +872,7 @@ public class StepDefinitions {
 		WebElement queryBox = driver.findElement(By.id("user-search-input"));
 		queryBox.click();
 		queryBox.sendKeys(newUser3);
-		waitForSeconds(1);
+		waitForSeconds(2);
 	}
 
 	@Then("user should see newUser1 unavailable not clickable")
@@ -1020,6 +1021,68 @@ public class StepDefinitions {
 	public void userSeesTheirFirstProposalThatTheySentOutOnTheCalendar() {
 		waitForSeconds(1);
 		// TODO: check calendar
+	}
+
+	/* all response-related tests */
+	@When("user clicks first proposal in received proposals")
+	public void userClicksFirstProposalInReceivedProposals() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("proposal-card"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user clicks first event on proposal page")
+	public void userClicksFirstEventOnProposalPage() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("event-card"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user selects available and excitement of {int}")
+	public void andUserSelectsAvailableAndExcitementOf(Integer int1) {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.id("mark-available"));
+		result.click();
+		waitForSeconds(1);
+		result = driver.findElement(By.cssSelector("button.excitement-star[data-star='" + int1 + "']"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user selects maybe and excitement of {int}")
+	public void andUserSelectsMaybeAndExcitementOf(Integer int1) {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.id("mark-maybe"));
+		result.click();
+		waitForSeconds(1);
+		result = driver.findElement(By.cssSelector("button.excitement-star[data-star='" + int1 + "']"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user selects not available")
+	public void andUserSelectsNoAndExcitementOf() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.id("mark-unavailable"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user clicks save response button")
+	public void userClicksSaveResponseButton() {
+		user_clicks_button("btn-save-user-resp");
+		waitForSeconds(1);
+	}
+
+	@Then("user gets response saved message")
+	public void userGetsResponseSavedMessage() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertTrue(alert.getText().contains("saved!"));
+		user_accepts_the_alert();
 	}
 
 	@After()
