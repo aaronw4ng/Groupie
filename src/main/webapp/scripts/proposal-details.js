@@ -165,18 +165,21 @@ function handleDeleteClick(event, type) {
             let allUsers = document.querySelectorAll(".user-card")
             // if deleting last non host user
             if (allUsers.length <= 2) {
-                $.ajax({
-                    method: "POST",
-                    url: "../deleteProposal",
-                    data: {
-                        proposalId: ssProposalID,
-                    },
-                    success: function (result) {
-                        if (result === "true") {
-                            console.log("Proposal Deleted successfully")
+                if (confirm("Are you sure you want to delete this " + type + "? Doing so will delete the proposal.")) {
+                    $.ajax({
+                        method: "POST",
+                        url: "../deleteProposal",
+                        data: {
+                            proposalId: ssProposalID,
+                        },
+                        success: function (result) {
+                            if (result === "true") {
+                                console.log("Proposal Deleted successfully")
+                                document.location.href = "./view-proposals.jsp"
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
             console.log(event.srcElement.parentElement.dataset.userId)
             let selectedUserID = event.srcElement.parentElement.dataset.userId
