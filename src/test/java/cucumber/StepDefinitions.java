@@ -754,11 +754,18 @@ public class StepDefinitions {
 	@When("user presses button to remove second user")
 	public void userPressesButtonToRemoveSecondUser() {
 		// buffer for time for items to fill in
-		waitForSeconds(30);
 		//String btn = "btn-delete-user-" + newUser2.toLowerCase();
 		System.out.println(driver.findElement(By.id(newUser2.toLowerCase())));
 		driver.findElement(By.id(newUser2.toLowerCase())).click();
 		waitForSeconds(10);
+	}
+
+	@When("user presses button to remove second user from draft")
+	public void userPressesButtonToRemoveSecondUserFromDraft() {
+		// buffer for time for items to fill in
+		waitForSeconds(10);
+		String btn = "remove-"+newUser2.toLowerCase();
+		driver.findElement(By.id(btn)).click();
 	}
 
 	@Then("user sees invitee delete alert")
@@ -767,6 +774,15 @@ public class StepDefinitions {
 		WebDriverWait wait = new WebDriverWait(driver, 300);
 		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 		assertEquals("Are you sure you want to delete this user?", alert.getText());
+		user_accepts_the_alert();
+	}
+
+	@Then("user sees delete invitee from draft alert")
+	public void userSeesDeleteInviteeFromDraftAlert() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Are you sure you want to remove this user?", alert.getText());
 		user_accepts_the_alert();
 	}
 
