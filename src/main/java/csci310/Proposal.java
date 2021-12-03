@@ -35,5 +35,6 @@ public class Proposal {
         //mapOfResponses = new TreeMap<>();
         accepted = new ArrayList<>();
         declined = new ArrayList<>();
+        notResponded = new ArrayList<>();
     }
 }
