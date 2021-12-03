@@ -124,6 +124,7 @@ function handleCreateProposalClick(event) {
             if (result) {
                 cleanUpSessionStorage()
                 alert("Proposal sent successfully!")
+                document.location.href = "./view-proposals.jsp"
             }
             else {
                 alert("Proposal failed to send.")
@@ -160,6 +161,8 @@ function handleSaveDraftClick(event) {
             console.log(result)
             if (result === "true") {
                 alert("Draft successfully saved!")
+                cleanUpSessionStorage()
+                document.location.href = "./view-proposals.jsp"
             }
             else {
                 alert("Unable to save draft.")
@@ -189,7 +192,7 @@ function populateEventsContainer(proposedEvents) {
             <div>
                 <h1>${proposedJson.eventName}</h1>
             </div>
-            <button onclick="handleDeleteEvent(event)" class="remove-btn event-remove">X</button>
+            <button onclick="handleDeleteEvent(event)" class="remove-btn event-remove" id="remove-draft-event-${i}">X</button>
         </div>
         `;
         eventsContainer.innerHTML += cardString

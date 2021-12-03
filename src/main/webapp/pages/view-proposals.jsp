@@ -11,9 +11,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500;800&display=swap");
-    </style>
   </head>
 
   <body>
@@ -21,11 +18,19 @@
       <div class="header">
         <h1>groupie</h1>
         <div class="header-links">
-          <a href="#" class="highlight-link">View Proposals</a>
-          <a href="create-proposal.jsp">Create Proposal</a>
-          <a id="logout-btn" href="../index.jsp">Logout</a>
-        </div>
-      </div>
+      <a id="view-proposals-btn" href="#" class="highlight-link">View Proposals</a>
+      <a id="create-proposal-btn" href="create-proposal.jsp">Create Proposal</a>
+      <a id="privacy-settings-btn" href="privacy-settings.jsp">Privacy Settings</a>
+      <a id="logout-btn" onclick="leave_site()">Logout</a>
+     </div>
+   </div>
+   <script>
+     function leave_site() {
+         sessionStorage.clear()
+         document.location.href="../index.jsp"
+         console.log("session ended " + sessionStorage.getItem("username"))
+     }
+   </script>
 
       <!-- Received Proposals Container -->
       <h1 id="page-header">view proposals</h1>
@@ -38,8 +43,20 @@
           <option id="received-option" class="proposal-option">received</option>
         </select>
       </div> -->
+      <h1 class="proposal-type-heading">sent proposals</h1>
+      <div id="sent-results-container"></div>
 
-      <div id="proposal-results-container"></div>
+      <hr>
+
+      <h1 class="proposal-type-heading">received proposals</h1>
+      <div id="received-results-container"></div>
+
+      <hr>
+
+      <h1 class="proposal-type-heading">draft proposals</h1>
+      <div id="draft-results-container"></div>
+
+      <hr>
 
       <!-- three buttons: show draft, show finalized, show unfinalized  -->
       <h1 id="page-title">
@@ -50,7 +67,9 @@
     <div id="footer">
       <p>team 27</p>
     </div>
+    <jsp:include page="autologout.jsp"></jsp:include>
+    <script src="../scripts/autologout.js"></script>
     <script src="../scripts/view-proposals.js"></script>
   </body>
-  <jsp:include page="autologout.jsp"></jsp:include>
+  
 </html>

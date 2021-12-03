@@ -1,8 +1,9 @@
 // Verify user
 let currentUserId = ""
+let currentUsername = ""
 
 if (sessionStorage.getItem("username")) {
-  const currentUsername = sessionStorage.getItem("username")
+  currentUsername = sessionStorage.getItem("username")
 }
 else {
     document.location.href = "../index.jsp"
@@ -11,6 +12,16 @@ else {
 // Store finalized & unfinaized proposals in separate arrays
 let REC_PROPOSALS_FINAL = []
 let REC_PROPOSALS_DRAFT = []
+
+let sentProposalResultsContainer = document.querySelector(
+"#sent-results-container"
+)
+let receivedProposalResultsContainer = document.querySelector(
+"#received-results-container"
+)
+let draftProposalResultsContainer = document.querySelector(
+"#draft-results-container"
+)
 
 document.addEventListener("DOMContentLoaded", async function () {
     var calendarEl = document.getElementById("calendar")
@@ -30,6 +41,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     })
   
     calendar.render()
+    startAutoLogoutRoutine()
+
   })
 
 // Retrieve all proposals on window load
@@ -72,18 +85,27 @@ document.addEventListener("DOMContentLoaded", async function () {
 //       }
 //     })
 // }
-let proposalResultsContainer = document.querySelector(
-  "#proposal-results-container"
-  )
+
+function cleanSessionStorage() {
+  for (var i = 0; i < sessionStorage.length; i++) {
+      if (sessionStorage.key(i) !== "username" && sessionStorage.key(i) !== "userId") {
+          sessionStorage.removeItem(sessionStorage.key(i))
+      }
+  }
+}
+
 const getEvents = async () => {
     
-        proposalResultsContainer.innerHTML = ""
+        sentProposalResultsContainer.innerHTML = ""
+        receivedProposalResultsContainer.innerHTML = ""
+        draftProposalResultsContainer.innerHTML = ""
 
   console.log("Getting events....")
   const userId = sessionStorage.getItem("userId")
-  const draftProposals = await getDraftProposals(userId)
-  const finalizedOwnedProposals = await getFinalizedOwnedProposals(userId)
-  const finalizedInvitedProposals = await getFinalizedInvitedProposals(userId)
+  let draftProposals = await getDraftProposals(userId)
+  let finalizedOwnedProposals = await getFinalizedOwnedProposals(userId)
+  let finalizedInvitedProposals = await getFinalizedInvitedProposals(userId)
+
 
   console.log("Draft Proposals: " + draftProposals)
   console.log("Finalized Owned Proposals: " + finalizedOwnedProposals)
@@ -119,7 +141,8 @@ const getDraftProposals = userId => {
     url: "../getAllDraftProposals",
     success: function (result) {
       draftProposals = result
-      // displayResults(JSON.parse(draftProposals))
+      // console.log(draftProposals)
+      displayResults(JSON.parse(draftProposals), draftProposalResultsContainer, "draft")
     },
   })
   return draftProposals
@@ -136,7 +159,8 @@ const getFinalizedOwnedProposals = userId => {
     url: "../getAllNonDraftProposals",
     success: function (result) {
       finalizedOwnedProposals = result
-      displayResults(JSON.parse(finalizedOwnedProposals))
+      // console.log(finalizedOwnedProposals)
+      displayResults(JSON.parse(finalizedOwnedProposals), sentProposalResultsContainer, "sent")
     },
   })
   return finalizedOwnedProposals
@@ -153,6 +177,8 @@ const getFinalizedInvitedProposals = userId => {
     url: "../getAllNonDraftProposals",
     success: function (result) {
       finalizedInvitedProposals = result
+      console.log("Nonowned Proposals:" + finalizedInvitedProposals)
+      displayResults(JSON.parse(finalizedInvitedProposals), receivedProposalResultsContainer, "received")
     },
   })
   return finalizedInvitedProposals
@@ -189,22 +215,45 @@ function filterResults(type, proposalId) {
 // Received proposals: Display title of proposal and
 
 
-function displayResults(filteredResults) {
+function displayResults(filteredResults, container, proposalType) {
+  container.innerHTML = ""
+  var i = 1
   filteredResults.forEach(result => {
     console.log(JSON.stringify(result))
+    if (proposalType === "received" && result.isDraft) {
+      return
+    }
     let resultsCard = `
-        <div data-json='${JSON.stringify(
+        <div id="${proposalType}-container-${i}" data-json='${JSON.stringify(
           result
-        )}' class="proposal-card" onclick="handleProposalResultClick(event)">
-          <h1 class="proposal-title">${result.title}</h1>
+        )}' class="proposal-card" onclick="handleProposalResultClick(event, '${proposalType}')">
+          <h1 class="proposal-title" id="proposal-card-${i}">${result.title}</h1>
         </div>
         `
-    proposalResultsContainer.innerHTML += resultsCard
+    container.innerHTML += resultsCard
+    i++
   })
 }
 
-function handleProposalResultClick(event) {
+function handleProposalResultClick(event, proposalType) {
   let proposalJSON = ""
+  // clear
+  if (sessionStorage.getItem("selectedProposal")) {
+    sessionStorage.removeItem("selectedProposal")
+  }
+  if (sessionStorage.getItem("selected")) {
+    sessionStorage.removeItem("selected")
+  }
+  if (sessionStorage.getItem("users")) {
+    sessionStorage.removeItem("users")
+  }
+  if (sessionStorage.getItem("proposalName")) {
+    sessionStorage.removeItem("proposalName")
+  }
+  if (sessionStorage.getItem("proposalId")) {
+    sessionStorage.removeItem("proposalId")
+  }
+
   if (event.srcElement.className === "proposal-title") {
     console.log(event.srcElement.parentElement.dataset.json)
     proposalJSON = event.srcElement.parentElement.dataset.json
@@ -213,7 +262,36 @@ function handleProposalResultClick(event) {
     proposalJSON = event.srcElement.dataset.json
   }
   sessionStorage.setItem("selectedProposal", proposalJSON)
-  document.location.href = "./proposal-details.jsp"
+  if (proposalType === "draft") {
+    let propID = JSON.parse(proposalJSON).proposalId
+    let propName = JSON.parse(proposalJSON).title
+    let selectedEvents = JSON.parse(proposalJSON).events
+    let selectedInvitees = JSON.parse(proposalJSON).invitees 
+    selectedInvitees = selectedInvitees.filter(user => {
+      console.log("Username = " + user.username + " Curr= " + currentUsername)
+      return (user.username !== currentUsername)
+    })
+    selectedInvitees = selectedInvitees.map(user => user.username)
+    console.log(selectedInvitees)
+    selectedEvents = selectedEvents.map(event => JSON.stringify(event))
+    console.log(JSON.stringify(selectedEvents))
+    sessionStorage.setItem("selected", JSON.stringify(selectedEvents))
+    sessionStorage.setItem("users", JSON.stringify(selectedInvitees))
+    sessionStorage.setItem("proposalId", propID)
+    sessionStorage.setItem("proposalName", propName)
+    document.location.href = "./create-proposal.jsp"
+  }
+  else {
+    console.log(JSON.parse(proposalJSON).isFinalized)
+    if (JSON.parse(proposalJSON).isFinalized) {
+      // direct to finalized page
+      document.location.href = "./finalized-proposal.jsp"
+    }
+    else {
+      document.location.href = "./proposal-details.jsp"
+    }
+
+  }
 }
 
 function isFinalized(proposal) {}
