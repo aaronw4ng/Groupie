@@ -335,6 +335,7 @@ public class StepDefinitions {
 	public void user_inputs_in_event_search(String string) {
 		WebElement queryBox = driver.findElement(By.id("event-search-input"));
 		queryBox.sendKeys(string);
+		waitForSeconds(1);
 	}
 
 	@When("user selects {string} in start date")
