@@ -296,11 +296,7 @@ public class StepDefinitions {
 
 	@When("user adds first event result")
 	public void user_adds_first_event_result() {
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForSeconds(4);
 		driver.findElement(By.id("btn-add-result-id-0")).click();
 	}
 
@@ -339,6 +335,7 @@ public class StepDefinitions {
 	public void user_inputs_in_event_search(String string) {
 		WebElement queryBox = driver.findElement(By.id("event-search-input"));
 		queryBox.sendKeys(string);
+		waitForSeconds(1);
 	}
 
 	@When("user selects {string} in start date")
@@ -645,8 +642,8 @@ public class StepDefinitions {
 		user_inputs_in_proposal_name(arg0);
 	}
 
-	@When("user clicks on the first proposal")
-	public void userClicksOnTheFirstProposal() {
+	@When("user clicks on the first sent proposal")
+	public void userClicksOnTheFirstSentProposal() {
 		// buffer for time for items to fill in
 		// give buffer time for proposals to show up
 		try {
@@ -654,17 +651,25 @@ public class StepDefinitions {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		driver.findElement(By.id("proposal-card-0")).click();
+		driver.findElement(By.id("sent-container-1")).click();
+	}
+
+	@When("user clicks on the first draft proposal")
+	public void userClicksOnTheFirstDraftProposal() {
+		// buffer for time for items to fill in
+		// give buffer time for proposals to show up
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.findElement(By.id("draft-container-1")).click();
 	}
 
 	@When("user presses button to remove the first event")
 	public void userPressesButtonToRemoveTheFirstEvent() {
 		// buffer for time for items to fill in
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForSeconds(4);
 		driver.findElement(By.id("btn-delete-event-0")).click();
 	}
 
