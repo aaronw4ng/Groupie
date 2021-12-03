@@ -74,7 +74,7 @@ function displayAllProposalInfo() {
             userString = `
             <div class="user-card">
                 <p id="proposal-host-header"><i class="fas fa-crown"></i> proposal host</p>
-                <h1>${user.username}</h1>
+                <h1 id="${user.username}">${user.username}</h1>
             </div>
             `;
         }
@@ -82,7 +82,7 @@ function displayAllProposalInfo() {
             userString = `
             <div data-user-id="${user.userId}" class="user-card">
                 <h1>${user.username}</h1>
-                <button id="btn-delete-user-${i}" class="btn-delete" onclick="handleDeleteClick(event, 'user')">X</button>
+                <button id="${user.username}" class="btn-delete" onclick="handleDeleteClick(event, 'user')">X</button>
             </div>
             `;
         }

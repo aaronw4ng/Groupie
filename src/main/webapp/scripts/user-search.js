@@ -153,7 +153,7 @@ function displaySelectedUser() {
         let userString = `
         <div data-username="${user}" class="added-user">
           <p>${user}</p>
-          <button class="remove-btn user-remove" onclick="handleUserRemoval(event)">X</button>
+          <button id="remove-${user}" class="remove-btn user-remove" onclick="handleUserRemoval(event)">X</button>
         </div>
         `;
         addedUserContainer.innerHTML += userString

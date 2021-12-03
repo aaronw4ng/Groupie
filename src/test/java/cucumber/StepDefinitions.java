@@ -46,6 +46,7 @@ public class StepDefinitions {
 	// usernames are for removing event
 	private static String randomUser1 = null;
 	private static String randomUser2 = null;
+	private static String randomUser3 = null;
   
 
 	private ChromeOptions handlingSSL = new ChromeOptions();
@@ -712,16 +713,77 @@ public class StepDefinitions {
 	}
 
 	/* Remove invitee from proposal */
+	@When("three new users are added")
+	public void threeNewUsersAreAdded() {
+		randomUser1 =  RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		randomUser2 =  RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		randomUser3 = RandomStringUtils.random(USERNAME_LENGTH, USERNAME_CHARACTERS);
+		driver.findElement(By.id("input-username")).sendKeys(randomUser1);
+		user_inputs_password("password1");
+		user_retypes_password("password1");
+		user_clicks_button("btn-create-account"); // create first user
+		user_accepts_the_alert(); // accepts alert
+		user_clicks_button("logout-btn"); // first user logs out
+		user_is_on_the_Create_User_page(); // go back to create user page
+		driver.findElement(By.id("input-username")).sendKeys(randomUser2);
+		user_inputs_password("password1");
+		user_retypes_password("password1");
+		user_clicks_button("btn-create-account"); // create second user
+		user_accepts_the_alert(); // accepts alert
+		user_clicks_button("logout-btn"); // second user logs out
+		user_is_on_the_Create_User_page(); // go back to create user page
+		driver.findElement(By.id("input-username")).sendKeys(randomUser3);
+		user_inputs_password("password1");
+		user_retypes_password("password1");
+		user_clicks_button("btn-create-account"); // create third user
+		user_accepts_the_alert(); // accepts alert
+		user_clicks_button("logout-btn"); // third user logs out
+		user_inputs_username(randomUser1); // first user logs in
+		user_inputs_password("password1");
+		user_clicks_button("btn-login");
+		user_accepts_the_alert(); // accepts alert
+	}
 	@When("user adds second user result")
 	public void userAddsSecondUserResult() {
+		WebElement queryBox = driver.findElement(By.id("user-search-input"));
+		queryBox.click();
+		waitForSeconds(5);
+		driver.findElement(By.id("user-card-2")).click();
 	}
 
-	@When("user presses button to remove the first invitee")
-	public void userPressesButtonToRemoveTheFirstInvitee() {
+	@When("user presses button to remove second user")
+	public void userPressesButtonToRemoveSecondUser() {
+		// buffer for time for items to fill in
+		//String btn = "btn-delete-user-" + newUser2.toLowerCase();
+		System.out.println(driver.findElement(By.id(newUser2.toLowerCase())));
+		driver.findElement(By.id(newUser2.toLowerCase())).click();
+		waitForSeconds(10);
 	}
 
-	@When("user accepts remove invitee alert")
-	public void userAcceptsRemoveInviteeAlert() {
+	@When("user presses button to remove second user from draft")
+	public void userPressesButtonToRemoveSecondUserFromDraft() {
+		// buffer for time for items to fill in
+		waitForSeconds(10);
+		String btn = "remove-"+newUser2.toLowerCase();
+		driver.findElement(By.id(btn)).click();
+	}
+
+	@Then("user sees invitee delete alert")
+	public void userSeesInviteeDeleteAlert() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Are you sure you want to delete this user?", alert.getText());
+		user_accepts_the_alert();
+	}
+
+	@Then("user sees delete invitee from draft alert")
+	public void userSeesDeleteInviteeFromDraftAlert() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertEquals("Are you sure you want to remove this user?", alert.getText());
+		user_accepts_the_alert();
 	}
 
 	@When("user accepts removing invitee will delete proposal alert")
