@@ -132,8 +132,8 @@ public class StepDefinitions {
 		newUserLogsIn(newUser3);
 	}
 
-	@When ("wait for {float} seconds")
-	public void waitForSeconds(float seconds) {
+	@When ("wait for {double} seconds")
+	public void waitForSeconds(double seconds) {
 		try {
 			Thread.sleep((long)(seconds * 1000));
 		} catch (InterruptedException e) {
@@ -296,11 +296,7 @@ public class StepDefinitions {
 
 	@When("user adds first event result")
 	public void user_adds_first_event_result() {
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		waitForSeconds(8);
 		driver.findElement(By.id("btn-add-result-id-0")).click();
 	}
 
@@ -948,6 +944,68 @@ public class StepDefinitions {
 	public void userSeesTheirFirstProposalThatTheySentOutOnTheCalendar() {
 		waitForSeconds(1);
 		// TODO: check calendar
+	}
+
+	/* all response-related tests */
+	@When("user clicks first proposal in received proposals")
+	public void userClicksFirstProposalInReceivedProposals() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("proposal-card"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user clicks first event on proposal page")
+	public void userClicksFirstEventOnProposalPage() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.className("event-card"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user selects available and excitement of {int}")
+	public void andUserSelectsAvailableAndExcitementOf(Integer int1) {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.id("mark-available"));
+		result.click();
+		waitForSeconds(1);
+		result = driver.findElement(By.cssSelector("button.excitement-star[data-star='" + int1 + "']"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user selects maybe and excitement of {int}")
+	public void andUserSelectsMaybeAndExcitementOf(Integer int1) {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.id("mark-maybe"));
+		result.click();
+		waitForSeconds(1);
+		result = driver.findElement(By.cssSelector("button.excitement-star[data-star='" + int1 + "']"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user selects not available")
+	public void andUserSelectsNoAndExcitementOf() {
+		waitForSeconds(1);
+		WebElement result = driver.findElement(By.id("mark-unavailable"));
+		result.click();
+		waitForSeconds(1);
+	}
+
+	@When("user clicks save response button")
+	public void userClicksSaveResponseButton() {
+		user_clicks_button("btn-save-user-resp");
+		waitForSeconds(1);
+	}
+
+	@Then("user gets response saved message")
+	public void userGetsResponseSavedMessage() {
+		// Check for success alert popup
+		WebDriverWait wait = new WebDriverWait(driver, 300);
+		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+		assertTrue(alert.getText().contains("saved!"));
+		user_accepts_the_alert();
 	}
 
 	@After()

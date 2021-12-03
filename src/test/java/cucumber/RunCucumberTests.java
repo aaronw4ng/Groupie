@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(strict = true)
-// @CucumberOptions(strict = true, features = {"src/test/resources/cucumber/view-received-proposals.feature"}) //will run only feature files x.feature and y.feature.
+// @CucumberOptions(strict = true, features = {"src/test/resources/cucumber/send-response.feature"}) //will run only feature files x.feature and y.feature.
 public class RunCucumberTests {
 
 	@BeforeClass
