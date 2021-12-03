@@ -673,7 +673,12 @@ public class StepDefinitions {
 		driver.findElement(By.id("btn-delete-event-0")).click();
 	}
 
-
+	@When("user presses button to remove the first draft event")
+	public void userPressesButtonToRemoveTheFirstDraftEvent() {
+		// buffer for time for items to fill in
+		waitForSeconds(4);
+		driver.findElement(By.id("remove-draft-event-0")).click();
+	}
 
 	@When("user clicks on {string} proposal")
 	public void userClicksOnProposal(String arg0) {

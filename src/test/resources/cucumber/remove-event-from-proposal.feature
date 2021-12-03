@@ -57,5 +57,22 @@ Feature: Owner can remove event from proposal at anytime
     And user accepts the alert
     And user navigates to View Proposals page
     And user clicks on the first draft proposal
-    And user presses button to remove the first event
+    And user presses button to remove the first draft event
+    Then user sees event delete alert
+
+  Scenario: Owner removes final event from draft proposal
+    Given user is on the Create User page
+    When two new users are added
+    And user inputs "Remove Last Event From Draft Proposal" in proposal name
+    And user clicks "btn-add-users" button
+    And user adds first user result
+    And user clicks "btn-event-find" button
+    And user inputs "Eric Nam" in event search
+    And user clicks "event-search-button" button
+    And user adds first event result
+    And user clicks "btn-save-draft" button
+    And user accepts the alert
+    And user navigates to View Proposals page
+    And user clicks on the first draft proposal
+    And user presses button to remove the first draft event
     Then user sees event delete alert
